@@ -82,7 +82,8 @@ include { BAM_READCOUNT               } from '../modules/local/bam/readcount'
 //include { SNP_COMPARE                 } from '../modules/local/snp/compare'
 //include { MAFFT_ALIGN as MAFFT_TWO    } from '../modules/local/mafft/align'
 //include { SNIPIT_SNPPLOT as SNIPIT_TWO } from '../modules/local/snipit/snpplot'
-include { CLEANUP		      } from '../modules/local/cleanup/cleanup.nf'
+include { CLEANUP		              } from '../modules/local/cleanup/cleanup'
+include { CLEANUP_INTERMEDIATE		  } from '../modules/local/cleanup/cleanup_intermediate'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -188,12 +189,38 @@ workflow METATROPICS {
         meta_with_othermeta_with_metalength_with_parameter
     )
 
-    rmetaplot_ch=((METAMAPS_MAP.out.metaclass.join(METAMAPS_CLASSIFY.out.classlength)).join(METAMAPS_CLASSIFY.out.classcov)).join(NANOPLOT.out.totalreads)
+    // Collect all outputs from METAMAPS_CLASSIFY
+    ch_all_metamaps_classify = METAMAPS_CLASSIFY.out.classem.collect()
+    .mix(METAMAPS_CLASSIFY.out.classem_original.collect())
+    .mix(METAMAPS_CLASSIFY.out.classkrona.collect())
+    .mix(METAMAPS_CLASSIFY.out.classlength.collect())
+    .mix(METAMAPS_CLASSIFY.out.classWIMP.collect())
+    .mix(METAMAPS_CLASSIFY.out.classcov.collect())
+    .collect()
+
+    // Create a dummy cleanup file if cleanup is not enabled
+    dummy_cleanup_file = file("dummy_cleanup_complete.txt")
+    dummy_cleanup_file.text = "Cleanup not enabled"
+
+    // Run intermediate CLEANUP only if Docker cleanup is enabled
+    if (params.enable_docker_cleanup) {
+        CLEANUP_INTERMEDIATE(ch_all_metamaps_classify)
+        ch_cleanup_done = CLEANUP_INTERMEDIATE.out.cleanup_done
+    } else {
+        ch_cleanup_done = Channel.value(dummy_cleanup_file)
+    }
+
+    // Continue with the rest of your workflow, using ch_cleanup_done to ensure cleanup has finished
+    rmetaplot_ch = ((METAMAPS_MAP.out.metaclass.join(METAMAPS_CLASSIFY.out.classlength))
+                .join(METAMAPS_CLASSIFY.out.classcov))
+                .join(NANOPLOT.out.totalreads)
+                .combine(ch_cleanup_done)
 
     R_METAPLOT(
-        rmetaplot_ch
+        rmetaplot_ch.map { meta, classification_results, length_and_identities, contig_coverage, total_reads, cleanup_done ->
+            tuple(meta, classification_results, length_and_identities, contig_coverage, total_reads, cleanup_done)
+        }
     )
-
     //KRONA_KRONADB();
 
     //KRONA_KTIMPORTTAXONOMY(
@@ -393,6 +420,7 @@ workflow METATROPICS {
             ReadCount.out.read_counts_csv
         )
     }
+
 }
 
 /*
