@@ -8,7 +8,7 @@ process R_METAPLOT {
         'daanjansen94/nf_r_plots:v4.2.2' }"
 
     input:
-    tuple val(meta), path(classification), path(classlengh), path(classcov), path(classtotal)
+    tuple val(meta), path(classification_results), path(length_and_identities), path(contig_coverage), path(total_reads), path(cleanup_done)
 
     output:
     tuple val(meta), path("*.pdf"), emit: plotpdf
