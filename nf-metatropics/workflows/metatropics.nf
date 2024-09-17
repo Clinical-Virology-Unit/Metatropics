@@ -198,16 +198,13 @@ workflow METATROPICS {
     .mix(METAMAPS_CLASSIFY.out.classcov.collect())
     .collect()
 
-    // Create a dummy cleanup file if cleanup is not enabled
-    dummy_cleanup_file = file("dummy_cleanup_complete.txt")
-    dummy_cleanup_file.text = "Cleanup not enabled"
+    // Create a dummy cleanup channel if cleanup is not enabled
+    ch_cleanup_done = Channel.value("Cleanup not enabled")
 
     // Run intermediate CLEANUP only if Docker cleanup is enabled
     if (params.enable_docker_cleanup) {
-        CLEANUP_INTERMEDIATE(ch_all_metamaps_classify)
-        ch_cleanup_done = CLEANUP_INTERMEDIATE.out.cleanup_done
-    } else {
-        ch_cleanup_done = Channel.value(dummy_cleanup_file)
+    CLEANUP_INTERMEDIATE(ch_all_metamaps_classify)
+    ch_cleanup_done = CLEANUP_INTERMEDIATE.out.cleanup_done
     }
 
     // Continue with the rest of your workflow, using ch_cleanup_done to ensure cleanup has finished
