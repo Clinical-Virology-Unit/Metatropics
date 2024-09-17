@@ -198,25 +198,28 @@ workflow METATROPICS {
     .mix(METAMAPS_CLASSIFY.out.classcov.collect())
     .collect()
 
-    // Create a dummy cleanup channel if cleanup is not enabled
-    ch_cleanup_done = Channel.value("Cleanup not enabled")
+    // Create a cleanup channel with a dummy file path
+    ch_cleanup_done = Channel.value(file("${workDir}/.cleanup_done"))
 
     // Run intermediate CLEANUP only if Docker cleanup is enabled
     if (params.enable_docker_cleanup) {
     CLEANUP_INTERMEDIATE(ch_all_metamaps_classify)
     ch_cleanup_done = CLEANUP_INTERMEDIATE.out.cleanup_done
+    } else {
+    // Create a dummy file in the work directory
+    file("${workDir}/.cleanup_done").text = "Cleanup not enabled"
     }
 
     // Continue with the rest of your workflow, using ch_cleanup_done to ensure cleanup has finished
     rmetaplot_ch = ((METAMAPS_MAP.out.metaclass.join(METAMAPS_CLASSIFY.out.classlength))
-                .join(METAMAPS_CLASSIFY.out.classcov))
-                .join(NANOPLOT.out.totalreads)
-                .combine(ch_cleanup_done)
+            .join(METAMAPS_CLASSIFY.out.classcov))
+            .join(NANOPLOT.out.totalreads)
+            .combine(ch_cleanup_done)
 
     R_METAPLOT(
-        rmetaplot_ch.map { meta, classification_results, length_and_identities, contig_coverage, total_reads, cleanup_done ->
-            tuple(meta, classification_results, length_and_identities, contig_coverage, total_reads, cleanup_done)
-        }
+    rmetaplot_ch.map { meta, classification_results, length_and_identities, contig_coverage, total_reads, cleanup_done ->
+        tuple(meta, classification_results, length_and_identities, contig_coverage, total_reads, cleanup_done)
+    }
     )
     //KRONA_KRONADB();
 
