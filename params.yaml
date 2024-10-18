@@ -5,8 +5,8 @@ fasta: /data/Daan/Projects/nextflow-metatropics-INRB/Databases/Human/chm13v2.0.f
 dbmeta: /data/Daan/Projects/nextflow-metatropics-INRB/Databases/ViralRefseq
 minLength: 200
 pair: true
-front: 25
-tail: 25
+front: 30
+tail: 30
 minVirus: 0.01
 quality: 20 # You can adapt this to '30' to reach Illumina quality
 depth: 30 # When wanting high-quality genomes better adapt this to '20"
