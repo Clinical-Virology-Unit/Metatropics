@@ -3,7 +3,7 @@ process GUPPYDEMULTI_DEMULTIPLEXING {
 
     container "$projectDir/images/guppy.sif"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/homopolish%3A0.4.1--pyhdfd78af_1':
+        '$projectDir/images/guppy.sif' :
         'daanjansen94/guppy:v6.5.7' }"
 
     input:
