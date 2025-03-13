@@ -12,7 +12,7 @@ The metatropics pipeline is a [Nextflow](https://www.nextflow.io/)-driven workfl
 
 ![Figure](./nf-metatropics//Metatropics.jpg)
 
-For a more detailed description see [Metatropics description](https://github.com/DaanJansen94/nf-metatropics)
+For a more detailed description see [Metatropics description](https://github.com/Clinical-Virology-Unit/Metatropics)
 
 ### 1. Download metatropics pipeline on Linux
 ```
