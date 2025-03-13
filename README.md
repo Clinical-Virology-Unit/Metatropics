@@ -19,7 +19,7 @@ For a more detailed description see [Metatropics description](https://github.com
 sudo apt update
 sudo apt install git
 git config --global http.postBuffer 524288000
-git clone https://github.com/DaanJansen94/nextflow-metatropics-INRB.git
+git clone https://github.com/Clinical-Virology-Unit/Metatropics.git
 ```
 
 ### 2. Install Java and Nextflow
@@ -96,7 +96,7 @@ depth 20 # for high-quality genomes
 
 ### 7. Set Input
 
-**Note:** Ensure that all your input FASTQ reads are consolidated into a single file rather than being spread across multiple files in directories like barcode01/fastq. To facilitate this, a bash script named concatenate_fastq.sh is available in the 'Input' folder. You can use this script to merge all FASTQ files in the barcode01 directory into a single barcode01.fastq file by running the command: bash concatenate_fastq.sh. The format of the `mpox.csv` [Input](https://github.com/DaanJansen94/nextflow-metatropics-INRB/tree/main/Input) file differs based on your starting data:
+**Note:** Ensure that all your input FASTQ reads are consolidated into a single file rather than being spread across multiple files in directories like barcode01/fastq. To facilitate this, a bash script named concatenate_fastq.sh is available in the 'Input' folder. You can use this script to merge all FASTQ files in the barcode01 directory into a single barcode01.fastq file by running the command: bash concatenate_fastq.sh. The format of the `mpox.csv` [Input](https://github.com/Clinical-Virology-Unit/Metatropics/tree/main/Input) file differs based on your starting data:
 - For raw reads (FASTQ): (<u>use params.yml</u>)
 ```
 The params.yaml file contains the most important paths
