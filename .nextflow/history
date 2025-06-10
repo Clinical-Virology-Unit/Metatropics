@@ -1,0 +1,106 @@
+2025-06-05 16:35:06	-	pensive_koch	-	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-05 16:36:56	8.7s	ridiculous_kimura	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-05 16:38:19	3m 58s	desperate_saha	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-05 16:49:51	12.5s	modest_heyrovsky	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-05 16:50:29	10.4s	distraught_lovelace	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-05 16:55:19	1m 44s	lonely_hodgkin	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-05 16:57:31	2h 28m 36s	infallible_bose	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-06 10:36:57	1m 47s	elegant_wiles	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-06 10:59:59	51m 44s	high_waddington	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-06 11:52:55	8.5s	small_pesquet	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-06 11:55:01	3m 58s	distracted_ramanujan	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-06 12:04:56	51m 17s	chaotic_minsky	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-06 13:00:33	43m 18s	focused_watson	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-06 13:43:58	31m 29s	elegant_mirzakhani	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-06 14:15:40	1h 23m 23s	curious_archimedes	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-06 15:39:15	9m 2s	reverent_magritte	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-06 15:48:49	16m 10s	peaceful_mestorf	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-06 16:05:08	-	berserk_ekeblad	-	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-06 16:10:31	15.9s	cheesy_lamarr	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-06 16:11:45	4m 33s	irreverent_wescoff	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-06 16:20:00	1h 49m 27s	cheeky_rutherford	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-06 18:27:43	6.2s	extravagant_joliot	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-06 18:28:03	5.7s	determined_mcnulty	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-06 18:28:13	6.1s	maniac_tesla	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-06 20:36:23	-	happy_dijkstra	-	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-06 20:37:18	1m 20s	hungry_meucci	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-06 20:39:31	47m 39s	zen_nightingale	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-06 21:29:40	5m 57s	scruffy_lamport	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-06 21:36:59	-	silly_elion	-	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-06 21:38:12	-	cranky_bardeen	-	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-06 21:38:56	-	jovial_shockley	-	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-06 21:40:42	-	suspicious_hugle	-	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-06 21:41:51	-	fervent_woese	-	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-06 21:43:39	-	peaceful_becquerel	-	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-06 21:44:29	1h 45m 1s	jovial_boyd	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-07 11:22:08	50m 14s	exotic_ramanujan	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-07 12:25:59	-	naughty_nobel	-	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-07 12:28:31	-	wise_rubens	-	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-07 12:30:17	-	special_easley	-	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-07 12:30:56	-	naughty_mcclintock	-	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-07 12:31:32	-	agitated_engelbart	-	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-07 12:33:12	-	maniac_solvay	-	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-07 12:34:08	5.6s	hopeful_thompson	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-07 12:34:55	1m 11s	sad_faraday	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-07 12:36:21	8m 22s	trusting_pesquet	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-07 12:53:29	51m 48s	stupefied_mcnulty	OK	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-07 19:01:23	8.2s	desperate_banach	OK	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-07 19:03:33	6.3s	boring_rosalind	OK	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-07 19:08:45	6.7s	mighty_boltzmann	OK	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-07 19:09:44	6s	clever_cray	OK	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-07 19:10:39	5.7s	awesome_legentil	OK	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-07 19:11:32	7.1s	distracted_poitras	OK	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-07 19:13:29	6.7s	dreamy_meitner	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-07 19:14:15	6.8s	jovial_tesla	OK	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-07 19:17:06	48m 41s	loving_brenner	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-07 21:09:20	2m 18s	nauseous_babbage	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-07 21:12:33	2h 37m 44s	boring_bhabha	OK	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 13:34:48	9.1s	hopeful_engelbart	OK	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 13:48:48	-	golden_mclean	-	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 13:50:29	14.6s	furious_mendel	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 13:51:30	6.5s	loving_moriondo	OK	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 13:52:32	6.6s	compassionate_visvesvaraya	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 13:55:47	6.3s	elated_kalam	OK	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 13:56:35	5.8s	romantic_caravaggio	OK	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 13:57:02	6.1s	ridiculous_agnesi	OK	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 13:57:52	7.5s	mad_kare	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 14:01:04	5.6s	hopeful_joliot	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 14:02:08	7s	maniac_sinoussi	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 14:02:41	6.1s	happy_stonebraker	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 14:02:57	6.2s	voluminous_curry	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 14:05:40	6.1s	friendly_ramanujan	OK	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 14:06:15	5.5s	sad_meninsky	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 14:06:25	6.3s	nice_khorana	OK	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 14:07:09	6.3s	berserk_ramanujan	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 14:08:18	6m 25s	drunk_waddington	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 14:16:39	7.3s	marvelous_turing	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 14:19:34	27.4s	adoring_lichterman	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 14:20:32	14m 54s	distraught_jepsen	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 14:37:35	3m 23s	desperate_gauss	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 14:43:24	1m	intergalactic_visvesvaraya	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 14:44:32	7.6s	intergalactic_mccarthy	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 14:45:05	5.2s	exotic_joliot	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 14:45:25	5.5s	serene_lorenz	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 14:46:16	5.9s	ecstatic_meucci	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 14:47:01	5.2s	marvelous_mayer	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 14:48:47	14m 23s	stupefied_curran	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 15:03:24	6m 34s	gigantic_mandelbrot	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 15:10:22	12m 44s	distraught_lamarr	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 15:25:15	2h 32m 59s	distracted_cray	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 19:25:25	1m 12s	lethal_borg	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-08 19:52:26	7h 8m 19s	tender_thompson	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-09 15:38:28	1m 54s	agitated_yonath	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-09 15:45:59	1m 29s	angry_plateau	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-09 15:50:44	26.2s	scruffy_lorenz	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-09 15:54:55	1m 26s	cranky_albattani	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-09 16:00:35	6m 39s	jovial_pauling	OK	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params2.yaml -resume
+2025-06-09 16:12:18	41.7s	fervent_gilbert	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params.yaml -resume
+2025-06-09 20:12:45	7m 30s	deadly_mayer	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params.yaml -resume
+2025-06-09 20:20:59	1h 59m 24s	focused_varahamihira	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params.yaml -resume
+2025-06-09 22:28:04	1h 26m 44s	silly_archimedes	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params.yaml -resume
+2025-06-09 23:56:03	52m 34s	irreverent_poitras	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params.yaml -resume
+2025-06-10 09:11:18	30m 23s	fabulous_volta	OK	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params.yaml -resume
+2025-06-10 09:49:38	1h 36m	zen_lamarck	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params.yaml -resume
+2025-06-10 11:28:05	2m 14s	deadly_hilbert	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params.yaml -resume
+2025-06-10 11:31:26	6m 8s	naughty_tesla	ERR	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params.yaml -resume
+2025-06-10 11:39:50	1h 31m 48s	compassionate_davinci	OK	8cb27832a964f03a4a8d3a99ed4e4523	caa03539-74a0-4049-8d89-8311f2884838	nextflow run nf-metatropics/ -profile docker -params-file params.yaml -resume

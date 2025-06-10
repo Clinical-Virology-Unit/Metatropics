@@ -30,22 +30,38 @@ count_reads <- function(file_path) {
 }
 
 extract_sample_name <- function(filename) {
-  if (grepl("_viral", filename)) {
-    sub("_viral.*", "", filename)
-  } else {
-    sub("_T1.*", "", filename)
-  }
+  # Remove file extensions and common suffixes
+  name <- sub("\\.[^.]+$", "", filename)  # Remove last extension
+  name <- sub("_fixed$", "", name)        # Remove _fixed suffix
+  name <- sub("_T1$", "", name)           # Remove _T1 suffix
+  name <- sub("_other$", "", name)        # Remove _other suffix
+  name <- sub("_viral$", "", name)        # Remove _viral suffix
+  
+  # Standardize sample names
+  name <- gsub("H20_", "H2O_", name)      # Fix H20 to H2O
+  name <- gsub("CRT57", "CRT-57", name)   # Fix CRT57 to CRT-57
+  name <- gsub("UAC902", "UAC-902", name) # Fix UAC902 to UAC-902
+  
+  return(name)
 }
 
 count_and_create_df <- function(pattern, dir = ".") {
   cat("Searching for files matching pattern:", pattern, "in directory:", dir, "\n")
+  
+  # Make pattern more flexible for raw reads
+  if (pattern == "^.*_T1\\.fastq\\.gz$") {
+    pattern <- ".*_fixed\\.fastq\\.gz$"
+  }
+  
   files <- list.files(dir, pattern = pattern, full.names = TRUE)
   cat("Found", length(files), "files:\n")
   cat(paste(files, collapse = "\n"), "\n")
+  
   if (length(files) == 0) {
     warning(paste("No files found matching pattern:", pattern, "in directory:", dir))
     return(data.frame(sample = character(), count = numeric()))
   }
+  
   names <- basename(files)
   sample_names <- sapply(names, extract_sample_name)
   
@@ -55,7 +71,7 @@ count_and_create_df <- function(pattern, dir = ".") {
   return(df)
 }
 
-raw_reads <- count_and_create_df("^.*_T1\\.fastq\\.gz$")
+raw_reads <- count_and_create_df("^.*_fixed\\.fastq\\.gz$")
 if (nrow(raw_reads) > 0) raw_reads <- raw_reads %>% rename(raw = count)
 
 trimmed_reads <- count_and_create_df("\\.fastp\\.fastq\\.gz$")

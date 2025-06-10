@@ -1,4 +1,9 @@
 process FIX_NAMES {
+    label 'process_medium'
+
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/bbmap:38.86--h1296035_0':
+        'daanjansen94/bbmap:38.86' }"
 
     tag{sample}
 
@@ -10,11 +15,7 @@ process FIX_NAMES {
 
     script:
     """
-    if [[ $params.basecall == "true" ]]; then
-        cat $reads/* > ${sample}.fastq && gzip ${sample}.fastq
-
-    elif [[ $params.basecall == "false" ]]; then
-        cat $reads > ${sample}.fastq && gzip ${sample}.fastq
-    fi
+    cat $reads > ${sample}_fixed.fastq
+    reformat.sh in=${sample}_fixed.fastq out=${sample}_fixed.fastq.gz
     """
 }
