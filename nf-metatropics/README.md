@@ -24,7 +24,7 @@ On release, automated continuous integration tests run the pipeline on a full-si
 
 <!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
 
-1. If input data if fast5 files, execute basecalling followed of demultiplexing with [`Guppy`] (https://nanoporetech.com/)
+1. If input data if fast5 files, execute basecalling followed of demultiplexing with [`Dorado`] (https://nanoporetech.com/)
 2. With fastq (input or after demultiplexing), read QC ([`Nanoplot`](https://github.com/wdecoster/NanoPlot))
 3. Filter by quality and length ([`FASTP`](https://github.com/OpenGene/fastp))
 3. Present QC for raw and filtered reads ([`MultiQC`](http://multiqc.info/))
@@ -57,7 +57,7 @@ Some containers need to be build:
 ```bash
 cd nf-metatropics/images
 sudo singularity build R_plot.sif R_plot.txt
-sudo singularity build guppy.sif guppy.txt
+sudo singularity build dorado.sif dorado.txt
 sudo singularity build homopolish.sif homopolish.txt
 sudo singularity build metamaps.sif metamaps.txt
 sudo singularity build samtools_minimap2.sif samtools_minimap2.txt
@@ -72,7 +72,6 @@ To uncompress the database, use the command line below:
    ```bash
    tar -xzvf virusDB2.tar.gz
    ```
-
 
 5. Start running your own analysis!
 
@@ -89,7 +88,7 @@ To uncompress the database, use the command line below:
     --fasta                       [string]  Path to FASTA genome file.
    Generic options
     --basecall                    [boolean] In case fast5 is the input, that option shoud be true. Default is false.
-    --model                       [string]  In case fast5 is the input, the guppy model for basecalling should be provide. [default:dna_r9.4.1_450bps_hac.cfg]
+    --model                       [string]  In case POD5 is the input, the dorado model for basecalling should be provided. [default: hac]
     --minLength                   [integer] Minimum length for a read to be analyzed. [default: 200]
     --minVirus                    [number]  Minimum virus data frequency in the raw data to be part of the output. [default: 0.001]
     --usegpu                      [boolean] In case fast5 is the input, the use of GPU Nvidia should be true.
@@ -113,7 +112,7 @@ To uncompress the database, use the command line below:
    ```
    The command line for this case:
    ```bash
-   nextflow run nf-metatropics/ -profile singularity --input /home/itg.be/arezende/example4.csv --input_dir /home/itg.be/arezende/fast5 --outdir /home/itg.be/arezende/testnf_guppy --fasta /home/itg.be/arezende/databases/chm13v2.0.fa --basecall true --minLength 600 --usegpu true --dbmeta /home/itg.be/arezende/databases/virusDB2 --pair true -resume
+   nextflow run nf-metatropics/ -profile singularity --input /home/itg.be/arezende/example4.csv --input_dir /home/itg.be/arezende/fast5 --outdir /home/itg.be/arezende/testnf_dorado --fasta /home/itg.be/arezende/databases/chm13v2.0.fa --basecall true --minLength 600 --usegpu true --dbmeta /home/itg.be/arezende/databases/virusDB2 --pair true -resume
    ```
 
    If you have FASTQ as input data, you will only need to use the parameter `--input` to provide your input. It will receives the path of a csv file with the format below:
@@ -133,10 +132,10 @@ To uncompress the database, use the command line below:
    ## Output
 
 <!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
-Below one can see the output directories and their description. `guppy` and `guppydemulti` will exist only in case the user has used FAST5 files as input.
+Below one can see the output directories and their description. `basecalling` and `demultiplexing` will exist only in case the user has used POD5 files as input.
 
-1. [`guppy`] - fastq files after the basecalling without being demultiplexed
-2. [`guppydemulti`] - directories and fastq files produced after the demultiplexing
+1. [`basecalling`] - fastq files after the basecalling without being demultiplexed
+2. [`demultiplexing`] - directories and fastq files produced after the demultiplexing
 3. [`fix`] - gziped fastq files for each sample of the run
 3. [`fastp`] - results after trimming analysis performed by FASTP
 4. [`nanoplot`] - quality results for the sequencing data just after demultiplexing

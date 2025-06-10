@@ -1,4 +1,3 @@
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     VALIDATE INPUTS
@@ -55,9 +54,9 @@ include { HOST_MAPPING } from '../subworkflows/local/host_mapping'
 //include { FASTQC                      } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
-include { GUPPY_ONT                   } from '../modules/local/guppy/ont'
-include { GUPPYDEMULTI_DEMULTIPLEXING } from '../modules/local/guppydemulti/demultiplexing'
-include { RAREFACTION		      } from '../modules/local/rarefaction/rarefaction'
+include { DORADO_ONT } from '../modules/local/dorado/ont'
+include { DORADO_DEMULTIPLEXING } from '../modules/local/dorado/demultiplexing'
+include { RAREFACTION		          } from '../modules/local/rarefaction/rarefaction'
 include { FASTP                       } from '../modules/nf-core/fastp/main'
 include { NANOPLOT                    } from '../modules/nf-core/nanoplot/main'
 include { METAMAPS_MAP                } from '../modules/local/metamaps/map'
@@ -105,28 +104,31 @@ workflow METATROPICS {
     }
 
     if(params.basecall==true){
-        if (params.input_dir==null) { exit 1, 'FAST5 input dir not specified!'}
+        if (params.input_dir==null) { exit 1, 'POD5 input dir not specified!'}
+        if (params.input==null) { exit 1, 'Sample sheet not specified!'}
+        
         ch_sample = INPUT_CHECK_METATROPICS.out.reads.map{tuple(it[1],it[0])}
+        ch_sample_sheet = Channel.fromPath(params.input, checkIfExists: true)
 
-        inFast5 = channel.fromPath(params.input_dir)
+        inPOD5 = channel.fromPath(params.input_dir)
 
-        GUPPY_ONT(
-            inFast5
+        DORADO_ONT(
+            inPOD5
         )
 
-        GUPPYDEMULTI_DEMULTIPLEXING(
-            GUPPY_ONT.out.basecalling_ch
+        DORADO_DEMULTIPLEXING(
+            DORADO_ONT.out.basecalling_ch
         )
-
-        ch_barcode = GUPPYDEMULTI_DEMULTIPLEXING.out.barcodeReads.flatten().map{file -> tuple(file.simpleName, file)}
+        
+        ch_barcode = DORADO_DEMULTIPLEXING.out.demultiplexed_fastq.flatten().map{file -> tuple(file.simpleName, file)}
         ch_sample_barcode = ch_sample.join(ch_barcode)
 
         FIX(
             ch_sample_barcode
         )
 
-        ch_versions = ch_versions.mix(GUPPY_ONT.out.versions)
-        ch_versions = ch_versions.mix(GUPPYDEMULTI_DEMULTIPLEXING.out.versions)
+        ch_versions = ch_versions.mix(DORADO_ONT.out.versions)
+        ch_versions = ch_versions.mix(DORADO_DEMULTIPLEXING.out.versions)
     }
     else if(params.basecall==false){
         ch_sample = INPUT_CHECK_METATROPICS.out.reads.map{tuple(it[1].replaceFirst(/\/.+\//,""),it[0],it[1])}
