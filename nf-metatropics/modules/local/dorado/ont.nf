@@ -31,7 +31,7 @@ process DORADO_ONT {
 
     """
     # Run dorado basecaller 
-    dorado basecaller hac $input_dir \
+    dorado basecaller ${params.model} $input_dir \
         --no-trim \
         --batchsize 1024 \
         --chunksize 10000 \
