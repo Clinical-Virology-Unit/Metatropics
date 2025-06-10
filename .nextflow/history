@@ -1,0 +1,4 @@
+2025-06-10 15:14:58	-	agitated_bell	-	8cb27832a964f03a4a8d3a99ed4e4523	1e70399d-70ce-4f88-bc49-0e4d0fa97e24	nextflow run -profile docker nf-metatropics/ --params-file params2.yaml
+2025-06-10 15:15:15	-	lethal_minsky	-	8cb27832a964f03a4a8d3a99ed4e4523	78bbcbd7-5513-402a-9f03-ed23476a0e30	nextflow run -profile docker nf-metatropics/ -params-file params2.yaml
+2025-06-10 15:16:16	15.5s	fabulous_bhabha	ERR	8cb27832a964f03a4a8d3a99ed4e4523	3e2a95c4-decb-4d62-9cfd-7e057569ed90	nextflow run -profile docker nf-metatropics/ -params-file params2.yaml
+2025-06-10 15:17:07	21m 58s	friendly_euclid	ERR	8cb27832a964f03a4a8d3a99ed4e4523	61739c50-aaeb-4e19-b1fc-d6801f4a0f17	nextflow run -profile docker nf-metatropics/ -params-file params2.yaml
