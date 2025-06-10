@@ -80,7 +80,7 @@ nano base.config
 
 ### 6. Set PATHs
 
-**Note:** Use params.yaml file for processing from raw reads (FASTQ format) and switch to the params2.yml file when dealing with squiggles (FAST5/POD5 format).
+**Note:** Use params.yaml file for processing from raw reads (FASTQ format) and switch to the params2.yml file when dealing with squiggles (POD5 format).
 
 ```
 cd nextflow-metatropics-INRB
@@ -105,7 +105,7 @@ sample_name01,True,/home/antonio/metatropics/nf-metatropics/fastq/barcode01.fast
 sample_name02,True,/home/antonio/metatropics/nf-metatropics/fastq/barcode02.fastq
 ```
 
-- For squiggle data (FAST5/POD5): (<u>use params2.yml</u>)
+- For squiggle data (POD5): (<u>use params2.yml</u>)
 ```
 sample,single_end,barcode
 sample_name01,True,barcode01
@@ -123,18 +123,18 @@ nextflow run nf-metatropics/ -profile docker -params-file params.yaml -resume
 
    Input/output options
     --input                       [string]  Path to comma-separated file containing information about the samples in the experiment.
-    --input_dir                   [string]  Input directory with fast5 [default: None]
+    --input_dir                   [string]  Input directory with POD5 [default: None]
     --outdir                      [string]  The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.
    Reference genome options
     --fasta                       [string]  Path to FASTA human genome file.
     --host_fasta                  [string]  Path to FASTA host genome file.
     --dbmeta                      [string]  Path for the MetaMaps database for read classification [default: None]
    Generic options
-    --basecall                    [boolean] In case fast5 is the input, that option shoud be true [default: false]
-    --model                       [string]  In case fast5 is the input, the guppy model for basecalling should be provide. [default:dna_r9.4.1_450bps_hac.cfg]
+    --basecall                    [boolean] In case POD5 is the input, that option shoud be true [default: false]
+    --kit_name                    [string]  In case POD5 is the input, the kit name should be provided. Available options include: EXP-NBD103, EXP-NBD104, EXP-NBD114, EXP-NBD114-24, EXP-NBD196, EXP-PBC001, EXP-PBC096, SQK-16S024, SQK-16S114-24, SQK-LWB001, SQK-MLK111-96-XL, SQK-MLK114-96-XL, SQK-NBD111-24, SQK-NBD111-96, SQK-NBD114-24, SQK-NBD114-96, SQK-PBK004, SQK-PCB109, SQK-PCB110, SQK-PCB111-24, SQK-PCB114-24, SQK-RAB201, SQK-RAB204, SQK-RBK001, SQK-RBK004, SQK-RBK110-96, SQK-RBK111-24, SQK-RBK111-96, SQK-RBK114-24, SQK-RBK114-96, SQK-RLB001, SQK-RPB004, SQK-RPB114-24, TWIST-16-UDI, TWIST-96A-UDI, VSK-PTC001, VSK-VMK001, VSK-VMK004, VSK-VPS001 [default: TWIST-96A-UDI]
     --minLength                   [integer] Minimum length for a read to be analyzed. [default: 200]
     --minVirus                    [number]  Minimum virus data frequency in the raw data to be part of the output. [default: 0.01]
-    --usegpu                      [boolean] In case fast5 is the input, the use of GPU Nvidia should be true.
+    --usegpu                      [boolean] In case POD5 is the input, the use of GPU Nvidia should be true.
     --pair                        [boolean] If barcodes were added at both sides of a read (true) or only at one side (false).
     --quality                     [integer] Minimum quality for a base to build the consensus [default: 7]
     --agreement                   [number]  Minimum base frequency to be called without ambiguit to build the consensus [default: 0.7]
@@ -151,10 +151,10 @@ nextflow run nf-metatropics/ -profile docker -params-file params.yaml -resume
 **Note:** If internet access is unavailable, disable the docker cleanup option to retain images after the initial download, allowing the pipeline to run without internet access.
 
 ### 9. Output
-Below one can see the output directories and their description. `guppy` and `guppydemulti` will exist only in case the user has used FAST5 files as input.
+Below one can see the output directories and their description. `basecalling` and `demultiplexing` will exist only in case the user has used POD5 files as input.
 
-1. [`guppy`] - fastq files after the basecalling without being demultiplexed
-2. [`guppydemulti`] - directories and fastq files produced after the demultiplexing
+1. [`basecalling`] - fastq files after the basecalling without being demultiplexed
+2. [`demultiplexing`] - directories and fastq files produced after demultiplexing
 3. [`fix`] - gziped fastq files for each sample of the run
 4. [`rarefaction`] - gziped fastq files for each rarefied sample
 5. [`fastp`] - results after trimming analysis performed by FASTP
@@ -184,42 +184,3 @@ Below one can see the output directories and their description. `guppy` and `gup
 Tip 1: If you have limited space, you can delete the 'work' directory and, after selecting the necessary output files, also remove the 'output' directory.
 
 Tip 2: When you encounter errors, make sure to double-check the memory allocated to your processes. This is often the cause, or alternatively, consider including rarefaction.
-
-### 10. Demultiplexing with TWIST (not applicable for tiling protocols)
-When viral-capture probes were used for positive enrichment of viruses in the samples, the barcodes attached to the sequences differ from the standard ONT barcodes. As a result, manual demultiplexing is necessary until we develop an additional module for the Metatropics pipeline. To perform manual demultiplexing:
-
-1. Perform basecalling on the ONT device (e.g., GridION) without demultiplexing. This will generate a folder called fastq_pass containing all raw reads.
-
-2. Prepare the required input for demultiplexing:
-
-```
-cd nextflow-metatropics-INRB/Input/TWIST_nanoplexer/Input
-```
-
-- Fill in 'sample_names.csv' with the Sample_names and Well_ID of the TWIST plate used. For example:
-
-```
-Sample_Name,Well_ID
-1271C_T,D_A01
-1301C_T,D_B01
-1272C_T,D_C01
-```
-
-- Copy the 'fastq_pass' folder from the GridION to nextflow-metatropics-INRB/Input/TWIST_nanoplexer/Input.
-
-3. If not already done, download the nanoplexer demultiplexer using conda (https://github.com/hanyue36/nanoplexer):
-   
-```
-conda config --add channels bioconda
-conda install -c bioconda nanoplexer
-nanoplexer -help
-```
-
-4. Run the demultiplexing script
-
-```
-cd nextflow-metatropics-INRB/Input/TWIST_nanoplexer
-bash demultiplexing_TWIST.sh
-```
-
-5. The demultiplexed reads will be placed in the nanoplexer_output folder.
