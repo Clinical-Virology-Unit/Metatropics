@@ -10,7 +10,12 @@ workflow FIX {
 
     main:
     FIX_NAMES ( basecalled )
-        .map { tuple(create_map(it[0]),it[1]) }
+        .map { sample, file -> 
+            def meta = [:]
+            meta.id = sample
+            meta.single_end = true
+            tuple(meta, file)
+        }
         .set { reads }
 
     emit:

@@ -1,18 +1,26 @@
-input: /data/Daan/Projects/INRB/Input/mpox.csv # csv files is different for fast5 and fastq files
-input_dir: /data/Daan/Projects/INRB_r/Input/pod5
-outdir: /data/Daan/Projects/INRB/Output
-fasta: /data/Daan/Projects/nextflow-metatropics-INRB/Databases/Human/chm13v2.0.fa
-#host_fasta: /data/Daan/Projects/nextflow-metatropics-INRB/Databases/Aedes/Aedes_aegypti.fasta
-dbmeta: /data/Daan/Projects/nextflow-metatropics-INRB/Databases/ViralRefseq
+input: /data/Daan/Projects/Dorado_test/Input/mpox.csv
+input_dir: /data/Daan/Projects/Dorado_test/Input/pod5
+outdir: /data/Daan/Projects/Dorado_test/Output
+fasta: /data/Daan/Projects/Metatropics/Databases/Human/chm13v2.0.fa
+#host_fasta: /data/Daan/Projects/Metatropics/Databases/Aedes/Aedes_aegypti.fasta
+dbmeta: /data/Daan/Projects/Metatropics/Databases/ViralRefseq
 basecall: true
 usegpu: true
-model: dna_r10.4.1_e8.2_400bps_hac.cfg
+kit_name: TWIST-96A-UDI
 minLength: 200
 pair: true
-front: 18
-tail: 18
-minVirus: 0.001
-quality: 20
-depth: 5
-agreement: 0.7
+front: 25
+tail: 25
+minVirus: 0.01
+quality: 30
+depth: 30
+agreement: 0.8
 rcoverage_figure: true
+
+# Rarefaction parameters
+perform_rarefaction: true  # Preferably rarefy to a reasonable number of input to decrease time of analysis
+target_bases: 500000000
+
+# Cleanup module
+enable_docker_cleanup: true
+
