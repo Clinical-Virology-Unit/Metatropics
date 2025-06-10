@@ -131,6 +131,7 @@ nextflow run nf-metatropics/ -profile docker -params-file params.yaml -resume
     --dbmeta                      [string]  Path for the MetaMaps database for read classification [default: None]
    Generic options
     --basecall                    [boolean] In case POD5 is the input, that option shoud be true [default: false]
+    --model                       [string]  In case POD5 is the input, the dorado model for basecalling should be provided. Choose from: fast, hac, or sup [default: hac]
     --kit_name                    [string]  In case POD5 is the input, the kit name should be provided. Available options include: EXP-NBD103, EXP-NBD104, EXP-NBD114, EXP-NBD114-24, EXP-NBD196, EXP-PBC001, EXP-PBC096, SQK-16S024, SQK-16S114-24, SQK-LWB001, SQK-MLK111-96-XL, SQK-MLK114-96-XL, SQK-NBD111-24, SQK-NBD111-96, SQK-NBD114-24, SQK-NBD114-96, SQK-PBK004, SQK-PCB109, SQK-PCB110, SQK-PCB111-24, SQK-PCB114-24, SQK-RAB201, SQK-RAB204, SQK-RBK001, SQK-RBK004, SQK-RBK110-96, SQK-RBK111-24, SQK-RBK111-96, SQK-RBK114-24, SQK-RBK114-96, SQK-RLB001, SQK-RPB004, SQK-RPB114-24, TWIST-16-UDI, TWIST-96A-UDI, VSK-PTC001, VSK-VMK001, VSK-VMK004, VSK-VPS001 [default: TWIST-96A-UDI]
     --minLength                   [integer] Minimum length for a read to be analyzed. [default: 200]
     --minVirus                    [number]  Minimum virus data frequency in the raw data to be part of the output. [default: 0.01]
