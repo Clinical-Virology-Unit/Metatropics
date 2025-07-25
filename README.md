@@ -55,7 +55,7 @@ This includes: i) Viral Refseq, ii) Human genome and iii) Mosquito (host) genome
 
 **Choice 1: Viral database**
 ```
-cd nextflow-metatropics-INRB/Databases
+cd Metatropics/Databases
 wget -c https://zenodo.org/records/13132915/files/combined_databases.tar.gz
 tar -xzvf combined_databases.tar.gz
 rm combined_databases.tar.gz
@@ -74,7 +74,7 @@ nproc
 **Note:** Optimize resources by allocating the required process labels (single, low, medium, high)
 
 ```
-cd nextflow-metatropics-INRB/nf-metatropics/conf
+cd Metatropics/nf-metatropics/conf
 nano base.config
 ```
 
@@ -83,7 +83,7 @@ nano base.config
 **Note:** Use params.yaml file for processing from raw reads (FASTQ format) and switch to the params2.yml file when dealing with squiggles (POD5 format).
 
 ```
-cd nextflow-metatropics-INRB
+cd Metatropics
 nano params.yml
 
 input: change to input PATH
