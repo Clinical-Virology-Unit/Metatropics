@@ -9,7 +9,7 @@ process ReadCount {
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/r-tidyverse:1.2.1':
         'rocker/tidyverse:latest' }"
-    containerOptions = "-v /data:/data -u \$(id -u):\$(id -g)"
+    containerOptions = "-v /data:/data -v /mnt/data:/mnt/data -u \$(id -u):\$(id -g)"
 
     input:
     val outdir
