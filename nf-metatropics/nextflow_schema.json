@@ -321,6 +321,11 @@
                     "default": 5,
                     "description": "Minimum depth of a position to build the consensus"
                 },
+                "horizontal_coverage": {
+                    "type": "number",
+                    "default": 1,
+                    "description": "Minimum horizontal genome coverage (%) required for depth calculation and de novo assembly decision"
+                },
                 "front": {
                     "type": "integer",
                     "default": 0,

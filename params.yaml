@@ -1,16 +1,17 @@
-input: /data/Daan/Projects/Dorado_test/Input/mpox_example_fastq.csv
-outdir: /data/Daan/Projects/Dorado_test/Output
-fasta: /data/Daan/Projects/nextflow-metatropics-INRB/Databases/Human/chm13v2.0.fa
+input: /data/Daan/Projects/Ane/Input/mpox.csv
+outdir: /data/Daan/Projects/Ane/Output
+fasta: /data/Daan/Projects/Metatropics/Databases/Human/chm13v2.0.fa
 #host_fasta: /data/Daan/Projects/nextflow-metatropics-INRB/Databases/Aedes/Aedes_aegypti.fasta
 dbmeta: /data/Daan/Projects/Metatropics/Databases/ViralRefseq
 minLength: 200
 pair: true
 front: 30
 tail: 30
-minVirus: 0.01
-quality: 30 # You can adapt this to '30' to reach Illumina quality
-depth: 30 # When wanting high-quality genomes better adapt this to '20"
-agreement: 0.8
+minVirus: 0.001
+quality: 20 # You can adapt this to '30' to reach Illumina quality
+depth: 20 # When wanting high-quality genomes better adapt this to '20"
+agreement: 0.7
+horizontal_coverage: 0
 rcoverage_figure: true
 
 # Rarefaction parameters
