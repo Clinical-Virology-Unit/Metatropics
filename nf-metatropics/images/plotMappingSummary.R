@@ -4,6 +4,7 @@ args = commandArgs(trailingOnly=TRUE)
 
 prefix <- "/data/projects/phillippy/projects/MetaMap/tmp/hmp7_2_miniSeq+H"
 minimumPlotFreq <- 0.001
+horizontal_coverage_threshold <- 1
 
 if(length(args) > 0)
 {
@@ -15,6 +16,12 @@ if(length(args) > 1)
 	minimumPlotFreq <- args[[2]]
 }
 minimumPlotFreq <-as.numeric(minimumPlotFreq)
+
+if(length(args) > 2)
+{
+	horizontal_coverage_threshold <- args[[3]]
+}
+horizontal_coverage_threshold <-as.numeric(horizontal_coverage_threshold)
 sample<-gsub("_classification_results","",prefix)
 readtotal<-scan(paste(prefix, ".total_reads", sep = ""))
 
@@ -119,7 +126,7 @@ final_report_df_ft <- final_report_df[final_report_df[["FractionMappedReads"]]>=
 #write.table(as.data.frame(final_report), file = paste(prefix, '.final_report.tsv', sep = ""), sep = "\t") 
 write.table(final_report_df_ft, file = paste(prefix, '.final_report.tsv', sep = ""), sep = "\t") 
 
-if(dim(final_report_df[(final_report_df[["MedianReadIdentities"]]>=0.8 & final_report_df[["GenomeCoverage"]]>=50 & final_report_df[["MeanReadLength"]]>=500),])[1]>0){
+if(dim(final_report_df[(final_report_df[["MedianReadIdentities"]]>=0.8 & final_report_df[["GenomeCoverage"]]>=horizontal_coverage_threshold & final_report_df[["MeanReadLength"]]>=500),])[1]>0){
   denovo<-"no"
 }else{
   denovo<-"yes"

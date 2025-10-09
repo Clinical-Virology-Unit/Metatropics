@@ -16,6 +16,7 @@ minVirus: 0.01
 quality: 30
 depth: 30
 agreement: 0.8
+horizontal_coverage: 0
 rcoverage_figure: true
 
 # Rarefaction parameters
