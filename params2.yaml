@@ -1,13 +1,13 @@
-input: /data/Daan/Projects/Dorado_test/Input/mpox.csv
-input_dir: /data/Daan/Projects/Dorado_test/Input/pod5
-outdir: /data/Daan/Projects/Dorado_test/Output
+input: /data/Daan/Projects/REGA_Winston/20250926_mpox_tecovirimatR/Input/mpox.csv
+input_dir: /data/Daan/Projects/REGA_Winston/20250926_mpox_tecovirimatR/Input/pod5
+outdir: /data/Daan/Projects/REGA_Winston/20250926_mpox_tecovirimatR/Output
 fasta: /data/Daan/Projects/Metatropics/Databases/Human/chm13v2.0.fa
 #host_fasta: /data/Daan/Projects/Metatropics/Databases/Aedes/Aedes_aegypti.fasta
 dbmeta: /data/Daan/Projects/Metatropics/Databases/ViralRefseq
 basecall: true
 usegpu: true
 kit_name: TWIST-96A-UDI
-model: sup
+model: hac
 minLength: 200
 pair: true
 front: 25

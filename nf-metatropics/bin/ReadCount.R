@@ -29,18 +29,28 @@ count_reads <- function(file_path) {
   })
 }
 
+strip_extensions <- function(name) {
+  repeat {
+    new_name <- sub("\\.(fastq|fastp|fq|gz|meta|csv)$", "", name, perl = TRUE)
+    if (new_name == name) break
+    name <- new_name
+  }
+  return(name)
+}
+
 extract_sample_name <- function(filename) {
-  # Remove file extensions and common suffixes
-  name <- sub("\\.[^.]+$", "", filename)  # Remove last extension
-  name <- sub("_fixed$", "", name)        # Remove _fixed suffix
-  name <- sub("_T1$", "", name)           # Remove _T1 suffix
-  name <- sub("_other$", "", name)        # Remove _other suffix
-  name <- sub("_viral$", "", name)        # Remove _viral suffix
+  # Remove all trailing extensions such as .fastq.gz or .fastp.fastq.gz
+  name <- strip_extensions(filename)
   
-  # Standardize sample names
-  name <- gsub("H20_", "H2O_", name)      # Fix H20 to H2O
-  name <- gsub("CRT57", "CRT-57", name)   # Fix CRT57 to CRT-57
-  name <- gsub("UAC902", "UAC-902", name) # Fix UAC902 to UAC-902
+  # Remove common processing suffixes
+  name <- sub("_other$", "", name)
+  name <- sub("_viral$", "", name)
+  name <- sub("_classification_results$", "", name)
+  name <- sub("_fixed$", "", name)
+  name <- sub("_T1$", "", name)
+  
+  # Remove leftover '.fastp' strings in the middle of the name
+  name <- sub("\\.fastp$", "", name)
   
   return(name)
 }

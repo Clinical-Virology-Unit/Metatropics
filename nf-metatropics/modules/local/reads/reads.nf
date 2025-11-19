@@ -9,7 +9,11 @@ process ReadCount {
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/r-tidyverse:1.2.1':
         'rocker/tidyverse:latest' }"
-    containerOptions = "-v /data:/data -v /mnt/data:/mnt/data -v /mnt/data1:/mnt/data1 -u \$(id -u):\$(id -g)"
+
+    if( workflow.containerEngine == 'docker' ) {
+        def outPath = file(params.outdir).toAbsolutePath().toString()
+        containerOptions "-v ${outPath}:${outPath} -u \$(id -u):\$(id -g)"
+    }
 
     input:
     val outdir
@@ -26,41 +30,52 @@ process ReadCount {
     """
     mkdir -p read_count read_count/nohuman read_count/nohost
 
-    # Check if directories exist
-    for dir in fix fastp nohuman metamaps; do
-        if [ ! -d "${outdir}/\$dir" ]; then
-            echo "Directory ${outdir}/\$dir does not exist"
-        fi
-    done
+    # Copy raw reads from 'fix' folder when available
+    if [ -d "${outdir}/fix" ]; then
+        find ${outdir}/fix -name "*.fastq.gz" -type f -exec cp {} read_count/ \\;
+    else
+        echo "Directory ${outdir}/fix does not exist, skipping raw read copy"
+    fi
 
-    # Copy raw reads from 'fix' folder
-    find ${outdir}/fix -name "*.fastq.gz" -type f -exec cp {} read_count/ \\; || echo "Copy from fix folder failed"
+    # Copy trimmed reads from 'fastp' folder when available
+    if [ -d "${outdir}/fastp" ]; then
+        find ${outdir}/fastp -name "*.fastq.gz" -type f -exec cp {} read_count/ \\;
+    else
+        echo "Directory ${outdir}/fastp does not exist, skipping trimmed read copy"
+    fi
 
-    # Copy trimmed reads from 'fastp' folder
-    find ${outdir}/fastp -name "*.fastq.gz" -type f -exec cp {} read_count/ \\; || echo "Copy from fastp folder failed"
-
-    # Copy human-depleted reads from 'nohuman' folder
-    find ${outdir}/nohuman -name '*other.fastq.gz' -type f -exec cp {} read_count/nohuman/ \\; || echo "Copy from nohuman folder failed"
+    # Copy human-depleted reads from 'nohuman' folder when available
+    if [ -d "${outdir}/nohuman" ]; then
+        find ${outdir}/nohuman -name '*other.fastq.gz' -type f -exec cp {} read_count/nohuman/ \\;
+    else
+        echo "Directory ${outdir}/nohuman does not exist, skipping human-depleted copy"
+    fi
 
     # Copy host-depleted reads from 'nohost' folder if it exists
     if [ -d "${outdir}/nohost" ]; then
-        find ${outdir}/nohost -name '*other.fastq.gz' -type f -exec cp {} read_count/nohost/ \\; || echo "Copy from nohost folder failed"
+        find ${outdir}/nohost -name '*other.fastq.gz' -type f -exec cp {} read_count/nohost/ \\;
     else
-        echo "nohost folder does not exist"
+        echo "Directory ${outdir}/nohost does not exist, skipping host-depleted copy"
     fi
 
     # Process viral reads from 'metamaps' folder
     echo "Sample,ViralReads" > read_count/viral_read_counts.csv
-    for file in ${outdir}/metamaps/*_classification_results.meta; do
-        if [ -f "\$file" ]; then
-            sample_name=\$(basename "\$file" _classification_results.meta)
-            viral_reads=\$(grep "ReadsMapped" "\$file" | awk '{print \$2}')
-            echo "\${sample_name},\${viral_reads}" >> read_count/viral_read_counts.csv
-        else
+    if [ -d "${outdir}/metamaps" ]; then
+        found_files=false
+        for file in ${outdir}/metamaps/*_classification_results.meta; do
+            if [ -f "\$file" ]; then
+                found_files=true
+                sample_name=\$(basename "\$file" _classification_results.meta)
+                viral_reads=\$(grep "ReadsMapped" "\$file" | awk '{print \$2}')
+                echo "\${sample_name},\${viral_reads}" >> read_count/viral_read_counts.csv
+            fi
+        done
+        if [ "\$found_files" = false ]; then
             echo "No matching files found in metamaps folder"
-            break
         fi
-    done
+    else
+        echo "Directory ${outdir}/metamaps does not exist, skipping viral read count extraction"
+    fi
 
     ReadCount.R ${params.outdir}/read_count/
     """

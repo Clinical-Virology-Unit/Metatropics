@@ -1,5 +1,5 @@
-input: /data/Daan/Projects/Ane/Input/mpox.csv
-outdir: /data/Daan/Projects/Ane/Output
+input: /data/Daan/Projects/Guinea/291025_LASV_NEGATIVES_RUN2/Input/mpox.csv
+outdir: /data/Daan/Projects/Guinea/291025_LASV_NEGATIVES_RUN2/Output
 fasta: /data/Daan/Projects/Metatropics/Databases/Human/chm13v2.0.fa
 #host_fasta: /data/Daan/Projects/nextflow-metatropics-INRB/Databases/Aedes/Aedes_aegypti.fasta
 dbmeta: /data/Daan/Projects/Metatropics/Databases/ViralRefseq
@@ -7,11 +7,11 @@ minLength: 200
 pair: true
 front: 30
 tail: 30
-minVirus: 0.001
-quality: 20 # You can adapt this to '30' to reach Illumina quality
-depth: 20 # When wanting high-quality genomes better adapt this to '20"
+minVirus: 0.01
+quality: 10 # You can adapt this to '30' to reach Illumina quality
+depth: 10 # When wanting high-quality genomes better adapt this to '20"
 agreement: 0.7
-horizontal_coverage: 0
+horizontal_coverage: 1
 rcoverage_figure: true
 
 # Rarefaction parameters
