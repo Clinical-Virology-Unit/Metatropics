@@ -88,8 +88,8 @@ nano params.yml
 
 input: change to input PATH
 outdir: change to output PATH
-Human_host_fasta: optional path to the human background genome (if unset, human depletion is skipped)
-Other_host_fasta: optional path to any additional host genome (e.g. mosquito; also optional)
+Human_host_fasta: optional path to the human background genome 
+Other_host_fasta: optional path to any additional host genome 
 dbmeta: change to ViralRefseq database PATH
 quality: 30 # for high-quality genomes
 depth 20 # for high-quality genomes
