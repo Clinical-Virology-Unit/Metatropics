@@ -88,7 +88,8 @@ nano params.yml
 
 input: change to input PATH
 outdir: change to output PATH
-fasta: change to human genome file PATH
+Human_host_fasta: optional path to the human background genome (if unset, human depletion is skipped)
+Other_host_fasta: optional path to any additional host genome (e.g. mosquito; also optional)
 dbmeta: change to ViralRefseq database PATH
 quality: 30 # for high-quality genomes
 depth 20 # for high-quality genomes
@@ -125,9 +126,9 @@ nextflow run nf-metatropics/ -profile docker -params-file params.yaml -resume
     --input                       [string]  Path to comma-separated file containing information about the samples in the experiment.
     --input_dir                   [string]  Input directory with POD5 [default: None]
     --outdir                      [string]  The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.
-   Reference genome options
-    --fasta                       [string]  Path to FASTA human genome file.
-    --host_fasta                  [string]  Path to FASTA host genome file.
+Reference genome options
+   --Human_host_fasta            [string]  Optional FASTA for the human background removal step.
+   --Other_host_fasta            [string]  Optional FASTA for an additional host background (e.g. mosquito, primate).
     --dbmeta                      [string]  Path for the MetaMaps database for read classification [default: None]
    Generic options
     --basecall                    [boolean] In case POD5 is the input, that option shoud be true [default: false]
