@@ -127,8 +127,8 @@ nextflow run nf-metatropics/ -profile docker -params-file params.yaml -resume
     --input_dir                   [string]  Input directory with POD5 [default: None]
     --outdir                      [string]  The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.
 Reference genome options
-   --Human_host_fasta            [string]  Optional FASTA for the human background removal step.
-   --Other_host_fasta            [string]  Optional FASTA for an additional host background (e.g. mosquito, primate).
+    --Human_host_fasta            [string]  Optional FASTA for the human background removal step.
+    --Other_host_fasta            [string]  Optional FASTA for an additional host background (e.g. mosquito, primate).
     --dbmeta                      [string]  Path for the MetaMaps database for read classification [default: None]
    Generic options
     --basecall                    [boolean] In case POD5 is the input, that option shoud be true [default: false]
