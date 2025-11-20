@@ -21,14 +21,15 @@ process ReadCount {
     val host_genome_status
 
     output:
-    path "read_count/*.fastq.gz", emit: read_count_fastq_root
-    path "read_count/**/*.fastq.gz", emit: read_count_fastq_nested
+    path "read_count/*.fastq.gz", emit: read_count_fastq_root, optional: true
+    path "read_count/**/*.fastq.gz", emit: read_count_fastq_nested, optional: true
     path "read_count/read_counts.csv", emit: read_counts_csv
     path "read_count/read_distribution.pdf", emit: read_distribution_pdf
 
     script:
     """
     mkdir -p read_count read_count/nohuman read_count/nohost
+    HOST_STATUS="${host_genome_status}"
 
     # Copy raw reads from 'fix' folder when available
     if [ -d "${outdir}/fix" ]; then
@@ -45,17 +46,25 @@ process ReadCount {
     fi
 
     # Copy human-depleted reads from 'nohuman' folder when available
-    if [ -d "${outdir}/nohuman" ]; then
-        find ${outdir}/nohuman -name '*other.fastq.gz' -type f -exec cp {} read_count/nohuman/ \\;
+    if [[ "\$HOST_STATUS" == "human_only" || "\$HOST_STATUS" == "both" ]]; then
+        if [ -d "${outdir}/nohuman" ]; then
+            find ${outdir}/nohuman -name '*other.fastq.gz' -type f -exec cp {} read_count/nohuman/ \\;
+        else
+            echo "Directory ${outdir}/nohuman does not exist, skipping human-depleted copy"
+        fi
     else
-        echo "Directory ${outdir}/nohuman does not exist, skipping human-depleted copy"
+        echo "Human host depletion not enabled; skipping human-depleted copy"
     fi
 
     # Copy host-depleted reads from 'nohost' folder if it exists
-    if [ -d "${outdir}/nohost" ]; then
-        find ${outdir}/nohost -name '*other.fastq.gz' -type f -exec cp {} read_count/nohost/ \\;
+    if [[ "\$HOST_STATUS" == "other_only" || "\$HOST_STATUS" == "both" ]]; then
+        if [ -d "${outdir}/nohost" ]; then
+            find ${outdir}/nohost -name '*other.fastq.gz' -type f -exec cp {} read_count/nohost/ \\;
+        else
+            echo "Directory ${outdir}/nohost does not exist, skipping host-depleted copy"
+        fi
     else
-        echo "Directory ${outdir}/nohost does not exist, skipping host-depleted copy"
+        echo "Additional host depletion not enabled; skipping host-depleted copy"
     fi
 
     # Process viral reads from 'metamaps' folder
@@ -77,6 +86,6 @@ process ReadCount {
         echo "Directory ${outdir}/metamaps does not exist, skipping viral read count extraction"
     fi
 
-    ReadCount.R ${params.outdir}/read_count/
+    ReadCount.R ${params.outdir}/read_count/ ${host_genome_status}
     """
 }

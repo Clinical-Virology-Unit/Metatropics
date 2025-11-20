@@ -11,7 +11,7 @@ workflow HOST_MAPPING {
     main:
     MINIMAP2_ALIGN(
         reads,
-        params.host_fasta,
+        params.Other_host_fasta,
         true,
         false,
         false

@@ -18,7 +18,34 @@ nextflow.enable.dsl = 2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-params.fasta = WorkflowMain.getGenomeAttribute(params, 'fasta')
+def providedHumanHostFasta = params.Human_host_fasta
+def providedOtherHostFasta = params.Other_host_fasta
+def legacyHumanParamSupplied = params.fasta ? true : false
+def legacyOtherParamSupplied = params.host_fasta ? true : false
+
+def genomeHumanHost   = WorkflowMain.getGenomeAttribute(params, 'Human_host_fasta')
+def genomeLegacyFasta = WorkflowMain.getGenomeAttribute(params, 'fasta')
+def genomeOtherHost   = WorkflowMain.getGenomeAttribute(params, 'Other_host_fasta')
+
+if (!params.Human_host_fasta) {
+    params.Human_host_fasta = genomeHumanHost ?: genomeLegacyFasta ?: params.fasta
+}
+
+if (!params.Other_host_fasta) {
+    params.Other_host_fasta = genomeOtherHost ?: params.host_fasta
+}
+
+if (legacyHumanParamSupplied && !providedHumanHostFasta) {
+    log.warn "Parameter '--fasta' is deprecated. Please use '--Human_host_fasta' instead."
+}
+
+if (legacyOtherParamSupplied && !providedOtherHostFasta) {
+    log.warn "Parameter '--host_fasta' is deprecated. Please use '--Other_host_fasta' instead."
+}
+
+// Keep legacy parameters in sync for backwards compatibility
+params.fasta      = params.Human_host_fasta
+params.host_fasta = params.Other_host_fasta
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

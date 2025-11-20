@@ -6,6 +6,9 @@ library(tidyr)
 library(ggplot2)
 library(tibble)
 
+args <- commandArgs(trailingOnly = TRUE)
+host_status <- if (length(args) >= 2) args[2] else "not_used"
+
 # Set working directory to the 'read_count' folder
 setwd("read_count")
 
@@ -87,12 +90,22 @@ if (nrow(raw_reads) > 0) raw_reads <- raw_reads %>% rename(raw = count)
 trimmed_reads <- count_and_create_df("\\.fastp\\.fastq\\.gz$")
 if (nrow(trimmed_reads) > 0) trimmed_reads <- trimmed_reads %>% rename(trimmed = count)
 
-human_depleted_reads <- count_and_create_df("\\.fastq\\.gz$", dir = "nohuman")
-if (nrow(human_depleted_reads) > 0) human_depleted_reads <- human_depleted_reads %>% rename(human_depleted = count)
+human_depleted_reads_raw <- count_and_create_df("\\.fastq\\.gz$", dir = "nohuman")
+human_depleted_present <- nrow(human_depleted_reads_raw) > 0
+human_depleted_reads <- if (human_depleted_present) {
+  human_depleted_reads_raw %>% rename(human_depleted = count)
+} else {
+  data.frame(sample = character(), human_depleted = numeric())
+}
 
-host_depleted_reads <- if (dir.exists("nohost")) {
-  df <- count_and_create_df("\\.fastq\\.gz$", dir = "nohost")
-  if (nrow(df) > 0) df %>% rename(host_depleted = count) else df
+host_depleted_reads_raw <- if (dir.exists("nohost")) {
+  count_and_create_df("\\.fastq\\.gz$", dir = "nohost")
+} else {
+  data.frame(sample = character(), count = numeric())
+}
+host_depleted_present <- nrow(host_depleted_reads_raw) > 0
+host_depleted_reads <- if (host_depleted_present) {
+  host_depleted_reads_raw %>% rename(host_depleted = count)
 } else {
   data.frame(sample = character(), host_depleted = numeric())
 }
@@ -106,73 +119,82 @@ rownames(viral_reads) <- viral_reads$sample
 all_data <- Reduce(function(x, y) full_join(x, y, by = "sample"),
                    list(raw_reads, trimmed_reads, human_depleted_reads, host_depleted_reads, viral_reads))
 
+# Ensure expected columns exist even if their source directories were absent
+expected_cols <- c("raw", "trimmed", "human_depleted", "host_depleted", "viral")
+for (col in expected_cols) {
+  if (!col %in% names(all_data)) {
+    all_data[[col]] <- 0
+  }
+}
+
+# Track which depletion stages actually ran
+include_human <- host_status %in% c("human_only", "both") && human_depleted_present
+include_other <- host_status %in% c("other_only", "both") && host_depleted_present
+
 if (nrow(all_data) == 0) {
   cat("No data found. Check if files are present in the correct directories.\n")
 } else {
   all_data <- all_data %>%
-    mutate(across(everything(), ~replace_na(., 0))) %>%
-    mutate(
-      trimmed_reads = raw - trimmed,
-      human_reads = trimmed - human_depleted
-    )
+    mutate(across(everything(), ~replace_na(., 0)))
   
-  # Check if host depletion was performed
-  host_depletion_performed <- dir.exists("nohost") && "host_depleted" %in% names(all_data) && sum(all_data$host_depleted) > 0
-  
-  if (host_depletion_performed) {
-    all_data <- all_data %>%
-      mutate(
-        host_reads = human_depleted - host_depleted,
-        non_viral = host_depleted - viral
-      )
-  } else {
-    all_data <- all_data %>%
-      mutate(
-        non_viral = human_depleted - viral
-      )
+  if (!include_human) {
+    all_data$human_depleted <- all_data$trimmed
+  }
+  if (!include_other) {
+    all_data$host_depleted <- all_data$human_depleted
   }
   
-  # Select columns based on whether host depletion was performed
-  if (host_depletion_performed) {
-    all_data <- all_data %>%
-      select(sample, raw, trimmed_reads, human_reads, host_reads, viral, non_viral)
+  trimmed_reads_vals <- pmax(all_data$raw - all_data$trimmed, 0)
+  human_reads_vals <- if (include_human) pmax(all_data$trimmed - all_data$human_depleted, 0) else rep(0, nrow(all_data))
+  host_reads_vals  <- if (include_other) pmax(all_data$human_depleted - all_data$host_depleted, 0) else rep(0, nrow(all_data))
+  non_viral_vals   <- if (include_other) {
+    pmax(all_data$host_depleted - all_data$viral, 0)
+  } else if (include_human) {
+    pmax(all_data$human_depleted - all_data$viral, 0)
   } else {
-    all_data <- all_data %>%
-      select(sample, raw, trimmed_reads, human_reads, viral, non_viral)
+    pmax(all_data$trimmed - all_data$viral, 0)
   }
   
-  # Calculate percentages
   all_data <- all_data %>%
     mutate(
-      trimmed_reads_pct = round(trimmed_reads / raw * 100, 2),
-      human_reads_pct = round(human_reads / raw * 100, 2),
-      viral_pct = round(viral / raw * 100, 2),
-      non_viral_pct = round(non_viral / raw * 100, 2)
+      trimmed_reads = trimmed_reads_vals,
+      human_reads   = human_reads_vals,
+      host_reads    = host_reads_vals,
+      non_viral     = non_viral_vals
     )
   
-  # Add host_reads percentage only if host depletion was performed
-  if (host_depletion_performed) {
-    all_data <- all_data %>%
-      mutate(host_reads_pct = round(host_reads / raw * 100, 2))
+  trimmed_reads_pct_vals <- round(ifelse(all_data$raw > 0, all_data$trimmed_reads / all_data$raw * 100, 0), 2)
+  viral_pct_vals         <- round(ifelse(all_data$raw > 0, all_data$viral / all_data$raw * 100, 0), 2)
+  non_viral_pct_vals     <- round(ifelse(all_data$raw > 0, all_data$non_viral / all_data$raw * 100, 0), 2)
+  human_reads_pct_vals   <- if (include_human) round(ifelse(all_data$raw > 0, all_data$human_reads / all_data$raw * 100, 0), 2) else NULL
+  host_reads_pct_vals    <- if (include_other) round(ifelse(all_data$raw > 0, all_data$host_reads / all_data$raw * 100, 0), 2) else NULL
+  
+  all_data <- all_data %>%
+    mutate(
+      trimmed_reads_pct = trimmed_reads_pct_vals,
+      viral_pct         = viral_pct_vals,
+      non_viral_pct     = non_viral_pct_vals
+    )
+  if (include_human) {
+    all_data$human_reads_pct <- human_reads_pct_vals
+  }
+  if (include_other) {
+    all_data$host_reads_pct <- host_reads_pct_vals
   }
   
-  # Reorder columns
-  if (host_depletion_performed) {
-    all_data <- all_data %>%
-      select(sample, raw, 
-             trimmed_reads, trimmed_reads_pct, 
-             human_reads, human_reads_pct, 
-             host_reads, host_reads_pct, 
-             viral, viral_pct, 
-             non_viral, non_viral_pct)
-  } else {
-    all_data <- all_data %>%
-      select(sample, raw, 
-             trimmed_reads, trimmed_reads_pct, 
-             human_reads, human_reads_pct, 
-             viral, viral_pct, 
-             non_viral, non_viral_pct)
+  # Build ordered columns based on available host backgrounds
+  column_order <- c("sample", "raw",
+                    "trimmed_reads", "trimmed_reads_pct")
+  if (include_human) {
+    column_order <- c(column_order, "human_reads", "human_reads_pct")
   }
+  if (include_other) {
+    column_order <- c(column_order, "host_reads", "host_reads_pct")
+  }
+  column_order <- c(column_order, "viral", "viral_pct", "non_viral", "non_viral_pct")
+  
+  column_order <- column_order[column_order %in% names(all_data)]
+  all_data <- all_data %>% select(all_of(column_order))
   
   rownames(all_data) <- all_data$sample
   all_data <- all_data %>% select(-sample)
@@ -198,17 +220,25 @@ if (nrow(all_data) == 0) {
     pivot_longer(cols = -sample, names_to = "category", values_to = "percentage") %>%
     mutate(category = sub("_pct$", "", category))
   
-  # Define the new order of categories, accounting for optional host category
-  if ("host_reads" %in% unique(plot_data$category)) {
-    category_order <- c("viral", "non_viral", "host_reads", "human_reads", "trimmed_reads")
-  } else {
-    category_order <- c("viral", "non_viral", "human_reads", "trimmed_reads")
+  available_categories <- unique(plot_data$category)
+  category_order <- c("viral", "non_viral")
+  if ("host_reads" %in% available_categories) {
+    category_order <- c(category_order, "host_reads")
   }
+  if ("human_reads" %in% available_categories) {
+    category_order <- c(category_order, "human_reads")
+  }
+  category_order <- c(category_order, "trimmed_reads")
+  category_order <- intersect(category_order, available_categories)
   plot_data$category <- factor(plot_data$category, levels = category_order)
   
   # Create color palette
-  colors <- c("viral" = "#e78ac3", "non_viral" = "#a6d854", 
-              "host_reads" = "#8da0cb", "human_reads" = "#fc8d62", "trimmed_reads" = "#66c2a5")
+  base_colors <- c("viral" = "#e78ac3",
+                   "non_viral" = "#a6d854",
+                   "host_reads" = "#8da0cb",
+                   "human_reads" = "#fc8d62",
+                   "trimmed_reads" = "#66c2a5")
+  colors <- base_colors[names(base_colors) %in% category_order]
   
   # Create the plot with improved aesthetics, borders around bars, and adjusted margins
   p <- ggplot(plot_data, aes(x = percentage, y = sample, fill = category)) +

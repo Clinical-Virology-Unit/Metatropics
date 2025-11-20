@@ -12,10 +12,8 @@ class WorkflowMetatropics {
     public static void initialise(params, log) {
         genomeExistsError(params, log)
 
-
-        if (!params.fasta) {
-            log.error "Genome fasta file not specified with e.g. '--fasta genome.fa' or via a detectable config file."
-            System.exit(1)
+        if (!params.Human_host_fasta && !params.Other_host_fasta) {
+            log.warn "No host background references were provided. Reads will be sent directly to downstream classification."
         }
     }
 

@@ -10,7 +10,7 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 WorkflowMetatropics.initialise(params, log)
 
 // Check input path parameters to see if they exist
-def checkPathParamList = [ params.input, params.multiqc_config, params.fasta ]
+def checkPathParamList = [ params.input, params.multiqc_config, params.Human_host_fasta, params.Other_host_fasta ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
@@ -166,17 +166,23 @@ workflow METATROPICS {
          FIX.out.reads
      )
 
-    HUMAN_MAPPING(
-        FASTP.out.reads
-    )
+    def readsAfterHuman = FASTP.out.reads
+    def readsForMetamaps
 
-    if (params.host_fasta) {
+    if (params.Human_host_fasta) {
+        HUMAN_MAPPING(
+            FASTP.out.reads
+        )
+        readsAfterHuman = HUMAN_MAPPING.out.humanout
+    }
+
+    if (params.Other_host_fasta) {
         HOST_MAPPING(
-            HUMAN_MAPPING.out.humanout
+            readsAfterHuman
         )
         readsForMetamaps = HOST_MAPPING.out.hostout
     } else {
-        readsForMetamaps = HUMAN_MAPPING.out.humanout
+        readsForMetamaps = readsAfterHuman
     }
 
     METAMAPS_MAP(
@@ -313,7 +319,14 @@ workflow METATROPICS {
     )
 
     // Define the host_genome_status
-    def host_genome_status = params.host_fasta ? 'used' : 'not_used'
+    def host_genome_status = 'not_used'
+    if (params.Human_host_fasta && params.Other_host_fasta) {
+        host_genome_status = 'both'
+    } else if (params.Human_host_fasta) {
+        host_genome_status = 'human_only'
+    } else if (params.Other_host_fasta) {
+        host_genome_status = 'other_only'
+    }
 
     // Call the ReadCount process
     ReadCount(
@@ -389,9 +402,11 @@ workflow METATROPICS {
     ch_versions = ch_versions.mix(SAMTOOLS_COVERAGE.out.versions.first())
     ch_versions = ch_versions.mix(IVAR_CONSENSUS.out.versions.first())
     ch_versions = ch_versions.mix(HOMOPOLISH_POLISHING.out.versions.first())
-    ch_versions = ch_versions.mix(HUMAN_MAPPING.out.versionsmini)
-    ch_versions = ch_versions.mix(HUMAN_MAPPING.out.versionssamsort)
-    ch_versions = ch_versions.mix(HUMAN_MAPPING.out.versionssamfastq)
+    if (params.Human_host_fasta) {
+        ch_versions = ch_versions.mix(HUMAN_MAPPING.out.versionsmini)
+        ch_versions = ch_versions.mix(HUMAN_MAPPING.out.versionssamsort)
+        ch_versions = ch_versions.mix(HUMAN_MAPPING.out.versionssamfastq)
+    }
 
     // Wait for RCOVERAGE to complete before running CUSTOM_DUMPSOFTWAREVERSIONS
     CUSTOM_DUMPSOFTWAREVERSIONS(
