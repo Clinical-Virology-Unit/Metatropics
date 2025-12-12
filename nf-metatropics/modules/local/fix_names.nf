@@ -16,6 +16,6 @@ process FIX_NAMES {
     script:
     """
     cat $reads > ${sample}_fixed.fastq
-    reformat.sh in=${sample}_fixed.fastq out=${sample}_fixed.fastq.gz
+    reformat.sh in=${sample}_fixed.fastq out=${sample}_fixed.fastq.gz qin=33 ignorebadquality
     """
 }
