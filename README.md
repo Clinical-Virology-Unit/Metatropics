@@ -144,6 +144,7 @@ Reference genome options
     --front                       [integer] Number of bases to delete at 5 prime of the read [default: 0]
     --tail                        [integer] Number of bases to delete at 3 prime of the read [default: 0]
     --rcoverage                   [string]  Coverage figures [default: false]
+    --horizontal_coverage         [integer] Minimum horizontal coverage threshold [default: 1]
    Rarefaction options
     --perform_rarefaction         [boolean] Option to perform rarefaction to a specified number of bases [default: false]
     --target_bases                [number]  Number of bases to which you want to rarefy each sample [default: 1 billion bases, equivalent to 500,000 reads of 2kb each]
