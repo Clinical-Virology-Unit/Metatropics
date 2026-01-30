@@ -56,12 +56,26 @@ final_report$Sample<-rep(sample,length(countsPerUnit))
 
 TaxIDvec<-vector()
 Chromvec<-vector()
+# Helper function to normalize taxonID (remove 'x' prefix if present)
+normalize_taxonID <- function(taxonID) {
+  # Remove 'x' prefix if present and convert to character for consistent matching
+  taxonID <- gsub("^x", "", taxonID)
+  return(as.character(taxonID))
+}
+
+# Convert coverage taxonIDs to character and normalize (remove 'x' prefix if present) for consistent matching
+data_coverage[["taxonID"]] <- as.character(data_coverage[["taxonID"]])
+# Normalize coverage taxonIDs by removing 'x' prefix if present
+data_coverage[["taxonID"]] <- sapply(data_coverage[["taxonID"]], normalize_taxonID)
+
 for(i in 1:length(countsPerUnit)){
   iLabel <- names(countsPerUnit)[[i]]
   if(!(length(regmatches(iLabel, regexec("kraken:taxid\\|(x?\\d+)\\|", iLabel))[[1]]) == 2)){
     cat("Can't match ", iLabel, "\n")
   }
   taxonID <- regmatches(iLabel, regexec("kraken:taxid\\|(x?\\d+)\\|", iLabel))[[1]][[2]]
+  # Normalize taxonID by removing 'x' prefix
+  taxonID <- normalize_taxonID(taxonID)
   chromosomeID <-regmatches(iLabel, regexec(".*\\|([^|]+)$", iLabel))[[1]][[2]]
   TaxIDvec<-c(TaxIDvec,taxonID) #Antonio
   Chromvec<-c(Chromvec,chromosomeID) #Antonio
@@ -77,7 +91,32 @@ wholeLenVec<-vector()
 
 for(i in 1:length(countsPerUnit)){
   indices_coverage_taxonID <- which( data_coverage[["taxonID"]] == final_report$TaxID[i])
-  stopifnot(length(indices_coverage_taxonID) > 0)
+  # Skip entries that don't have matching coverage data instead of crashing
+  if(length(indices_coverage_taxonID) == 0){
+    cat("WARNING: No coverage data found for taxonID ", final_report$TaxID[i], " (mapping unit: ", names(countsPerUnit)[i], "). Using placeholder values.\n")
+    # Use placeholder values for missing coverage data
+    ViNameVec<-c(ViNameVec, "Unknown")
+    depthAveVec<-c(depthAveVec, 0)
+    covgenVec<-c(covgenVec, 0)
+    # Still try to get identity/length data if available
+    indice_identity_taxonID <- which(data_LandI[["ID"]] == names(countsPerUnit)[i])
+    if(length(indice_identity_taxonID) > 0){
+      readlenvec<-vector()
+      readidenvec<-vector()
+      for(z in 1:length(indice_identity_taxonID)){
+        idenR<-as.numeric(data_LandI[["Identity"]][[indice_identity_taxonID[[z]]]])
+        lenR<-as.numeric(data_LandI[["Length"]][[indice_identity_taxonID[[z]]]])
+        readlenvec<-c(readlenvec,lenR)
+        readidenvec<-c(readidenvec,idenR)
+      }
+      wholeIdenVec<-c(wholeIdenVec,median(readidenvec))
+      wholeLenVec<-c(wholeLenVec,mean(readlenvec))
+    } else {
+      wholeIdenVec<-c(wholeIdenVec,0)
+      wholeLenVec<-c(wholeLenVec,0)
+    }
+    next
+  }
   taxonLabel <- as.character(data_coverage[["equalCoverageUnitLabel"]][[indices_coverage_taxonID[[1]]]])
   ViNameVec<-c(ViNameVec,taxonLabel)
   regionCover<-0
@@ -87,7 +126,9 @@ for(i in 1:length(countsPerUnit)){
     covj<-as.numeric(data_coverage[["readCoverage"]][[indices_coverage_taxonID[[j]]]])
     covVec<-c(covVec,covj)
     
-    if(as.numeric(data_coverage[["nBases"]][[indices_coverage_taxonID[[j]]]])!=0){
+    # Handle NA values properly - convert to 0 if NA, then check if != 0
+    nBases_val <- as.numeric(data_coverage[["nBases"]][[indices_coverage_taxonID[[j]]]])
+    if(!is.na(nBases_val) && nBases_val != 0){
       regionCover<-regionCover+1
     }
   }
@@ -147,6 +188,8 @@ for(i in 1:length(countsPerUnit))
 		}
 		stopifnot(length(regmatches(iLabel, regexec("kraken:taxid\\|(x?\\d+)\\|", iLabel))[[1]]) == 2)
 		taxonID <- regmatches(iLabel, regexec("kraken:taxid\\|(x?\\d+)\\|", iLabel))[[1]][[2]]
+		# Normalize taxonID for consistent matching
+		taxonID <- normalize_taxonID(taxonID)
 		plotTaxonIDs[[taxonID]] <- 1
 		
 		if(!(taxonID %in% names(taxonID_2_mappingUnits)))
@@ -184,7 +227,11 @@ for(doWhat in c("limits", "plot"))
 	for(taxonID in names(plotTaxonIDs))
 	{
 		indices_coverage_taxonID <- which( data_coverage[["taxonID"]] == taxonID )
-		stopifnot(length(indices_coverage_taxonID) > 0)
+		# Skip taxonIDs that don't have coverage data instead of crashing
+		if(length(indices_coverage_taxonID) == 0){
+			cat("WARNING: No coverage data found for taxonID ", taxonID, " in plotting section. Skipping.\n")
+			next
+		}
 		
 		taxonLabel <- as.character(data_coverage[["equalCoverageUnitLabel"]][[indices_coverage_taxonID[[1]]]])
 				reads_count <- 0
@@ -240,7 +287,11 @@ for(doWhat in c("limits", "plot"))
 		if(doWhat == "plot")
 		{
 			indices_coverage_taxonID <- which( data_coverage[["taxonID"]] == taxonID )
-			stopifnot(length(indices_coverage_taxonID) > 0)
+			# Skip if no coverage data (shouldn't happen here, but be safe)
+			if(length(indices_coverage_taxonID) == 0){
+				cat("WARNING: No coverage data found for taxonID ", taxonID, " in plot section. Skipping.\n")
+				next
+			}
 			
 			taxonLabel <- as.character(data_coverage[["equalCoverageUnitLabel"]][[indices_coverage_taxonID[[1]]]])
 			

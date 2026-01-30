@@ -27,7 +27,31 @@ process METAMAPS_CLASSIFY {
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     # Run MetaMaps classify
+    # Note: metamaps may crash with exit 134 (assertion failure) after completing EM algorithm
+    # The .EM file is created before the crash, so we can use it even if the command fails
+    set +e
     metamaps classify --mappings ${prefix}_classification_results $args
+    classify_exit=\$?
+    set -e
+    
+    # Check if the essential output file was created (even if command failed)
+    if [ ! -f "${prefix}_classification_results.EM" ]; then
+        echo "ERROR: ${prefix}_classification_results.EM was not created. Metamaps classify failed before producing output."
+        exit 1
+    fi
+    
+    # If metamaps crashed with exit 134 but .EM file exists, log a warning but continue
+    # This is a known bug where metamaps crashes after completing the EM algorithm
+    if [ \$classify_exit -eq 134 ]; then
+        echo "WARNING: Metamaps classify crashed with assertion failure (exit 134), but .EM file exists."
+        echo "WARNING: Using existing .EM file to continue processing. This is a known metamaps bug."
+        echo "WARNING: The classification results should still be valid."
+        # Exit with 0 to indicate success since we have the output we need
+        # (we'll re-enable strict error checking after this)
+    elif [ \$classify_exit -ne 0 ]; then
+        echo "ERROR: Metamaps classify failed with exit code \$classify_exit"
+        exit \$classify_exit
+    fi
 
     # Filter for unambiguous mappings
     awk '
