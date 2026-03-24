@@ -19,7 +19,7 @@ For a more detailed description see [Metatropics description](https://github.com
 sudo apt update
 sudo apt install git
 git config --global http.postBuffer 524288000
-git clone https://github.com/Clinical-Virology-Unit/Metatropics.git
+git clone https://github.com/DaanJansen94/Metatropics.git
 ```
 
 ### 2. Install Java and Nextflow
