@@ -7,8 +7,8 @@ process ReadCount {
     label 'process_medium'
     tag "ReadCount"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'library://philarevalo/dev/rocker-tidyverse-pomp:latest':
-        'rocker/tidyverse:latest' }"
+        'library://jansendaan94_v2/metatropics/rocker_tidyverse:latest':
+        'daanjansen94/rocker-tidyverse:latest' }"
 
     if( workflow.containerEngine == 'docker' ) {
         def outPath = file(params.outdir).toAbsolutePath().toString()
