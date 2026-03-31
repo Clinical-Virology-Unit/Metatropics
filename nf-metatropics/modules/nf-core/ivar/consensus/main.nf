@@ -4,7 +4,7 @@ process IVAR_CONSENSUS {
 
     conda "bioconda::ivar=1.4"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/ivar:1.4--h6b7c446_1' :
+        'library://daanjansen94/metatropics/ivar:v1.4.1' :
         'daanjansen94/ivar:v1.4.1' }"
 
     input:

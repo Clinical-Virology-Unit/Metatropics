@@ -1,10 +1,9 @@
 process REF_FASTA {
     tag "$meta.id"
 
-    container "$projectDir/images/samtools_minimap2.sif"
     conda "bioconda::metamaps=0.1.98102e9"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/metamaps:0.1.98102e9--h176a8bc_0':
+        'library://daanjansen94/metatropics/samtools:minimap2_v1.16_v2.28':
         'daanjansen94/minimap:v2.28' }"
 
     input:

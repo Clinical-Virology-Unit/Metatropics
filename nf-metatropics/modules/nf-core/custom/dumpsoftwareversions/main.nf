@@ -4,7 +4,7 @@ process CUSTOM_DUMPSOFTWAREVERSIONS {
     // Requires `pyyaml` which does not have a dedicated container but is in the MultiQC container
     conda "bioconda::multiqc=1.13"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/multiqc:1.13--pyhdfd78af_0' :
+        'library://daanjansen94/metatropics/multiqc:v1.12' :
         'daanjansen94/multiqc:v1.12' }"
 
     input:
