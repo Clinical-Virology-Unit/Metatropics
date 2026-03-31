@@ -3,7 +3,7 @@ process RCOVERAGE {
     label 'process_high' 
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'library://jansendaan94/metatropics/rcoverage:latest':
+        'library://daanjansen94/metatropics/rcoverage:v4.0.2':
         'daanjansen94/rcoverage:v4.0.2' }"
 
     when:
