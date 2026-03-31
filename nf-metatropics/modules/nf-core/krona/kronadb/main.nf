@@ -5,7 +5,7 @@ process KRONA_KRONADB {
 
     conda "bioconda::krona=2.7.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/krona:2.7.1--pl526_5' :
+        'library://daanjansen94/metatropics/krona:v2.7.1' :
         'daanjansen94/krona:v2.7.1' }"
 
     output:

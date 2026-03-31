@@ -7,7 +7,7 @@ process ReadCount {
     label 'process_medium'
     tag "ReadCount"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/r-tidyverse:1.2.1':
+        'library://daanjansen94/metatropics/rcoverage:v4.0.2':
         'rocker/tidyverse:latest' }"
 
     if( workflow.containerEngine == 'docker' ) {

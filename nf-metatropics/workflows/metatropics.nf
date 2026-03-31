@@ -51,7 +51,6 @@ include { HOST_MAPPING } from '../subworkflows/local/host_mapping'
 //
 // MODULE: Installed directly from nf-core/modules
 //
-//include { FASTQC                      } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 include { DORADO_ONT } from '../modules/local/dorado/ont'
@@ -76,11 +75,6 @@ include { HOMOPOLISH_POLISHING        } from '../modules/local/homopolish/polish
 include { ADDING_DEPTH                } from '../modules/local/adding_depth'
 include { FINAL_REPORT                } from '../modules/local/final_report'
 include { BAM_READCOUNT               } from '../modules/local/bam/readcount'
-//include { MAFFT_ALIGN                 } from '../modules/local/mafft/align'
-//include { SNIPIT_SNPPLOT              } from '../modules/local/snipit/snpplot'
-//include { SNP_COMPARE                 } from '../modules/local/snp/compare'
-//include { MAFFT_ALIGN as MAFFT_TWO    } from '../modules/local/mafft/align'
-//include { SNIPIT_SNPPLOT as SNIPIT_TWO } from '../modules/local/snipit/snpplot'
 include { CLEANUP		              } from '../modules/local/cleanup/cleanup'
 include { CLEANUP_INTERMEDIATE		  } from '../modules/local/cleanup/cleanup_intermediate'
 

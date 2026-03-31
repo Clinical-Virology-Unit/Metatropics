@@ -4,7 +4,7 @@ process BAM_READCOUNT {
 
     conda "bioconda::bam-readcount=0.8"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/bam-readcount%3A0.8--py36pl5.22.0_3':
+        'library://daanjansen94/metatropics/bam-readcount:v0.8':
         'daanjansen94/bam-readcount:v0.8' }"
 
     input:

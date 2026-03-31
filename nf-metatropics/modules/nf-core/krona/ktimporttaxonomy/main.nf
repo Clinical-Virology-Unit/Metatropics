@@ -5,7 +5,7 @@ process KRONA_KTIMPORTTAXONOMY {
     // WARN: Version information not provided by tool on CLI. Please update version string below when bumping container versions.
     conda "bioconda::krona=2.8"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/krona:2.8--pl5262hdfd78af_2' :
+        'library://daanjansen94/metatropics/krona:v2.7.1' :
         'daanjansen94/krona:v2.7.1' }"
 
     input:

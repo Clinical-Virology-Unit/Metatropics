@@ -2,9 +2,8 @@ process HOMOPOLISH_POLISHING {
     tag "${meta.id}.${meta.virus}"
     label 'process_single'
 
-    container "$projectDir/images/homopolish.sif"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/homopolish%3A0.4.1--pyhdfd78af_1':
+        'library://daanjansen94/metatropics/homopolish:v0.4.1':
         'daanjansen94/homopolish:v0.4.1' }"
 
     input:

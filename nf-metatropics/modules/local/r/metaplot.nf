@@ -2,9 +2,8 @@ process R_METAPLOT {
     tag "$meta.id"
     label 'process_high'
 
-    container "$projectDir/images/R_plot.sif"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/YOUR-TOOL-HERE':
+        'library://daanjansen94/metatropics/nf:r_plots_v4.2.2':
         'daanjansen94/nf_r_plots:v4.2.2' }"
 
     input:

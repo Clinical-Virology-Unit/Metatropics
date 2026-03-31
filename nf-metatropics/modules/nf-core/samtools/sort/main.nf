@@ -4,7 +4,7 @@ process SAMTOOLS_SORT {
 
     conda "bioconda::samtools=1.17"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/samtools:1.17--h00cdaf9_0' :
+        'library://daanjansen94/metatropics/samtools:v1.17' :
         'daanjansen94/samtools:v1.17' }"
 
     input:

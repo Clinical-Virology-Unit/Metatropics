@@ -1,8 +1,8 @@
 process DORADO_ONT {
     label 'process_high'
 
-    container "${ workflow.containerEngine == 'singularity' ?
-        '$projectDir/images/dorado.sif' :
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'library://daanjansen94/metatropics/dorado:0.9.0' :
         'nanoporetech/dorado:sha4644018526d3644d92a9e680ab8f2d1eeff2e272' }"
 
     // Set container options for Docker and Singularity

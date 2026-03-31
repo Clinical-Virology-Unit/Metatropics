@@ -1,0 +1,8 @@
+# Nextflow runtime / temporary artifacts (repo root)
+.nextflow/
+.nextflow.log*
+work/
+
+# Local pulled databases (large, reproducible)
+Databases/
+
