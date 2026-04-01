@@ -10,9 +10,12 @@ process ReadCount {
         'library://jansendaan94_v2/metatropics/rocker_tidyverse:latest':
         'daanjansen94/rocker-tidyverse:latest' }"
 
+    def outPath = file(params.outdir).toAbsolutePath().toString()
     if( workflow.containerEngine == 'docker' ) {
-        def outPath = file(params.outdir).toAbsolutePath().toString()
         containerOptions "-v ${outPath}:${outPath} -u \$(id -u):\$(id -g)"
+    }
+    if( workflow.containerEngine == 'singularity' ) {
+        containerOptions "--bind ${outPath}:${outPath}"
     }
 
     input:
