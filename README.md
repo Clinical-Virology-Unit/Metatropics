@@ -6,7 +6,7 @@
 [![Launch on Nextflow Tower](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Nextflow%20Tower-%234256e7)](https://tower.nf/launch?pipeline=https://github.com/nf-core/metatropics)
 
 # Metatropics
-The metatropics pipeline is a [Nextflow](https://www.nextflow.io/)-driven workflow designed for viral identification and the creation of consensus genomes from nanopore (metagenomic) sequencing data. It leverages container systems like [Docker](https://www.docker.com) and [Singularity](https://sylabs.io/docs/), utilizing one container per process to avoid software dependency conflicts and simplifies maintainenance. This container-based approach ensures that installation is straightforward and results are highly reproducible. 
+The metatropics pipeline is a [Nextflow](https://www.nextflow.io/)-driven workflow designed for viral identification and the creation of consensus genomes from nanopore (metagenomic) sequencing data. It leverages container systems like [Docker](https://www.docker.com) and [Singularity](https://sylabs.io/docs/), utilizing one container per process to avoid software dependency conflicts and simplifies maintainenance. This container-based approach ensures that installation is straightforward and results are highly reproducible.
 
 ### Pipeline summary
 
@@ -187,3 +187,7 @@ Below one can see the output directories and their description. `basecalling` an
 Tip 1: If you have limited space, you can delete the 'work' directory and, after selecting the necessary output files, also remove the 'output' directory.
 
 Tip 2: When you encounter errors, make sure to double-check the memory allocated to your processes. This is often the cause, or alternatively, consider including rarefaction.
+
+### 10. High performance computing
+
+You can also run this pipeline on an HPC cluster; for example, on the Flemish Tier-1 system **CalcUA** (VSC), use the Slurm submission scripts and Nextflow profile under [`nf-metatropics/assets/calcua/`](nf-metatropics/assets/calcua/)—for setup and usage, see the [README in that folder](nf-metatropics/assets/calcua/README.md).
