@@ -189,4 +189,4 @@ Tip 2: When you encounter errors, make sure to double-check the memory allocated
 
 ### 10. High performance computing
 
-You can also run this pipeline on an HPC cluster; for example, on the Flemish Tier-1 system **CalcUA** (VSC), use the Slurm submission scripts and Nextflow profile under [`nf-metatropics/assets/calcua/`](nf-metatropics/assets/calcua/)—for setup and usage, see the [README in that folder](nf-metatropics/assets/calcua/README.md).
+You can also run this pipeline on an HPC cluster; for example, on the Flemish Tier-1 system **CalcUA** (VSC), use the Slurm submission scripts and Nextflow profile under [`nf-metatropics/assets/calcua/`](nf-metatropics/assets/calcua/). For setup and usage, see the [README in that folder](nf-metatropics/assets/calcua/README.md).
