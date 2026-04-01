@@ -1,8 +1,8 @@
-input: /data/Daan/Projects/docker_test/Input/mpox.csv
-outdir: /data/Daan/Projects/docker_test/Output
-Human_host_fasta: /data/Daan/Projects/Metatropics/Databases/Human/chm13v2.0.fa
+input: /scratch/antwerpen/209/vsc20958/Metatropics_runs/TEST_RUN/Input/mpox.csv
+outdir: /scratch/antwerpen/209/vsc20958/Metatropics_runs/TEST_RUN/Output
+Human_host_fasta: /scratch/antwerpen/209/vsc20958/Metatropics_runs/Metatropics/Databases/Human/chm13v2.0.fa
 #Other_host_fasta: /data/Daan/Projects/Metatropics/Databases/Monkeys/AloCar_genomic.fna
-dbmeta: /data/Daan/Projects/Metatropics/Databases/ViralRefseq
+dbmeta: /scratch/antwerpen/209/vsc20958/Metatropics_runs/Metatropics/Databases/ViralRefseq
 minLength: 200
 pair: true
 front: 30
