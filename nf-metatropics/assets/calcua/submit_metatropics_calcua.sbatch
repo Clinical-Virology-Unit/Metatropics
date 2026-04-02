@@ -22,7 +22,9 @@ module load Java
 module load Nextflow
 
 export APPTAINER_CACHEDIR="${VSC_SCRATCH}/apptainer/cache"
-export APPTAINER_TMPDIR="${VSC_SCRATCH}/apptainer/tmp"
+# Prefer node-local temp dir if Slurm provides it; fall back to scratch.
+# This avoids hitting scratch quota during Docker→SIF conversion.
+export APPTAINER_TMPDIR="${TMPDIR:-${VSC_SCRATCH}/apptainer/tmp}"
 export NXF_APPTAINER_CACHEDIR="${VSC_SCRATCH}/apptainer/nextflow_cache"
 
 mkdir -p "$APPTAINER_CACHEDIR" "$APPTAINER_TMPDIR" "$NXF_APPTAINER_CACHEDIR"
