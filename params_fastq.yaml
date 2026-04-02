@@ -1,5 +1,4 @@
 # Metatropics — FASTQ input (no POD5 basecalling). 
-# Edit paths below to your samplesheet, output dir, and databases on $VSC_SCRATCH.
 
 input: /scratch/antwerpen/209/vsc20958/Metatropics_runs/TEST_RUN/Input/mpox.csv
 outdir: /scratch/antwerpen/209/vsc20958/Metatropics_runs/TEST_RUN/Output
