@@ -1,6 +1,6 @@
 process RCOVERAGE {
     tag "rcoverage"
-    label 'process_high' 
+    label 'process_medium'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'library://daanjansen94/metatropics/rcoverage:v4.0.2':
