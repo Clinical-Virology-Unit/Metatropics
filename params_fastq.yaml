@@ -1,22 +1,27 @@
+# Metatropics — FASTQ input (no POD5 basecalling). 
+# Edit paths below to your samplesheet, output dir, and databases on $VSC_SCRATCH.
+
 input: /scratch/antwerpen/209/vsc20958/Metatropics_runs/TEST_RUN/Input/mpox.csv
 outdir: /scratch/antwerpen/209/vsc20958/Metatropics_runs/TEST_RUN/Output
 Human_host_fasta: /scratch/antwerpen/209/vsc20958/Metatropics_runs/Metatropics/Databases/Human/chm13v2.0.fa
-#Other_host_fasta: /data/Daan/Projects/Metatropics/Databases/Monkeys/AloCar_genomic.fna
+#Other_host_fasta: /path/to/optional_host.fasta
 dbmeta: /scratch/antwerpen/209/vsc20958/Metatropics_runs/Metatropics/Databases/ViralRefseq
+
+# Required for FASTQ workflow: no POD5 / Dorado
+basecall: false
+
 minLength: 200
 pair: true
 front: 30
 tail: 30
 minVirus: 0.01
-quality: 20 # You can adapt this to '30' to reach Illumina quality
-depth: 20 # When wanting high-quality genomes better adapt this to '20"
+quality: 20
+depth: 20
 agreement: 0.8
 horizontal_coverage: 5
 rcoverage_figure: true
 
-# Rarefaction parameters
-perform_rarefaction: true # Preferably rarefy to a reasonable number of input to decrease time of analysis
+perform_rarefaction: true
 target_bases: 500000000
 
-# Cleanup module
 enable_docker_cleanup: false

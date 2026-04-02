@@ -1,6 +1,17 @@
 # CalcUA (VSC Antwerp)
 
-To run Metatropics on CalcUA, use Slurm and keep Apptainer caches on `$VSC_SCRATCH` (the script below sets that). Edit `#SBATCH` (account, partition, walltime) and set `PIPELINE_DIR` / `PARAMS_FILE` in [submit_metatropics_calcua.sbatch](submit_metatropics_calcua.sbatch) if your paths differ from the defaults. Then submit the pipeline job; it runs Nextflow with `-profile vsc_calcua` (see [`conf/vsc_calcua.config`](../../conf/vsc_calcua.config)).
+To run Metatropics on CalcUA, use Slurm and keep Apptainer caches on `$VSC_SCRATCH` (the scripts below set that). Edit `#SBATCH` (account, partition, walltime) and set `PIPELINE_DIR` / `PARAMS_FILE` in each `.sbatch` if your paths differ from the defaults.
+
+There are **two** submission scripts:
+
+| Script | Input | Params file | Nextflow profile |
+|--------|--------|-------------|------------------|
+| [submit_metatropics_fastq_calcua.sbatch](submit_metatropics_fastq_calcua.sbatch) | FASTQ | `params_fastq.yaml` | `vsc_calcua` (CPU) |
+| [submit_metatropics_pod5_calcua.sbatch](submit_metatropics_pod5_calcua.sbatch) | POD5 + Dorado | `params_POD5.yaml` | `vsc_calcua_gpu` (CPU tasks + GPU queue for Dorado) |
+
+CPU-focused config: [`conf/vsc_calcua_cpu.config`](../../conf/vsc_calcua_cpu.config). GPU extras: [`conf/vsc_calcua_gpu.config`](../../conf/vsc_calcua_gpu.config).
+
+For GPU steps (Dorado), `calcua_gpu_slurm_partition` / `calcua_gpu_cluster_options` are set in the GPU config (edit or override via CLI if your partition differs).
 
 Container images are pulled automatically when needed and cached under your scratch Apptainer paths (notably `NXF_APPTAINER_CACHEDIR`, set in the `.sbatch` file), so later runs reuse existing images. The script also prefers the job’s `$TMPDIR` for `APPTAINER_TMPDIR` when available (fallback to scratch) to avoid scratch tmp quota issues during Docker→SIF conversion.
 
@@ -15,14 +26,18 @@ On CalcUA, the `vsc_calcua` profile supports these Slurm partitions (max per-tas
 | `broadwell_256` | 28 | 240 GB | 3 days |
 | `skylake` | 28 | 176 GB | 7 days |
 
-In Slurm-scheduled mode, these are limits for individual pipeline tasks; for `single_node` runs they’re “up to what you requested with `sbatch`”.
+In Slurm-scheduled mode, these are limits for individual pipeline tasks; for `single_node` runs they’re “up to what you requested with `sbatch`” (see commented block in the FASTQ `.sbatch`).
 
-The CalcUA profile also tunes process label resources conservatively so the same pipeline run can work on any of the partitions above; see [`conf/vsc_calcua.config`](../../conf/vsc_calcua.config).
+The CalcUA profile also tunes process label resources conservatively so the same pipeline run can work on any of the partitions above; see [`conf/vsc_calcua_cpu.config`](../../conf/vsc_calcua_cpu.config).
 
-**Run the pipeline** (from the **Metatropics** repo root, the folder that contains `nf-metatropics/`):
+**Submit** (from the **Metatropics** repo root, the folder that contains `nf-metatropics/`):
 
 ```bash
-sbatch nf-metatropics/assets/calcua/submit_metatropics_calcua.sbatch
+# FASTQ
+sbatch nf-metatropics/assets/calcua/submit_metatropics_fastq_calcua.sbatch
+
+# POD5 + Dorado (GPU)
+sbatch nf-metatropics/assets/calcua/submit_metatropics_pod5_calcua.sbatch
 ```
 
-If the repo lives elsewhere on scratch, call `sbatch` with the full path to the `.sbatch` file. Copies next to a run directory work too, e.g. `sbatch $VSC_SCRATCH/Metatropics_runs/submit_metatropics_calcua.sbatch`.
+If the repo lives elsewhere on scratch, use the full path to the `.sbatch` file, e.g. `sbatch $VSC_SCRATCH/Metatropics_runs/submit_metatropics_fastq_calcua.sbatch`.
