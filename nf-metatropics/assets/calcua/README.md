@@ -4,6 +4,19 @@ To run Metatropics on CalcUA, use Slurm and keep Apptainer caches on `$VSC_SCRAT
 
 Container images are pulled automatically when needed and cached under your scratch Apptainer paths (notably `NXF_APPTAINER_CACHEDIR`, set in the `.sbatch` file), so later runs reuse existing images. The script also prefers the job’s `$TMPDIR` for `APPTAINER_TMPDIR` when available (fallback to scratch) to avoid scratch tmp quota issues during Docker→SIF conversion.
 
+On CalcUA, the `vsc_calcua` profile supports these Slurm partitions (max per-task resources):
+
+| Partition | Max CPU | Max RAM | Max walltime |
+|----------|---------|---------|--------------|
+| `zen2` | 64 | 240 GB | 3 days |
+| `zen3` | 64 | 240 GB | 3 days |
+| `zen3_512` | 64 | 496 GB | 3 days |
+| `broadwell` | 28 | 112 GB | 3 days |
+| `broadwell_256` | 28 | 240 GB | 3 days |
+| `skylake` | 28 | 176 GB | 7 days |
+
+In Slurm-scheduled mode, these are limits for individual pipeline tasks; for `single_node` runs they’re “up to what you requested with `sbatch`”.
+
 **Run the pipeline** (from the **Metatropics** repo root, the folder that contains `nf-metatropics/`):
 
 ```bash
