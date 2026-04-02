@@ -11,8 +11,6 @@ There are **two** submission scripts:
 
 CPU-focused config: [`conf/vsc_calcua_cpu.config`](../../conf/vsc_calcua_cpu.config). GPU extras: [`conf/vsc_calcua_gpu.config`](../../conf/vsc_calcua_gpu.config).
 
-For GPU steps (Dorado), settings live in [`conf/vsc_calcua_gpu.config`](../../conf/vsc_calcua_gpu.config) — see below.
-
 Container images are pulled automatically when needed and cached under your scratch Apptainer paths (notably `NXF_APPTAINER_CACHEDIR`, set in the `.sbatch` file), so later runs reuse existing images. The script also prefers the job’s `$TMPDIR` for `APPTAINER_TMPDIR` when available (fallback to scratch) to avoid scratch tmp quota issues during Docker→SIF conversion.
 
 ### GPU partitions (Dorado / CUDA)
