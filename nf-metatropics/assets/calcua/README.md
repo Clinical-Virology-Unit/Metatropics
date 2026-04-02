@@ -13,8 +13,6 @@ CPU-focused config: [`conf/vsc_calcua_cpu.config`](../../conf/vsc_calcua_cpu.con
 
 Container images are pulled automatically when needed and cached under your scratch Apptainer paths (notably `NXF_APPTAINER_CACHEDIR`, set in the `.sbatch` file), so later runs reuse existing images. The script also prefers the job’s `$TMPDIR` for `APPTAINER_TMPDIR` when available (fallback to scratch) to avoid scratch tmp quota issues during Docker→SIF conversion.
 
-The **POD5** submission script requests **more memory** for the Slurm driver job than the FASTQ script: building the Dorado SIF (`mksquashfs`) needs substantial RAM; too little (e.g. 4 GB) often ends with `mksquashfs ... signal: killed` (OOM). After the image exists in the cache, that cost is mostly a one-time issue.
-
 ### GPU partitions (Dorado / CUDA)
 
 These are the usual **GPU** queues on CalcUA (Vaughan / Leibniz). Confirm with `sinfo -o '%P %G %l %m'` and [VSC Antwerp hardware docs](https://docs.vscentrum.be/antwerp/tier2_hardware.html); exact quotas and access depend on your project.
