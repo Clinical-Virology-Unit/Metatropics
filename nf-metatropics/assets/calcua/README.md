@@ -17,6 +17,8 @@ On CalcUA, the `vsc_calcua` profile supports these Slurm partitions (max per-tas
 
 In Slurm-scheduled mode, these are limits for individual pipeline tasks; for `single_node` runs they’re “up to what you requested with `sbatch`”.
 
+The CalcUA profile also tunes process label resources conservatively so the same pipeline run can work on any of the partitions above; see [`conf/vsc_calcua.config`](../../conf/vsc_calcua.config).
+
 **Run the pipeline** (from the **Metatropics** repo root, the folder that contains `nf-metatropics/`):
 
 ```bash
