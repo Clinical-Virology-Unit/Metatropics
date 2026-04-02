@@ -1,5 +1,5 @@
 process DORADO_DEMULTIPLEXING {
-    label 'process_medium'
+    label 'process_gpu'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'library://daanjansen94/metatropics/dorado:0.9.0' :

@@ -27,7 +27,7 @@ Dorado is **NVIDIA/CUDA**: use **`ampere_gpu`** or **`pascal_gpu`**, not `arctur
 
 To use another GPU queue or Slurm GPU flags, edit `calcua_gpu_slurm_partition` and `calcua_gpu_cluster_options` in [`conf/vsc_calcua_gpu.config`](../../conf/vsc_calcua_gpu.config), then run via [`submit_metatropics_pod5_calcua.sbatch`](submit_metatropics_pod5_calcua.sbatch) (same `nextflow` line is already in that script).
 
-**CPU/RAM for basecalling:** `DORADO_ONT` is labelled `process_high` in the pipeline, so on CalcUA it still gets **CPU and memory** from [`conf/vsc_calcua_cpu.config`](../../conf/vsc_calcua_cpu.config) (same labels as other heavy steps). GPU allocation is **only** what you set via `calcua_gpu_cluster_options` in `vsc_calcua_gpu.config`; Dorado’s internal settings (e.g. model in `params_POD5.yaml`, batch size in the module) control how hard the **GPU** works, not Slurm’s CPU count.
+**CPU/RAM for Dorado:** `DORADO_*` use the `process_gpu` label. Default limits are in [`conf/base.config`](../../conf/base.config); CalcUA tuning for POD5 runs is in [`conf/vsc_calcua_gpu.config`](../../conf/vsc_calcua_gpu.config) (together with the GPU partition / `--gres`). GPU allocation is what you set via `calcua_gpu_cluster_options`. The Dorado image in the modules is pulled from Docker Hub and cached as a SIF under `NXF_APPTAINER_CACHEDIR` like other images.
 
 On CalcUA, the `vsc_calcua` profile supports these **CPU** partitions (max per-task resources):
 
