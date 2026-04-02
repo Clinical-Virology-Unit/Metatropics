@@ -79,11 +79,11 @@ nano base.config
 
 ### 6. Set PATHs
 
-**Note:** Use params.yaml file for processing from raw reads (FASTQ format) and switch to the params2.yml file when dealing with squiggles (POD5 format).
+**Note:** Use `params_fastq.yaml` for FASTQ input and switich to `params_POD5.yaml` when dealing with squiggles.
 
 ```
 cd Metatropics
-nano params.yml
+nano params_fastq.yaml
 
 input: change to input PATH
 outdir: change to output PATH
@@ -97,15 +97,15 @@ depth 20 # for high-quality genomes
 ### 7. Set Input
 
 **Note:** Ensure that all your input FASTQ reads are consolidated into a single file rather than being spread across multiple files in directories like barcode01/fastq. To facilitate this, a bash script named concatenate_fastq.sh is available in the 'Input' folder. You can use this script to merge all FASTQ files in the barcode01 directory into a single barcode01.fastq file by running the command: bash concatenate_fastq.sh. The format of the `mpox.csv` [Input](https://github.com/Clinical-Virology-Unit/Metatropics/tree/main/Input) file differs based on your starting data:
-- For raw reads (FASTQ): (<u>use params.yml</u>)
+- For raw reads (FASTQ): (<u>use params_fastq.yaml</u>)
 ```
-The params.yaml file contains the most important paths
+The params file contains the most important paths
 sample,single_end,barcode
 sample_name01,True,/home/antonio/metatropics/nf-metatropics/fastq/barcode01.fastq
 sample_name02,True,/home/antonio/metatropics/nf-metatropics/fastq/barcode02.fastq
 ```
 
-- For squiggle data (POD5): (<u>use params2.yml</u>)
+- For squiggle data (POD5): (<u>use params_POD5.yaml</u>)
 ```
 sample,single_end,barcode
 sample_name01,True,barcode01
@@ -115,7 +115,7 @@ sample_name02,True,barcode02
 ### 8. Runing pipeline
 
 ```
-nextflow run nf-metatropics/ -profile docker -params-file params.yaml -resume
+nextflow run nf-metatropics/ -profile docker -params-file params_fastq.yaml -resume
 ```
 
    ```

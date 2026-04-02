@@ -1,0 +1,28 @@
+# Metatropics — POD5 + Dorado basecalling (GPU). Use with submit_metatropics_pod5_calcua.sbatch
+# (Former params2.yaml.) Edit paths to your project on $VSC_SCRATCH.
+
+input: /scratch/antwerpen/209/vsc20958/Metatropics_runs/TEST_RUN_POD5/Input/mpox_example_pod5.csv
+input_idr: /scratch/antwerpen/209/vsc20958/Metatropics_runs/TEST_RUN_POD5/Input/POD5
+outdir: /scratch/antwerpen/209/vsc20958/Metatropics_runs/TEST_RUN_POD5/Output
+Human_host_fasta: /scratch/antwerpen/209/vsc20958/Metatropics_runs/Metatropics/Databases/Human/chm13v2.0.fa
+#Other_host_fasta: /scratch/antwerpen/209/vsc20958/Metatropics_runs/Metatropics/Databases/Aedes/Aedes_aegypti.fasta
+dbmeta: /scratch/antwerpen/209/vsc20958/Metatropics_runs/Metatropics/Databases/ViralRefseq
+basecall: true
+usegpu: true
+kit_name: TWIST-96A-UDI
+model: hac
+minLength: 200
+pair: true
+front: 25
+tail: 25
+minVirus: 0.01
+quality: 30
+depth: 30
+agreement: 0.8
+horizontal_coverage: 10
+rcoverage_figure: true
+
+perform_rarefaction: true
+target_bases: 100000000
+
+enable_docker_cleanup: false
