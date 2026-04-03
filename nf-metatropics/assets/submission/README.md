@@ -1,18 +1,13 @@
 # Samplesheets (`fastq.csv` / `POD5.csv`)
 
-This folder holds **example CSV samplesheets** only. Edit paths or barcode names, then point Nextflow at them with `--input` (usually via a params file).
+These files are **example CSV samplesheets**. Each has a header row and one row per sample:
 
-| File | Use when |
-|------|----------|
-| [`fastq.csv`](fastq.csv) | **FASTQ** already available: `barcode` column = path to each sample’s FASTQ (e.g. `.fastq.gz`). |
-| [`POD5.csv`](POD5.csv) | **POD5** runs: `barcode` column = barcode label (e.g. `barcode01`); set `input_dir` in your params to the directory that contains the POD5 data. |
+| Column | Meaning |
+|--------|---------|
+| `sample` | Sample name used in the pipeline. |
+| `single_end` | `True` or `False`. |
+| `barcode` | Depends on the file (see below). |
 
-**Parameter files** (paths, `basecall`, resources, etc.) live at the **Metatropics repo root**: [`params_fastq.yaml`](../../../params_fastq.yaml) and [`params_POD5.yaml`](../../../params_POD5.yaml). Copy or edit those; they reference a samplesheet path in `input:` — aim that at your edited `fastq.csv` / `POD5.csv` (or a copy elsewhere).
+**[`fastq.csv`](fastq.csv)** - for runs that start from **FASTQ** reads: `barcode` is the **full path** to that sample’s `.fastq.gz` file.
 
-```bash
-nextflow run nf-metatropics/ -profile docker -params-file params_fastq.yaml -resume
-```
-
-### HPC (CalcUA / Slurm)
-
-See **[`../calcua/`](../calcua/)** for Slurm scripts and `-profile vsc_calcua` / `vsc_calcua_gpu`.
+**[`POD5.csv`](POD5.csv)** — for runs that start from **POD5** data: `barcode` is the **barcode label** (e.g. `barcode01`) for that sample. Which directory holds the POD5 files is **not** listed in the CSV; set that separately in your params next to the samplesheet path.

@@ -48,11 +48,11 @@ rm combined_databases.tar.gz
 
 ### 5. Configure paths (samplesheet, output, databases)
 
-At the **repository root**, edit **[`params_fastq.yaml`](params_fastq.yaml)** (FASTQ) or **[`params_POD5.yaml`](params_POD5.yaml)** (POD5). Use **absolute paths**.
+At the **repository root**, choose the params file to match how you start: **[`params_fastq.yaml`](params_fastq.yaml)** when you already have basecalled **reads (FASTQ)**, or **[`params_POD5.yaml`](params_POD5.yaml)** when you start from raw **POD5** signal (“squiggle”) data and need basecalling inside the pipeline. Edit that file using **absolute paths**.
 
 | Setting | Purpose |
 |-----|-------------------|
-| `input` | Samplesheet CSV: copy **[`fastq.csv`](nf-metatropics/assets/submission/fastq.csv)** (FASTQ) or **[`POD5.csv`](nf-metatropics/assets/submission/POD5.csv)** (POD5) from [`nf-metatropics/assets/submission/`](nf-metatropics/assets/submission/), edit it, then set `input` to that file’s absolute path. Column layout and FASTQ vs POD5 behaviour are described in the [submission README](nf-metatropics/assets/submission/README.md). |
+| `input` | Samplesheet CSV: copy **[`fastq.csv`](nf-metatropics/assets/submission/fastq.csv)** (FASTQ) or **[`POD5.csv`](nf-metatropics/assets/submission/POD5.csv)** (POD5) from [`nf-metatropics/assets/submission/`](nf-metatropics/assets/submission/), edit it, then set `input` to that file’s absolute path. 
 | `outdir` | Where results are written. |
 | `dbmeta` | Set database path (from step 4). |
 | `Human_host_fasta` | Set human host FASTA path (from step 4). |
@@ -145,7 +145,7 @@ If you use Metatropics in your research, please cite:
 De Souza Novaes, A., Jansen, D., de Block, T., Vercauteren, K., & Rezende, A. M. (2026). Metatropics: Human viral pathogen identification and consensus genome calling from nanopore metagenomic sequencing data (Version 0.0.5). GitHub. https://github.com/DaanJansen94/Metatropics
 ```
 
-Also cite the **nf-core** framework, and other tools you rely on; see [`nf-metatropics/assets/Citing/CITATIONS.md`](nf-metatropics/assets/Citing/CITATIONS.md).
+Also cite the **nf-core** framework, and other tools you rely on; see [`nf-metatropics/assets/citing/CITATIONS.md`](nf-metatropics/assets/citing/CITATIONS.md).
 
 ## License
 
