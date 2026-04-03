@@ -199,11 +199,11 @@ If you use Metatropics in your research, please cite:
 De Souza Novaes, A., Jansen, D., de Block, T., Vercauteren, K., & Rezende, A. M. (2026). Metatropics: Human viral pathogen identification and consensus genome calling from nanopore metagenomic sequencing data (Version 0.0.5). GitHub. https://github.com/DaanJansen94/Metatropics
 ```
 
-Also cite **Nextflow**, the **nf-core** framework, and other tools you rely on; see [`nf-metatropics/assets/Citing/CITATIONS.md`](nf-metatropics/assets/Citing/CITATIONS.md).
+Also cite the **nf-core** framework, and other tools you rely on; see [`nf-metatropics/assets/Citing/CITATIONS.md`](nf-metatropics/assets/Citing/CITATIONS.md).
 
 ## License
 
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
 ## Contributing
 
