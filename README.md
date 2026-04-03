@@ -190,3 +190,25 @@ Tip 2: When you encounter errors, make sure to double-check the memory allocated
 ### 10. High performance computing
 
 You can also run this pipeline on an HPC cluster; for example, on the Flemish Tier-1 system **CalcUA** (VSC), use the Slurm submission scripts and Nextflow profile under [`nf-metatropics/assets/calcua/`](nf-metatropics/assets/calcua/). For setup and usage, see the [README in that folder](nf-metatropics/assets/calcua/README.md).
+
+## Citation
+
+If you use Metatropics in your research, please cite:
+
+```
+De Souza Novaes, A., Jansen, D., de Block, T., Vercauteren, K., & Rezende, A. M. (2026). Metatropics: Human viral pathogen identification and consensus genome calling from nanopore metagenomic sequencing data (Version 0.0.5). GitHub. https://github.com/DaanJansen94/Metatropics
+```
+
+Also cite **Nextflow**, the **nf-core** framework, and other tools you rely on; see [`nf-metatropics/assets/Citing/CITATIONS.md`](nf-metatropics/assets/Citing/CITATIONS.md).
+
+## License
+
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+
+## Contributing
+
+Contributions are welcome. Please open a pull request or an issue to discuss larger changes first.
+
+## Support
+
+If you run into problems or have questions, open an issue on [GitHub](https://github.com/DaanJansen94/Metatropics/issues).
