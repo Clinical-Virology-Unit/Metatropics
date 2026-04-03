@@ -37,7 +37,7 @@ docker run --rm hello-world
 ```
 
 ### 4. Download databases
-Download and unpack the required database ((Viral RefSeq and human host genomes):
+Download and unpack the required database (Viral RefSeq and human host genomes):
 
 ```
 mkdir -p Databases && cd Databases
