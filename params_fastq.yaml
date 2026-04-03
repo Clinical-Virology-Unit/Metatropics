@@ -1,8 +1,8 @@
 # Metatropics — FASTQ input (no POD5 basecalling).
 # Example samplesheet: nf-metatropics/assets/submission/fastq.csv
 
-input: /scratch/antwerpen/209/vsc20958/Metatropics_runs/Metatropics/nf-metatropics/assets/submission/fastq.csv
-outdir: /scratch/antwerpen/209/vsc20958/Metatropics_runs/TEST_RUN/Output
+input: /data/Daan/Projects/docker_test/Input/fastq.csv
+ourdir: /data/Daan/Projects/docker_test/Output
 Human_host_fasta: /scratch/antwerpen/209/vsc20958/Metatropics_runs/Metatropics/Databases/Human/chm13v2.0.fa
 #Other_host_fasta: /path/to/optional_host.fasta
 dbmeta: /scratch/antwerpen/209/vsc20958/Metatropics_runs/Metatropics/Databases/ViralRefseq
