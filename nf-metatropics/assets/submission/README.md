@@ -1,4 +1,4 @@
-# Samplesheets (`fastq.csv` / `POD5.csv`)
+# Samplesheets
 
 These files are **example CSV samplesheets**. Each has a header row and one row per sample:
 
