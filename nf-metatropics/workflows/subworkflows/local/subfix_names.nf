@@ -2,7 +2,7 @@
 // Check input samplesheet and get read channels
 //
 
-include { FIX_NAMES } from '../../modules/local/fix_names'
+include { FIX_NAMES } from '../../../modules/local/fix_names'
 
 workflow FIX {
     take:

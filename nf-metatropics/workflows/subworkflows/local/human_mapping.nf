@@ -2,9 +2,9 @@
 // Check input samplesheet and get read channels
 //
 
-include { MINIMAP2_ALIGN              } from '../../modules/nf-core/minimap2/align/main'
-include { SAMTOOLS_SORT               } from '../../modules/nf-core/samtools/sort/main'
-include { SAMTOOLS_hFASTQ            } from '../../modules/nf-core/samtools/fastq/main'
+include { MINIMAP2_ALIGN              } from '../../../modules/nf-core/minimap2/align/main'
+include { SAMTOOLS_SORT               } from '../../../modules/nf-core/samtools/sort/main'
+include { SAMTOOLS_hFASTQ            } from '../../../modules/nf-core/samtools/fastq/main'
 
 workflow HUMAN_MAPPING {
     take:

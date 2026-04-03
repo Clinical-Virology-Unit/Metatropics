@@ -22,8 +22,8 @@ process R_METAPLOT {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    # Use the fixed script from the project directory instead of the one in the container
-    Rscript ${projectDir}/images/plotMappingSummary.R ${prefix}_classification_results $args
+    # Bundled script (overrides older copy that may exist in the container)
+    Rscript ${projectDir}/bin/plotMappingSummary.R ${prefix}_classification_results $args
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
