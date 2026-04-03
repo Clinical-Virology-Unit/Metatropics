@@ -3,8 +3,6 @@
 #SBATCH --partition=zen3
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=2
-# Request enough RAM for the Nextflow driver: first-time `singularity pull` / mksquashfs for large
-# images (e.g. Dorado) can be killed with ~4G (OOM → "signal: killed"). Raise to 64G if pull still fails.
 #SBATCH --mem=32G
 #SBATCH --time=72:00:00
 #SBATCH --account=ap_itg_cvu
