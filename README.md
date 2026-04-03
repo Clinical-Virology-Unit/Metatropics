@@ -58,45 +58,15 @@ At the **repository root**, choose the params file to match how you start: **[`p
 | `Human_host_fasta` | Set human host FASTA path (from step 4). |
 | `input_dir` | POD5 only: directory containing POD5 files (with **`params_POD5.yaml`**) |
 
-## 6. Running pipeline
+Additional options: **[`nf-metatropics/assets/submission/all_options.md`](nf-metatropics/assets/submission/all_options.md)**.
+
+## 6. Running Metatropics
+
+With your `params_fastq.yaml` or `params_POD5.yaml` in place, run from the **repository root** (swap `-profile docker` for e.g. `-profile singularity`, if needed):
 
 ```
 nextflow run nf-metatropics/ -profile docker -params-file params_fastq.yaml -resume
 ```
-
-   ```
-   nextflow run nf-metatropics/ --help
-
-   Input/output options
-    --input                       [string]  Path to comma-separated file containing information about the samples in the experiment.
-    --input_dir                   [string]  Input directory with POD5 [default: None]
-    --outdir                      [string]  The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.
-Reference genome options
-    --Human_host_fasta            [string]  Optional FASTA for the human background removal step.
-    --Other_host_fasta            [string]  Optional FASTA for an additional host background (e.g. mosquito, primate).
-    --dbmeta                      [string]  Path for the MetaMaps database for read classification [default: None]
-   Generic options
-    --basecall                    [boolean] In case POD5 is the input, that option shoud be true [default: false]
-    --model                       [string]  In case POD5 is the input, the dorado model for basecalling should be provided. Choose from: fast, hac, or sup [default: hac]
-    --kit_name                    [string]  In case POD5 is the input, the kit name should be provided. Available options include: EXP-NBD103, EXP-NBD104, EXP-NBD114, EXP-NBD114-24, EXP-NBD196, EXP-PBC001, EXP-PBC096, SQK-16S024, SQK-16S114-24, SQK-LWB001, SQK-MLK111-96-XL, SQK-MLK114-96-XL, SQK-NBD111-24, SQK-NBD111-96, SQK-NBD114-24, SQK-NBD114-96, SQK-PBK004, SQK-PCB109, SQK-PCB110, SQK-PCB111-24, SQK-PCB114-24, SQK-RAB201, SQK-RAB204, SQK-RBK001, SQK-RBK004, SQK-RBK110-96, SQK-RBK111-24, SQK-RBK111-96, SQK-RBK114-24, SQK-RBK114-96, SQK-RLB001, SQK-RPB004, SQK-RPB114-24, TWIST-16-UDI, TWIST-96A-UDI, VSK-PTC001, VSK-VMK001, VSK-VMK004, VSK-VPS001 [default: TWIST-96A-UDI]
-    --minLength                   [integer] Minimum length for a read to be analyzed. [default: 200]
-    --minVirus                    [number]  Minimum virus data frequency in the raw data to be part of the output. [default: 0.01]
-    --usegpu                      [boolean] In case POD5 is the input, the use of GPU Nvidia should be true.
-    --pair                        [boolean] If barcodes were added at both sides of a read (true) or only at one side (false).
-    --quality                     [integer] Minimum quality for a base to build the consensus [default: 7]
-    --agreement                   [number]  Minimum base frequency to be called without ambiguit to build the consensus [default: 0.7]
-    --depth                       [integer] Minimum depth of a position to build the consensus [default: 5]
-    --front                       [integer] Number of bases to delete at 5 prime of the read [default: 0]
-    --tail                        [integer] Number of bases to delete at 3 prime of the read [default: 0]
-    --rcoverage                   [string]  Coverage figures [default: false]
-    --horizontal_coverage         [integer] Minimum horizontal coverage threshold [default: 1]
-   Rarefaction options
-    --perform_rarefaction         [boolean] Option to perform rarefaction to a specified number of bases [default: false]
-    --target_bases                [number]  Number of bases to which you want to rarefy each sample [default: 1 billion bases, equivalent to 500,000 reads of 2kb each]
-   Docker cleanup 
-    --enable_docker_cleanup       [boolean] Removes all downloaded Docker images to free up root space [default: false]
-   ```
-**Note:** If internet access is unavailable, disable the docker cleanup option to retain images after the initial download, allowing the pipeline to run without internet access.
 
 ## 7. Output
 Below one can see the output directories and their description. `basecalling` and `demultiplexing` will exist only in case the user has used POD5 files as input.
