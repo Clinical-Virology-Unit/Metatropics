@@ -27,7 +27,9 @@ nextflow -version
 ```
 
 ### 3. Container runtime
-The pipeline expects a runtime such as **[Docker](https://docs.docker.com/engine/install/)**, **[Singularity / Apptainer](https://sylabs.io/docs/)**, **[Podman](https://podman.io/)**, **[Shifter](https://nersc.gitlab.io/development/shifter/how-to-use/)**, or **[Charliecloud](https://hpc.github.io/charliecloud/)**. **Docker** (example):
+Use **[Docker](https://docs.docker.com/engine/install/)** on a typical Linux workstation (example below), or **[Singularity](https://sylabs.io/docs/) / [Apptainer](https://apptainer.org/docs/)** on many HPC clusters—then run with the matching Nextflow profile (e.g. `-profile docker`, `-profile singularity`).
+
+**Docker** (example):
 ```bash
 curl -fsSL https://get.docker.com/ | sudo sh
 sudo usermod -aG docker "$USER"   # then log out and back in (or `newgrp docker`)
