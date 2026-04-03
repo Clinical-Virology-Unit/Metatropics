@@ -48,13 +48,13 @@ rm combined_databases.tar.gz
 
 ### 5. Set PATHs
 
-**Note:** Edit **[`params_fastq.yaml`](params_fastq.yaml)** for FASTQ input and **[`params_POD5.yaml`](params_POD5.yaml)** for POD5 / raw squiggle data (both at the **Metatropics** repo root). Example **samplesheets only** are in **[`nf-metatropics/assets/submission/`](nf-metatropics/assets/submission/)** — see [`README.md` there](nf-metatropics/assets/submission/README.md).
+**Note:** Edit **[`params_fastq.yaml`](params_fastq.yaml)** for FASTQ input and **[`params_POD5.yaml`](params_POD5.yaml)** for POD5 / raw squiggle data (both at the **Metatropics** repo root). Example **samplesheets only** are in **[`nf-metatropics/assets/submission/`](nf-metatropics/assets/submission/)** - see [`README.md` there](nf-metatropics/assets/submission/README.md).
 
 ```
 # from the repository root (after step 1)
 nano params_fastq.yaml   # or params_POD5.yaml
 
-input: absolute path to your samplesheet — use or copy [`nf-metatropics/assets/submission/fastq.csv`](nf-metatropics/assets/submission/fastq.csv) or [`POD5.csv`](nf-metatropics/assets/submission/POD5.csv)
+input: absolute path to your samplesheet 
 outdir: absolute path to your output directory
 Human_host_fasta: optional path to the human background genome
 Other_host_fasta: optional path to any additional host genome
