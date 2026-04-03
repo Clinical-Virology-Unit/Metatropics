@@ -46,42 +46,19 @@ tar -xzvf combined_databases.tar.gz
 rm combined_databases.tar.gz
 ```
 
-### 5. Set PATHs
+### 5. Configure paths (samplesheet, output, databases)
 
-**Note:** Edit **[`params_fastq.yaml`](params_fastq.yaml)** for FASTQ input and **[`params_POD5.yaml`](params_POD5.yaml)** for POD5 / raw squiggle data (both at the **Metatropics** repo root). Example **samplesheets only** are in **[`nf-metatropics/assets/submission/`](nf-metatropics/assets/submission/)** - see [`README.md` there](nf-metatropics/assets/submission/README.md).
+At the **repository root**, edit **[`params_fastq.yaml`](params_fastq.yaml)** (FASTQ) or **[`params_POD5.yaml`](params_POD5.yaml)** (POD5). Use **absolute paths**.
 
-```
-# from the repository root (after step 1)
-nano params_fastq.yaml   # or params_POD5.yaml
+| Setting | Purpose |
+|-----|-------------------|
+| `input` | Samplesheet CSV: copy **[`fastq.csv`](nf-metatropics/assets/submission/fastq.csv)** (FASTQ) or **[`POD5.csv`](nf-metatropics/assets/submission/POD5.csv)** (POD5) from [`nf-metatropics/assets/submission/`](nf-metatropics/assets/submission/), edit it, then set `input` to that file’s absolute path. Column layout and FASTQ vs POD5 behaviour are described in the [submission README](nf-metatropics/assets/submission/README.md). |
+| `outdir` | Where results are written. |
+| `dbmeta` | Set database path (from step 4). |
+| `Human_host_fasta` | Set human host FASTA path (from step 4). |
+| `input_dir` | POD5 only: directory containing POD5 files (with **`params_POD5.yaml`**) |
 
-input: absolute path to your samplesheet 
-outdir: absolute path to your output directory
-Human_host_fasta: optional path to the human background genome
-Other_host_fasta: optional path to any additional host genome
-dbmeta: path to your ViralRefseq (MetaMaps) database
-quality: 30 # for high-quality genomes
-depth: 20 # for high-quality genomes
-```
-
-### 6. Set Input
-
-**Note:** Ensure that each sample’s FASTQ is consolidated (e.g. one file per barcode) before you list paths in the samplesheet. **Example CSVs** are under **[`nf-metatropics/assets/submission/`](nf-metatropics/assets/submission/)** — see that [README](nf-metatropics/assets/submission/README.md) (`fastq.csv` vs `POD5.csv`). **Params** stay at the repo root: **[`params_fastq.yaml`](params_fastq.yaml)** / **[`params_POD5.yaml`](params_POD5.yaml)**. The CSV columns differ by starting data:
-- For raw reads (FASTQ): **[`params_fastq.yaml`](params_fastq.yaml)** + samplesheet **[`fastq.csv`](nf-metatropics/assets/submission/fastq.csv)** (copy and edit paths)
-```
-The params file contains the most important paths
-sample,single_end,barcode
-sample_name01,True,/home/antonio/metatropics/nf-metatropics/fastq/barcode01.fastq
-sample_name02,True,/home/antonio/metatropics/nf-metatropics/fastq/barcode02.fastq
-```
-
-- For squiggle data (POD5): **[`params_POD5.yaml`](params_POD5.yaml)** + samplesheet **[`POD5.csv`](nf-metatropics/assets/submission/POD5.csv)** (copy and edit; set `input_dir` to your POD5 directory)
-```
-sample,single_end,barcode
-sample_name01,True,barcode01
-sample_name02,True,barcode02
-```
-
-### 7. Runing pipeline
+### 6. Running pipeline
 
 ```
 nextflow run nf-metatropics/ -profile docker -params-file params_fastq.yaml -resume
@@ -121,7 +98,7 @@ Reference genome options
    ```
 **Note:** If internet access is unavailable, disable the docker cleanup option to retain images after the initial download, allowing the pipeline to run without internet access.
 
-### 8. Output
+### 7. Output
 Below one can see the output directories and their description. `basecalling` and `demultiplexing` will exist only in case the user has used POD5 files as input.
 
 1. [`basecalling`] - fastq files after the basecalling without being demultiplexed
@@ -156,7 +133,7 @@ Tip 1: If you have limited space, you can delete the 'work' directory and, after
 
 Tip 2: When you encounter errors, make sure to double-check the memory allocated to your processes. This is often the cause, or alternatively, consider including rarefaction.
 
-### 9. High performance computing
+### 8. High performance computing
 
 You can also run this pipeline on an HPC cluster; for example, on the Flemish Tier-1 system **CalcUA** (VSC), use the Slurm submission scripts and Nextflow profile under [`nf-metatropics/assets/calcua/`](nf-metatropics/assets/calcua/). For setup and usage, see the [README in that folder](nf-metatropics/assets/calcua/README.md).
 
