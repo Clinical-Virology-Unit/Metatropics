@@ -9,7 +9,7 @@ The metatropics pipeline is a [Nextflow](https://www.nextflow.io/)-driven workfl
 
 ### Pipeline summary
 
-![Figure](./nf-metatropics//Metatropics.jpg)
+![Figure](./nf-metatropics/assets/logo/Metatropics.jpg)
 
 For a more detailed description see [Metatropics description](https://github.com/Clinical-Virology-Unit/Metatropics)
 
@@ -79,25 +79,25 @@ nano base.config
 
 ### 6. Set PATHs
 
-**Note:** Use `params_fastq.yaml` for FASTQ input and switich to `params_POD5.yaml` when dealing with squiggles.
+**Note:** Edit **[`params_fastq.yaml`](params_fastq.yaml)** for FASTQ input and **[`params_POD5.yaml`](params_POD5.yaml)** for POD5 / raw squiggle data (both at the **Metatropics** repo root). Example **samplesheets only** are in **[`nf-metatropics/assets/submission/`](nf-metatropics/assets/submission/)** — see [`README.md` there](nf-metatropics/assets/submission/README.md).
 
 ```
 cd Metatropics
-nano params_fastq.yaml
+nano params_fastq.yaml   # or params_POD5.yaml
 
-input: change to input PATH
-outdir: change to output PATH
-Human_host_fasta: optional path to the human background genome 
-Other_host_fasta: optional path to any additional host genome 
-dbmeta: change to ViralRefseq database PATH
+input: absolute path to your samplesheet — use or copy [`nf-metatropics/assets/submission/fastq.csv`](nf-metatropics/assets/submission/fastq.csv) or [`POD5.csv`](nf-metatropics/assets/submission/POD5.csv)
+outdir: absolute path to your output directory
+Human_host_fasta: optional path to the human background genome
+Other_host_fasta: optional path to any additional host genome
+dbmeta: path to your ViralRefseq (MetaMaps) database
 quality: 30 # for high-quality genomes
-depth 20 # for high-quality genomes
+depth: 20 # for high-quality genomes
 ```
 
 ### 7. Set Input
 
-**Note:** Ensure that all your input FASTQ reads are consolidated into a single file rather than being spread across multiple files in directories like barcode01/fastq. To facilitate this, a bash script named concatenate_fastq.sh is available in the 'Input' folder. You can use this script to merge all FASTQ files in the barcode01 directory into a single barcode01.fastq file by running the command: bash concatenate_fastq.sh. The format of the `mpox.csv` [Input](https://github.com/Clinical-Virology-Unit/Metatropics/tree/main/Input) file differs based on your starting data:
-- For raw reads (FASTQ): (<u>use params_fastq.yaml</u>)
+**Note:** Ensure that each sample’s FASTQ is consolidated (e.g. one file per barcode) before you list paths in the samplesheet. **Example CSVs** are under **[`nf-metatropics/assets/submission/`](nf-metatropics/assets/submission/)** — see that [README](nf-metatropics/assets/submission/README.md) (`fastq.csv` vs `POD5.csv`). **Params** stay at the repo root: **[`params_fastq.yaml`](params_fastq.yaml)** / **[`params_POD5.yaml`](params_POD5.yaml)**. The CSV columns differ by starting data:
+- For raw reads (FASTQ): **[`params_fastq.yaml`](params_fastq.yaml)** + samplesheet **[`fastq.csv`](nf-metatropics/assets/submission/fastq.csv)** (copy and edit paths)
 ```
 The params file contains the most important paths
 sample,single_end,barcode
@@ -105,7 +105,7 @@ sample_name01,True,/home/antonio/metatropics/nf-metatropics/fastq/barcode01.fast
 sample_name02,True,/home/antonio/metatropics/nf-metatropics/fastq/barcode02.fastq
 ```
 
-- For squiggle data (POD5): (<u>use params_POD5.yaml</u>)
+- For squiggle data (POD5): **[`params_POD5.yaml`](params_POD5.yaml)** + samplesheet **[`POD5.csv`](nf-metatropics/assets/submission/POD5.csv)** (copy and edit; set `input_dir` to your POD5 directory)
 ```
 sample,single_end,barcode
 sample_name01,True,barcode01

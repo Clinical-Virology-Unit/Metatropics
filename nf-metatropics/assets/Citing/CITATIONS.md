@@ -1,4 +1,12 @@
-# nf-core/metatropics: Citations
+# Citations
+
+To cite **Metatropics** itself, use the metadata in [`CITATION.cff`](../../../CITATION.cff) at the repository root (GitHub shows this under **Cite this repository**).
+
+The references below are for **nf-core, Nextflow, and tools** used inside the pipeline.
+
+---
+
+## nf-core/metatropics: tool and framework citations
 
 ## [nf-core](https://pubmed.ncbi.nlm.nih.gov/32055031/)
 

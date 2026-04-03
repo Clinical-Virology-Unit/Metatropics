@@ -1,8 +1,8 @@
 // host_mapping.nf
 
-include { MINIMAP2_ALIGN } from '../../modules/nf-core/minimap2/align/main'
-include { SAMTOOLS_SORT  } from '../../modules/nf-core/samtools/sort/main'
-include { SAMTOOLS_hoFASTQ } from '../../modules/nf-core/samtools/fastq/main2'
+include { MINIMAP2_ALIGN } from '../../../modules/nf-core/minimap2/align/main'
+include { SAMTOOLS_SORT  } from '../../../modules/nf-core/samtools/sort/main'
+include { SAMTOOLS_hoFASTQ } from '../../../modules/nf-core/samtools/fastq/main2'
 
 workflow HOST_MAPPING {
     take:
