@@ -11,13 +11,13 @@ The metatropics pipeline is a [Nextflow](https://www.nextflow.io/)-driven workfl
 
 ![Figure](./nf-metatropics/assets/logo/Metatropics.jpg)
 
-### 1. Clone the repository
+### Clone the repository
 ```bash
 git clone https://github.com/DaanJansen94/Metatropics.git
 cd Metatropics
 ```
 
-### 2. Java and Nextflow
+### Java and Nextflow
 You need **Java 17+** and **[Nextflow](https://www.nextflow.io/docs/latest/getstarted.html#installation) ≥ 22.10.1**. On Debian/Ubuntu you can do:
 ```bash
 sudo apt update && sudo apt install -y openjdk-17-jdk curl
@@ -26,7 +26,7 @@ chmod +x nextflow && sudo mv nextflow /usr/local/bin/
 nextflow -version
 ```
 
-### 3. Containers
+### Containers
 Use **[Docker](https://docs.docker.com/engine/install/)** on a typical Linux workstation (example below), or **[Singularity](https://sylabs.io/docs/) / [Apptainer](https://apptainer.org/docs/)** on many HPC clusters - then run with the matching Nextflow profile (e.g. `-profile docker`, `-profile singularity`).
 
 **Docker** (example):
@@ -36,7 +36,7 @@ sudo usermod -aG docker "$USER"   # then log out and back in (or `newgrp docker`
 docker run --rm hello-world
 ```
 
-### 4. Download databases
+### Download databases
 Download and unpack the required database (Viral RefSeq and human host genomes):
 
 ```
@@ -46,7 +46,7 @@ tar -xzvf combined_databases.tar.gz
 rm combined_databases.tar.gz
 ```
 
-### 5. Configure paths (samplesheet, output, databases)
+### Configure paths (samplesheet, output, databases)
 
 At the **repository root**, choose the params file to match how you start: **[`params_fastq.yaml`](params_fastq.yaml)** when you already have basecalled **reads (FASTQ)**, or **[`params_POD5.yaml`](params_POD5.yaml)** when you start from raw **POD5** signal (“squiggle”) data and need basecalling inside the pipeline. Edit that file using **absolute paths**.
 
@@ -58,7 +58,7 @@ At the **repository root**, choose the params file to match how you start: **[`p
 | `Human_host_fasta` | Set human host FASTA path (from step 4). |
 | `input_dir` | POD5 only: directory containing POD5 files (with **`params_POD5.yaml`**) |
 
-### 6. Running pipeline
+### Running pipeline
 
 ```
 nextflow run nf-metatropics/ -profile docker -params-file params_fastq.yaml -resume
@@ -98,7 +98,7 @@ Reference genome options
    ```
 **Note:** If internet access is unavailable, disable the docker cleanup option to retain images after the initial download, allowing the pipeline to run without internet access.
 
-### 7. Output
+### Output
 Below one can see the output directories and their description. `basecalling` and `demultiplexing` will exist only in case the user has used POD5 files as input.
 
 1. [`basecalling`] - fastq files after the basecalling without being demultiplexed
@@ -133,11 +133,11 @@ Tip 1: If you have limited space, you can delete the 'work' directory and, after
 
 Tip 2: When you encounter errors, make sure to double-check the memory allocated to your processes. This is often the cause, or alternatively, consider including rarefaction.
 
-### 8. High performance computing
+### High performance computing
 
 You can also run this pipeline on an HPC cluster; for example, on the Flemish Tier-1 system **CalcUA** (VSC), use the Slurm submission scripts and Nextflow profile under [`nf-metatropics/assets/calcua/`](nf-metatropics/assets/calcua/). For setup and usage, see the [README in that folder](nf-metatropics/assets/calcua/README.md).
 
-## Citation
+### Citation
 
 If you use Metatropics in your research, please cite:
 
@@ -147,7 +147,7 @@ De Souza Novaes, A., Jansen, D., de Block, T., Vercauteren, K., & Rezende, A. M.
 
 Also cite the **nf-core** framework, and other tools you rely on; see [`nf-metatropics/assets/citing/CITATIONS.md`](nf-metatropics/assets/citing/CITATIONS.md).
 
-## License
+### License
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
