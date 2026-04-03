@@ -11,78 +11,45 @@ The metatropics pipeline is a [Nextflow](https://www.nextflow.io/)-driven workfl
 
 ![Figure](./nf-metatropics/assets/logo/Metatropics.jpg)
 
-For a more detailed description see [Metatropics description](https://github.com/Clinical-Virology-Unit/Metatropics)
-
-### 1. Download metatropics pipeline on Linux
-```
-sudo apt update
-sudo apt install git
-git config --global http.postBuffer 524288000
+### 1. Clone the repository
+```bash
 git clone https://github.com/DaanJansen94/Metatropics.git
+cd Metatropics
 ```
 
-### 2. Install Java and Nextflow
-Install [`Nextflow`](https://www.nextflow.io/docs/latest/getstarted.html#installation) (`>=22.10.1`)
-```
-sudo apt-get install curl
-curl -s https://get.sdkman.io | bash
-
-Open a new terminal
-
-sdk install java 17.0.10-tem
-java -version
-curl -s https://get.nextflow.io | bash
-chmod +x nextflow
-sudo mv nextflow /usr/local/bin 
-nextflow info
+### 2. Java and Nextflow
+You need **Java 17+** and **[Nextflow](https://www.nextflow.io/docs/latest/getstarted.html#installation) ≥ 22.10.1**. On Debian/Ubuntu you can do:
+```bash
+sudo apt update && sudo apt install -y openjdk-17-jdk curl
+curl -sSL https://get.nextflow.io | bash
+chmod +x nextflow && sudo mv nextflow /usr/local/bin/
+nextflow -version
 ```
 
-### 3. Install container system
-Install any of the following container systems [`Docker`](https://docs.sevenbridges.com/docs/install-docker-on-linux), [`Singularity`](https://www.sylabs.io/guides/3.0/user-guide/), [`Podman`](https://podman.io/), [`Shifter`](https://nersc.gitlab.io/development/shifter/how-to-use/) or [`Charliecloud`](https://hpc.github.io/charliecloud/) for full pipeline reproducibility.
-
-Docker example:  
-```
-curl -fsSL https://get.docker.com/ | sh
-sudo usermod -aG docker <your_username>
-sudo chmod 666 /var/run/docker.sock
-docker run hello-world
-sudo service docker restart
+### 3. Container runtime
+The pipeline expects a runtime such as **[Docker](https://docs.docker.com/engine/install/)**, **[Singularity / Apptainer](https://sylabs.io/docs/)**, **[Podman](https://podman.io/)**, **[Shifter](https://nersc.gitlab.io/development/shifter/how-to-use/)**, or **[Charliecloud](https://hpc.github.io/charliecloud/)**. **Docker** (example):
+```bash
+curl -fsSL https://get.docker.com/ | sudo sh
+sudo usermod -aG docker "$USER"   # then log out and back in (or `newgrp docker`)
+docker run --rm hello-world
 ```
 
-### 4. Download Databases 
-This includes: i) Viral Refseq, ii) Human genome and iii) Mosquito (host) genomes databases.
+### 4. Download the required databases
+Download and unpack the combined reference bundle (Viral RefSeq, human host, and mosquito host genomes used by the pipeline):
 
-**Choice 1: Viral database**
 ```
-cd Metatropics/Databases
+mkdir -p Databases && cd Databases
 wget -c https://zenodo.org/records/13132915/files/combined_databases.tar.gz
 tar -xzvf combined_databases.tar.gz
 rm combined_databases.tar.gz
 ```
 
-### 5. Resource Optimization
-**Note:** Allocate resources for enhanced computational efficiency. This version is optimized for a 64 GB RAM, 20-core Linux computer. If your computer is similar, use the default settings. If not, or if unsure, optimize accordingly:
-
-**Note:** Determine resources
-
-```
-free -h
-nproc
-```
-
-**Note:** Optimize resources by allocating the required process labels (single, low, medium, high)
-
-```
-cd Metatropics/nf-metatropics/conf
-nano base.config
-```
-
-### 6. Set PATHs
+### 5. Set PATHs
 
 **Note:** Edit **[`params_fastq.yaml`](params_fastq.yaml)** for FASTQ input and **[`params_POD5.yaml`](params_POD5.yaml)** for POD5 / raw squiggle data (both at the **Metatropics** repo root). Example **samplesheets only** are in **[`nf-metatropics/assets/submission/`](nf-metatropics/assets/submission/)** — see [`README.md` there](nf-metatropics/assets/submission/README.md).
 
 ```
-cd Metatropics
+# from the repository root (after step 1)
 nano params_fastq.yaml   # or params_POD5.yaml
 
 input: absolute path to your samplesheet — use or copy [`nf-metatropics/assets/submission/fastq.csv`](nf-metatropics/assets/submission/fastq.csv) or [`POD5.csv`](nf-metatropics/assets/submission/POD5.csv)
@@ -94,7 +61,7 @@ quality: 30 # for high-quality genomes
 depth: 20 # for high-quality genomes
 ```
 
-### 7. Set Input
+### 6. Set Input
 
 **Note:** Ensure that each sample’s FASTQ is consolidated (e.g. one file per barcode) before you list paths in the samplesheet. **Example CSVs** are under **[`nf-metatropics/assets/submission/`](nf-metatropics/assets/submission/)** — see that [README](nf-metatropics/assets/submission/README.md) (`fastq.csv` vs `POD5.csv`). **Params** stay at the repo root: **[`params_fastq.yaml`](params_fastq.yaml)** / **[`params_POD5.yaml`](params_POD5.yaml)**. The CSV columns differ by starting data:
 - For raw reads (FASTQ): **[`params_fastq.yaml`](params_fastq.yaml)** + samplesheet **[`fastq.csv`](nf-metatropics/assets/submission/fastq.csv)** (copy and edit paths)
@@ -112,7 +79,7 @@ sample_name01,True,barcode01
 sample_name02,True,barcode02
 ```
 
-### 8. Runing pipeline
+### 7. Runing pipeline
 
 ```
 nextflow run nf-metatropics/ -profile docker -params-file params_fastq.yaml -resume
@@ -152,7 +119,7 @@ Reference genome options
    ```
 **Note:** If internet access is unavailable, disable the docker cleanup option to retain images after the initial download, allowing the pipeline to run without internet access.
 
-### 9. Output
+### 8. Output
 Below one can see the output directories and their description. `basecalling` and `demultiplexing` will exist only in case the user has used POD5 files as input.
 
 1. [`basecalling`] - fastq files after the basecalling without being demultiplexed
@@ -187,7 +154,7 @@ Tip 1: If you have limited space, you can delete the 'work' directory and, after
 
 Tip 2: When you encounter errors, make sure to double-check the memory allocated to your processes. This is often the cause, or alternatively, consider including rarefaction.
 
-### 10. High performance computing
+### 9. High performance computing
 
 You can also run this pipeline on an HPC cluster; for example, on the Flemish Tier-1 system **CalcUA** (VSC), use the Slurm submission scripts and Nextflow profile under [`nf-metatropics/assets/calcua/`](nf-metatropics/assets/calcua/). For setup and usage, see the [README in that folder](nf-metatropics/assets/calcua/README.md).
 
