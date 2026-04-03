@@ -26,8 +26,8 @@ chmod +x nextflow && sudo mv nextflow /usr/local/bin/
 nextflow -version
 ```
 
-### 3. Container runtime
-Use **[Docker](https://docs.docker.com/engine/install/)** on a typical Linux workstation (example below), or **[Singularity](https://sylabs.io/docs/) / [Apptainer](https://apptainer.org/docs/)** on many HPC clusters—then run with the matching Nextflow profile (e.g. `-profile docker`, `-profile singularity`).
+### 3. Containers
+Use **[Docker](https://docs.docker.com/engine/install/)** on a typical Linux workstation (example below), or **[Singularity](https://sylabs.io/docs/) / [Apptainer](https://apptainer.org/docs/)** on many HPC clusters - then run with the matching Nextflow profile (e.g. `-profile docker`, `-profile singularity`).
 
 **Docker** (example):
 ```bash
@@ -36,8 +36,8 @@ sudo usermod -aG docker "$USER"   # then log out and back in (or `newgrp docker`
 docker run --rm hello-world
 ```
 
-### 4. Download the required databases
-Download and unpack the combined reference bundle (Viral RefSeq, human host, and mosquito host genomes used by the pipeline):
+### 4. Download databases
+Download and unpack the required database ((Viral RefSeq and human host genomes):
 
 ```
 mkdir -p Databases && cd Databases
