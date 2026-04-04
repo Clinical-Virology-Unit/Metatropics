@@ -73,9 +73,9 @@ nextflow run nf-metatropics/ -profile docker -params-file params_fastq.yaml -res
 
 ## 7. Output
 
-Results are written under your chosen `--outdir`.  The list below groups outputs by role; **`basecalling`** and **`demultiplexing`** exist only for POD5 input.
+Results are written under your chosen `--outdir` with the important outputs summarized below:
 
-### POD5 basecalling and demultiplexing
+### POD5 basecalling and demultiplexing (optional)
 
 | Folder | Contents |
 |--------|----------|
@@ -84,7 +84,7 @@ Results are written under your chosen `--outdir`.  The list below groups outputs
 
 ### Reads, QC, host alignment, and depletion
 
-Trimming and QC happen first; then reads are aligned to the **human** host with minimap2 (BAMs below). Reads **without** hits to the human genome go to **`nohuman`**; if you set a second host, **`nohost`** holds reads after that depletion step. 
+**Read quality control (QC)** comes first: fix naming, optionally subsample, trim, and build simple quality summaries. **Then** reads are aligned to the **human** host; reads that **do not** map to the human genome are written to **`nohuman`**. If you configure a second host, another depletion step produces **`nohost`**.
 
 | Folder | Contents |
 |--------|----------|
@@ -99,6 +99,8 @@ Trimming and QC happen first; then reads are aligned to the **human** host with 
 
 ### Taxonomic classification
 
+Host-depleted reads are mapped to the metagenomic database and summarized so you can see **which organisms (taxa) are present** in each sample.
+
 | Folder | Contents |
 |--------|----------|
 | `metamaps` | MetaMaps mapping and classification outputs (`mapDirectly`, `Classify`). |
@@ -107,25 +109,27 @@ Trimming and QC happen first; then reads are aligned to the **human** host with 
 
 ### Per-virus reads
 
+Reads that MetaMaps assigns to a given **virus** are extracted into separate FASTQs **per sample and per virus** for downstream work.
+
 | Folder | Contents |
 |--------|----------|
 | `seqtk` | FASTQ per sample per virus (reads assigned to that virus). |
 
 ### Variant calling (BAMs and references)
 
-**Reference FASTA** and **BAM** alignments to that reference, plus depth and alignment statistics. Pair **`medaka`** BAMs with **`reffix`** FASTA by sample and virus name (cleaned headers).
+For each candidate virus, reads are aligned to the **viral reference** (**BAMs**). **Variant calls**—differences from that reference—are derived from those alignments. 
 
 | Folder | Contents |
 |--------|----------|
-| `reffix` | Reference FASTA with **cleaned headers** for each virus (use with `medaka` BAMs). |
-| `medaka` | **BAMs** of reads aligned to each viral reference (per virus, per sample). |
+| `reffix` | Reference FASTA with **cleaned headers** for each virus. |
+| `medaka` | **BAMs** of reads aligned to each viral reference and **VCF** files with **variant calls** (differences from that reference). |
 | `samtools` | Mapping and coverage summaries for the `medaka` BAMs. |
 | `bam` | Per-position statistics for the viral-reference BAMs. |
 | `addingDepth` | Depth tables per virus per sample. |
 
 ### Consensus
 
-Draft and polished **consensus genome** sequences. The main deliverable for reporting is usually the Homopolish output.
+A **consensus genome** is called per virus (iVar draft, **Homopolish** final genome).
 
 | Folder | Contents |
 |--------|----------|
@@ -133,6 +137,8 @@ Draft and polished **consensus genome** sequences. The main deliverable for repo
 | `homopolish` | **Polished** consensus FASTA (typical final genome per virus per sample). |
 
 ### Run-level summaries and provenance
+
+Outputs that **summarize the whole run** (combined tables, coverage plots, read-count inputs, and pipeline provenance).
 
 | Folder | Contents |
 |--------|----------|
