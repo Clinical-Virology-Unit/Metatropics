@@ -75,75 +75,17 @@ nextflow run nf-metatropics/ -profile docker -params-file params_fastq.yaml -res
 
 Results are written under your chosen `--outdir` and summarized below:
 
-### POD5 basecalling and demultiplexing (optional)
+| Group | Role |
+|--------|------|
+| **`Basecalling/`** | POD5: Dorado basecalling and demultiplexing (optional). |
+| **`Reads/`** | Read QC, trimming, MultiQC, human / optional host depletion. |
+| **`Classification/`** | MetaMaps and Krona taxonomic outputs. |
+| **`Viral_reads/`** | Per-virus extracted FASTQs (`seqtk`). |
+| **`Variant_calling/`** | Viral references, Medaka alignments/variants, merged depth tables. |
+| **`Consensus/`** | iVar draft and Homopolish polished genomes. |
+| **`Summary/`** | Run-wide tables, read-count figure, coverage PDFs, Nextflow reports, validated samplesheet. |
 
-| Folder | Contents |
-|--------|----------|
-| `basecalling` | Intermediate FASTQ from Dorado before demultiplexing. |
-| `demultiplexing` | Per-barcode FASTQ after demultiplexing. |
-
-### Read preprocessing
-
-This step removes low-quality reads and reads that match host background (e.g., human). The host-depleted read set is used for the rest of the pipeline.
-
-| Folder | Contents |
-|--------|----------|
-| `fix` | Per-sample FASTQ after naming / format fixes (compressed). |
-| `rarefaction` | Per-sample FASTQ after optional rarefaction subsampling. |
-| `fastp` | Trimmed reads and FASTP reports. |
-| `nanoplot` | Read-length and quality summaries (NanoPlot). |
-| `multiqc` | **MultiQC** HTML report (`multiqc_report.html`)  |
-| `nohuman` | FASTQ of reads **not** mapping to the human reference (human-depleted). |
-| `nohost` | Optional: FASTQ after depletion against an extra host genome. |
-
-### Taxonomic classification
-
-Host-depleted reads are then mapped to the metagenomic database and summarized so you can see **which organisms (taxa) are present** in each sample.
-
-| Folder | Contents |
-|--------|----------|
-| `metamaps` | MetaMaps mapping and classification outputs (`mapDirectly`, `Classify`). |
-| `krona` | Krona HTML charts of taxonomic composition. |
-
-### Per-virus reads
-
-Reads that MetaMaps assigns to a given **virus** are extracted into separate FASTQs **per sample and per virus** for downstream work.
-
-| Folder | Contents |
-|--------|----------|
-| `seqtk` | FASTQ per sample per virus (reads assigned to that virus). |
-
-### Variant calling (BAMs and references)
-
-For each candidate virus, reads are aligned to the **viral reference** (**BAMs**). **Variant calls** - differences from that reference - are derived from those alignments. 
-
-| Folder | Contents |
-|--------|----------|
-| `reffix` | Reference FASTA with **cleaned headers** for each virus. |
-| `medaka` | **BAMs** of reads aligned to each viral reference and **VCF** files with **variant calls** (differences from that reference). |
-| `addingDepth` | Per-virus depth tables (coverage + consensus + classification). |
-
-### Consensus
-
-A **consensus genome** is called per virus (iVar draft, **Homopolish** final genome).
-
-| Folder | Contents |
-|--------|----------|
-| `ivar` | Consensus sequences from iVar (input to Homopolish). |
-| `homopolish` | **Polished** consensus FASTA (typical final genome per virus per sample). |
-
-### Run-level summaries and provenance
-
-Outputs that **summarize the whole run** (combined tables, coverage plots, read-count inputs, and pipeline provenance).
-
-| Folder | Contents |
-|--------|----------|
-| `final` | Combined **final TSV** across the whole run. |
-| `rcoverage` | Coverage **PDFs** for identified viruses (if enabled). |
-| `read_count` | Read-count **CSV/PDF** and staged inputs for the read-distribution figure (aggregates material from `fix`, `fastp`, `nohuman`, `nohost`, `metamaps`—folder names must stay as the pipeline expects). |
-| `pipeline_info` | Nextflow reports, command lines, and software versions. |
-
-**Note:** For a typical outbreak-style use case, priority outputs are often **`homopolish`** (polished consensus), **`final`**, **`rcoverage`**, and **`read_count`**. 
+For **each subfolder**, the **files and reports** written to `--outdir`, and what they are for, see [`nf-metatropics/assets/output/README.md`](nf-metatropics/assets/output/README.md).
 
 ## 8. High performance computing
 
