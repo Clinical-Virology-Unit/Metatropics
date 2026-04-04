@@ -77,7 +77,7 @@ Results are written under your chosen `--outdir` and summarized below:
 
 | Group | Role |
 |--------|------|
-| **`Basecalling/`** | POD5: Dorado basecalling and demultiplexing (optional). |
+| **`Basecalling/`** | Dorado basecalling and demultiplexing (optional). |
 | **`Reads/`** | Read QC, trimming, MultiQC, human / optional host depletion. |
 | **`Classification/`** | MetaMaps and Krona taxonomic outputs. |
 | **`Viral_reads/`** | Per-virus extracted FASTQs (`seqtk`). |
