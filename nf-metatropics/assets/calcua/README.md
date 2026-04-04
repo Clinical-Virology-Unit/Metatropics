@@ -12,7 +12,7 @@ This guide is for **running Metatropics on CalcUA**, the Tier‑1 HPC at **VSC A
 | Your input | Script | Params file (typical) | Nextflow profile |
 |------------|--------|------------------------|------------------|
 | FASTQ | [submit_metatropics_fastq_calcua.sbatch](submit_metatropics_fastq_calcua.sbatch) | `params_fastq.yaml` | `vsc_calcua` (CPU) |
-| POD5 | [submit_metatropics_pod5_calcua.sbatch](submit_metatropics_pod5_calcua.sbatch) | `params_POD5.yaml` | `vsc_calcua_gpu` (CPUs for most steps; **GPU for Dorado**) |
+| POD5 | [submit_metatropics_pod5_calcua.sbatch](submit_metatropics_pod5_calcua.sbatch) | `params_POD5.yaml` | `vsc_calcua_gpu` (GPU + CPU) |
 
 ```bash
 # FASTQ
