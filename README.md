@@ -72,39 +72,76 @@ nextflow run nf-metatropics/ -profile docker -params-file params_fastq.yaml -res
 ```
 
 ## 7. Output
-Below one can see the output directories and their description. `basecalling` and `demultiplexing` will exist only in case the user has used POD5 files as input.
 
-1. [`basecalling`] - fastq files after the basecalling without being demultiplexed
-2. [`demultiplexing`] - directories and fastq files produced after demultiplexing
-3. [`fix`] - gziped fastq files for each sample of the run
-4. [`rarefaction`] - gziped fastq files for each rarefied sample
-5. [`fastp`] - results after trimming analysis performed by FASTP
-6. [`nanoplot`] - quality results for the sequencing data just after demultiplexing
-7. [`minimap2`] - BAM files about mapping against host genome
-8. [`nohuman`] - gziped fastq files without reads mapping to human genome
-9. [`nohost`] - gziped fastq files without reads mapping to host genome (-optional)
-10. [`metamaps`] - results from both steps of Metamaps execution for read classification (mapDirectly and Classify)
-11. [`r`] - intermediate table report and graphical PDF report for each sample
-12. [`ref`] - header of the reads and fasta reference genomes for each virus found for each sample
-13. [`krona`] - HTML files for each sample with interactive composition pie chart
-14. [`reffix`] - fasta refence genomes with fixed header for each virus found during the run
-15. [`seqtk`] - gziped fastq file for each set of read classified to a virus for each sample
-16. [`medaka`] - BAM file for each virus with mapping results from the virus genome reference for each sample
-17. [`samtools`] - mapping statistics calculated to BAM files present in the `medaka` directory
-18. [`ivar`] - consensus sequences produced for each virus found in each sample
-19. [`bam`] - detailed statistics for the BAM files from `medaka` directory for each position of virus refence genome
-20. [`homopolish`] - consensus sequence for each virus in each sample polished for the indel variations
-21. [`addingDepth`] - table report for each virus in each sample
-22. [`final`] - final table report for all the run
-23. [`pipeline_info`] - reports on the execution of the pipeline produced by NextFlow
-24. [`rcoverage`] - PDF files including coverage figures of identified viruses
-25. [`read_count`] - PDF and CSV files representing read distribution. These figures visualize the distribution of all reads, including trimmed, human, viral, and other reads.
+Results are written under your chosen `--outdir`.  The list below groups outputs by role; **`basecalling`** and **`demultiplexing`** exist only for POD5 input.
 
-**Note:** For the INRB mpox analysis, the most important files are the polished consensus sequences (20), the final report (22), the coverage (24) and read distribution figures (25). 
+### POD5 basecalling and demultiplexing
 
-Tip 1: If you have limited space, you can delete the 'work' directory and, after selecting the necessary output files, also remove the 'output' directory.
+| Folder | Contents |
+|--------|----------|
+| `basecalling` | Intermediate FASTQ from Dorado before demultiplexing. |
+| `demultiplexing` | Per-barcode FASTQ after demultiplexing. |
 
-Tip 2: When you encounter errors, make sure to double-check the memory allocated to your processes. This is often the cause, or alternatively, consider including rarefaction.
+### Reads, QC, host alignment, and depletion
+
+Trimming and QC happen first; then reads are aligned to the **human** host with minimap2 (BAMs below). Reads **without** hits to the human genome go to **`nohuman`**; if you set a second host, **`nohost`** holds reads after that depletion step. 
+
+| Folder | Contents |
+|--------|----------|
+| `fix` | Per-sample FASTQ after naming / format fixes (compressed). |
+| `rarefaction` | Per-sample FASTQ after optional rarefaction subsampling. |
+| `fastp` | Trimmed reads and FASTP reports. |
+| `nanoplot` | Read-length and quality summaries (NanoPlot). |
+| `multiqc` | **MultiQC** HTML report (`multiqc_report.html`)  |
+| `minimap2` | **BAMs** from aligning reads to the **human host** reference (host-genome alignment, not “the mapper” as such). |
+| `nohuman` | FASTQ of reads **not** mapping to the human reference (human-depleted). |
+| `nohost` | Optional: FASTQ after depletion against an extra host genome. |
+
+### Taxonomic classification
+
+| Folder | Contents |
+|--------|----------|
+| `metamaps` | MetaMaps mapping and classification outputs (`mapDirectly`, `Classify`). |
+| `krona` | Krona HTML charts of taxonomic composition. |
+| `r` | Intermediate tabular and PDF summaries per sample (R-generated). |
+
+### Per-virus reads
+
+| Folder | Contents |
+|--------|----------|
+| `seqtk` | FASTQ per sample per virus (reads assigned to that virus). |
+
+### Variant calling (BAMs and references)
+
+**Reference FASTA** and **BAM** alignments to that reference, plus depth and alignment statistics. Pair **`medaka`** BAMs with **`reffix`** FASTA by sample and virus name (cleaned headers).
+
+| Folder | Contents |
+|--------|----------|
+| `reffix` | Reference FASTA with **cleaned headers** for each virus (use with `medaka` BAMs). |
+| `medaka` | **BAMs** of reads aligned to each viral reference (per virus, per sample). |
+| `samtools` | Mapping and coverage summaries for the `medaka` BAMs. |
+| `bam` | Per-position statistics for the viral-reference BAMs. |
+| `addingDepth` | Depth tables per virus per sample. |
+
+### Consensus
+
+Draft and polished **consensus genome** sequences. The main deliverable for reporting is usually the Homopolish output.
+
+| Folder | Contents |
+|--------|----------|
+| `ivar` | Consensus sequences from iVar (input to Homopolish). |
+| `homopolish` | **Polished** consensus FASTA (typical final genome per virus per sample). |
+
+### Run-level summaries and provenance
+
+| Folder | Contents |
+|--------|----------|
+| `final` | Combined **final TSV** across the whole run. |
+| `rcoverage` | Coverage **PDFs** for identified viruses (if enabled). |
+| `read_count` | Read-count **CSV/PDF** and staged inputs for the read-distribution figure (aggregates material from `fix`, `fastp`, `nohuman`, `nohost`, `metamaps`—folder names must stay as the pipeline expects). |
+| `pipeline_info` | Nextflow reports, command lines, and software versions. |
+
+**Note:** For a typical outbreak-style use case, priority outputs are often **`homopolish`** (polished consensus), **`final`**, **`rcoverage`**, and **`read_count`**. 
 
 ## 8. High performance computing
 
