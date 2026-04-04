@@ -1,6 +1,6 @@
 # Citations
 
-To cite **Metatropics** itself, use the metadata in [`CITATION.cff`](../../../CITATION.cff) at the repository root (GitHub shows this under **Cite this repository**). The rest of this file lists citations for **nf-core**, **Nextflow**, **container engines**, and **third-party software invoked by this pipeline** (see `nf-metatropics/modules/` and `workflows/`).
+To cite **Metatropics** itself, use the metadata in [`CITATION.cff`](../../../CITATION.cff) at the repository root (GitHub shows this under **Cite this repository**). Everything below is a **reference list for papers**: journal articles, DOIs, and canonical software/project links you can paste into a bibliography—**not** run logs or file paths.
 
 ---
 
@@ -26,19 +26,17 @@ To cite **Metatropics** itself, use the metadata in [`CITATION.cff`](../../../CI
 
 ## Pipeline software
 
-Alphabetical. Match names to modules under `nf-metatropics/modules/`. Each tool uses the same layout as above: **linked heading** (primary URL) + blockquote.
-
 ### [bam-readcount](https://github.com/genome/bam-readcount)
 
-> Used for per-position base counts in BAMs. Open source from the McDonnell Genome Institute; there is no single journal article—cite the repository and any wider variant-calling / QC workflow you pair it with.
+> McDonnell Genome Institute. bam-readcount. [https://github.com/genome/bam-readcount](https://github.com/genome/bam-readcount)
 
 ### [BBMap / BBTools](https://sourceforge.net/projects/bbmap/)
 
-> Used for `reformat.sh` and rarefaction in modules. Bushnell B. BBTools / BBMap (JGI). Primary site: [SourceForge: BBMap](https://sourceforge.net/projects/bbmap/). Typical attribution: Lawrence Berkeley National Lab / JGI. Related peer-reviewed component: Bushnell B. BBMerge: Accurate paired shotgun read merging via overlap. *PLOS ONE* 9(4):e93362. doi: [10.1371/journal.pone.0093362](https://doi.org/10.1371/journal.pone.0093362).
+> Bushnell B. BBMerge: Accurate paired shotgun read merging via overlap. *PLOS ONE*. 2014;9(4):e93362. doi: [10.1371/journal.pone.0093362](https://doi.org/10.1371/journal.pone.0093362).
 
 ### [Dorado](https://github.com/nanoporetech/dorado)
 
-> Oxford Nanopore Technologies. Cite the **Dorado version** you ran and ONT basecalling documentation for your chemistry / flow-cell. Source: [github.com/nanoporetech/dorado](https://github.com/nanoporetech/dorado).
+> Oxford Nanopore Technologies. Basecalling software: [github.com/nanoporetech/dorado](https://github.com/nanoporetech/dorado) (cite the release you used; follow ONT’s documentation for your chemistry).
 
 ### [fastp](https://pubmed.ncbi.nlm.nih.gov/30423086/)
 
@@ -54,7 +52,7 @@ Alphabetical. Match names to modules under `nf-metatropics/modules/`. Each tool 
 
 ### [Medaka](https://github.com/nanoporetech/medaka)
 
-> Oxford Nanopore Technologies neural-network consensus / polishing. The Medaka README asks you to cite the **repository** and ONT documentation—follow the README for the version in your container. [github.com/nanoporetech/medaka](https://github.com/nanoporetech/medaka).
+> Oxford Nanopore Technologies neural-network consensus / polishing. [github.com/nanoporetech/medaka](https://github.com/nanoporetech/medaka) (follow the Medaka README for how to cite the release you used).
 
 ### [MetaMaps](https://pubmed.ncbi.nlm.nih.gov/31296857/)
 
@@ -70,7 +68,7 @@ Alphabetical. Match names to modules under `nf-metatropics/modules/`. Each tool 
 
 ### [R](https://www.R-project.org/)
 
-> R Core Team. R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria. [https://www.R-project.org/](https://www.R-project.org/) (cite the R **year/version** you used).
+> R Core Team. R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria. [https://www.R-project.org/](https://www.R-project.org/)
 
 ### [ggplot2](https://ggplot2.tidyverse.org)
 
@@ -82,12 +80,10 @@ Alphabetical. Match names to modules under `nf-metatropics/modules/`. Each tool 
 
 ### [seqtk](https://github.com/lh3/seqtk)
 
-> Li H. seqtk: Toolkit for processing sequences in FASTA/FASTQ format. [https://github.com/lh3/seqtk](https://github.com/lh3/seqtk) (cite the **commit or release** from your container / conda environment).
+> Li H. seqtk: Toolkit for processing sequences in FASTA/FASTQ format. [https://github.com/lh3/seqtk](https://github.com/lh3/seqtk)
 
 ---
 
 ## Notes
 
-- **Versions**: For reproducibility, cite the **software versions** recorded in your run under `Summary/pipeline_info/` (`software_versions.yml`), not only the papers above.
-- **Perl / shell / Python** one-liners (e.g. header cleanup) are standard utilities; no separate citation is usually required beyond this file and your methods text.
-- If you add or swap tools in a fork, update this list to match `modules/` and `workflows/`.
+- **Perl / shell / Python** one-liners in modules (e.g. header cleanup) are small utilities; they usually do not need a separate publication reference.
