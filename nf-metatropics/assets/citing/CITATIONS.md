@@ -4,7 +4,7 @@ References for the **programs and frameworks** used in the Metatropics pipeline.
 
 ---
 
-## nf-core / Nextflow / containers
+## Pipeline frameworks
 
 ### [nf-core](https://doi.org/10.1038/s41587-020-0439-x)
 
@@ -24,7 +24,7 @@ References for the **programs and frameworks** used in the Metatropics pipeline.
 
 ---
 
-## Pipeline software
+## Pipeline softwares
 
 ### [bam-readcount](https://github.com/genome/bam-readcount)
 
