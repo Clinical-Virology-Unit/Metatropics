@@ -94,7 +94,7 @@ Results are written under your chosen `--outdir` and summarized below:
 | Group | Role |
 |--------|------|
 | **`Basecalling/`** | Dorado basecalling and demultiplexing (optional). |
-| **`Reads/`** | Read QC, trimming, MultiQC, human / optional host depletion. |
+| **`Reads/`** | Read QC, trimming, human / optional host depletion. |
 | **`Classification/`** | MetaMaps taxonomic outputs. |
 | **`Viral_reads/`** | Per-virus extracted FASTQs. |
 | **`Variant_calling/`** | Viral references, Medaka alignments/variants, merged depth tables. |

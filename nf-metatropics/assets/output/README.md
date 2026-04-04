@@ -9,7 +9,7 @@ Paths below are relative to your pipeline **`--outdir`**. The pipeline also crea
 | Group | Role |
 |--------|------|
 | **`Basecalling/`** | POD5: Dorado basecalling and demultiplexing (optional). |
-| **`Reads/`** | Read QC, trimming, MultiQC, human / optional host depletion. |
+| **`Reads/`** | Read QC, trimming, human / optional host depletion. |
 | **`Classification/`** | MetaMaps taxonomic outputs. |
 | **`Viral_reads/`** | Per-virus extracted FASTQs. |
 | **`Variant_calling/`** | Viral references, Medaka alignments/variants, merged depth tables. |
@@ -37,7 +37,6 @@ This stage removes low-quality reads and reads that match host background (e.g. 
 | `Reads/rarefaction` | Per-sample FASTQ after optional rarefaction subsampling. |
 | `Reads/fastp` | Trimmed reads and FASTP reports. |
 | `Reads/nanoplot` | Read-length and quality summaries (NanoPlot). |
-| `Reads/multiqc` | **MultiQC** HTML report (`multiqc_report.html`). |
 | `Reads/nohuman` | FASTQ of reads **not** mapping to the human reference (human-depleted). |
 | `Reads/nohost` | Optional: FASTQ after depletion against an extra host genome. |
 
@@ -95,6 +94,6 @@ Run-wide summaries and provenance.
 | `Summary/final` | Combined **final TSV** across the whole run. |
 | `Summary/rcoverage` | Coverage **PDFs** for identified viruses (if enabled). |
 | `Summary/read_count` | Read-count **CSV/PDF** and staged inputs for the read-distribution figure (copies from **`Reads/`** and scans **`Classification/metamaps`**). |
-| `Summary/pipeline_info` | Nextflow trace/reports, software versions, MultiQC-related YAML, validated samplesheet (`samplesheet.valid.csv`). |
+| `Summary/pipeline_info` | Nextflow trace/reports and software versions. |
 
 **Typical reporting priorities:** **`Consensus/homopolish`**, **`Summary/final`**, **`Summary/rcoverage`**, and **`Summary/read_count`**.

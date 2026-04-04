@@ -4,13 +4,11 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
-
 // Validate input parameters
 WorkflowMetatropics.initialise(params, log)
 
 // Check input path parameters to see if they exist
-def checkPathParamList = [ params.input, params.multiqc_config, params.Human_host_fasta, params.Other_host_fasta ]
+def checkPathParamList = [ params.input, params.Human_host_fasta, params.Other_host_fasta ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
@@ -21,11 +19,6 @@ if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input sample
     CONFIG FILES
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-
-ch_multiqc_config          = Channel.fromPath("$projectDir/modules/nf-core/multiqc/multiqc_config.yml", checkIfExists: true)
-ch_multiqc_custom_config   = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
-ch_multiqc_logo            = params.multiqc_logo   ? Channel.fromPath( params.multiqc_logo, checkIfExists: true ) : Channel.empty()
-ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/modules/nf-core/multiqc/methods_description_template.yml", checkIfExists: true)
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -50,7 +43,6 @@ include { HOST_MAPPING } from './subworkflows/local/host_mapping'
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 include { DORADO_ONT } from '../modules/local/dorado/ont'
 include { DORADO_DEMULTIPLEXING } from '../modules/local/dorado/demultiplexing'
@@ -392,21 +384,6 @@ workflow METATROPICS {
     ch_versions.unique().collectFile(name: 'collated_versions.yml'),
     ch_rcoverage_done // Add this channel as an input
     )
-
-    // MODULE: MultiQC
-    //
-    workflow_summary    = WorkflowMetatropics.paramsSummaryMultiqc(workflow, summary_params)
-    ch_workflow_summary = Channel.value(workflow_summary)
-
-    methods_description    = WorkflowMetatropics.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description)
-    ch_methods_description = Channel.value(methods_description)
-
-    ch_multiqc_files = Channel.empty()
-    ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-    ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
-    ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
-    ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.collect{it[1]}.ifEmpty([]))
-    ch_multiqc_files = ch_multiqc_files.mix(NANOPLOT.out.txt.collect{it[1]}.ifEmpty([]))
 
     // Run CLEANUP only if Docker cleanup is enabled
     if (params.enable_docker_cleanup) {
