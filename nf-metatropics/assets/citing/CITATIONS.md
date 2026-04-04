@@ -36,7 +36,7 @@ Alphabetical. Match names to modules under `nf-metatropics/modules/`. Each tool 
 
 > Used for `reformat.sh` and rarefaction in modules. Bushnell B. BBTools / BBMap (JGI). Primary site: [SourceForge: BBMap](https://sourceforge.net/projects/bbmap/). Typical attribution: Lawrence Berkeley National Lab / JGI. Related peer-reviewed component: Bushnell B. BBMerge: Accurate paired shotgun read merging via overlap. *PLOS ONE* 9(4):e93362. doi: [10.1371/journal.pone.0093362](https://doi.org/10.1371/journal.pone.0093362).
 
-### [Dorado](https://github.com/nanoporetech/dorado) (ONT basecalling / demultiplexing)
+### [Dorado](https://github.com/nanoporetech/dorado)
 
 > Oxford Nanopore Technologies. Cite the **Dorado version** you ran and ONT basecalling documentation for your chemistry / flow-cell. Source: [github.com/nanoporetech/dorado](https://github.com/nanoporetech/dorado).
 
