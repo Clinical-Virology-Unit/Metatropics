@@ -62,7 +62,7 @@ To cite **Metatropics** itself, use the metadata in [`CITATION.cff`](../../../CI
 
 > Li H. Minimap2: pairwise alignment for nucleotide sequences. *Bioinformatics*. 2018 Sep 15;34(18):3094-3100. doi: [10.1093/bioinformatics/bty191](https://doi.org/10.1093/bioinformatics/bty191). PubMed PMID: [29750262](https://pubmed.ncbi.nlm.nih.gov/29750262/). GitHub: [github.com/lh3/minimap2](https://github.com/lh3/minimap2).
 
-### [NanoPlot](https://pubmed.ncbi.nlm.nih.gov/29547981/) (NanoPack family)
+### [NanoPlot](https://pubmed.ncbi.nlm.nih.gov/29547981/)
 
 > De Coster W, D'Hert S, Schultz DT, Cruts M, Van Broeckhoven C. NanoPack: visualizing and processing long-read sequencing data. *Bioinformatics*. 2018 Aug 1;34(15):2666-2669. doi: [10.1093/bioinformatics/bty149](https://doi.org/10.1093/bioinformatics/bty149). PubMed PMID: [29547981](https://pubmed.ncbi.nlm.nih.gov/29547981/). Repository: [github.com/wdecoster/nanoplot](https://github.com/wdecoster/NanoPlot).
 
