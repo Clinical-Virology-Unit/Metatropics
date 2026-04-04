@@ -1,11 +1,11 @@
 process CUSTOM_DUMPSOFTWAREVERSIONS {
     label 'process_single'
 
-    // Requires `pyyaml` which does not have a dedicated container but is in the MultiQC container
-    conda "bioconda::multiqc=1.13"
+    conda "conda-forge::python=3.12 conda-forge::pyyaml=6.0.2"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'library://daanjansen94/metatropics/multiqc:v1.12' :
-        'daanjansen94/multiqc:v1.12' }"
+        'docker://python:3.12-slim-bookworm' :
+        'python:3.12-slim-bookworm' }"
+    beforeScript 'pip install --root-user-action=ignore --disable-pip-version-check -q pyyaml==6.0.2'
 
     input:
     path versions
