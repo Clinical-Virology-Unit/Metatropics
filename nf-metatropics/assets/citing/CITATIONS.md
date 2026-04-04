@@ -52,7 +52,7 @@ References for the **programs and frameworks** used in the Metatropics pipeline.
 
 ### [Medaka](https://github.com/nanoporetech/medaka)
 
-> Oxford Nanopore Technologies. Medaka (neural-network consensus / polishing). [https://github.com/nanoporetech/medaka](https://github.com/nanoporetech/medaka) (follow the Medaka README for how to cite the release you used).
+> Oxford Nanopore Technologies. Medaka (neural-network consensus / polishing). [https://github.com/nanoporetech/medaka](https://github.com/nanoporetech/medaka).
 
 ### [MetaMaps](https://doi.org/10.1038/s41467-019-10934-2)
 
