@@ -2,12 +2,11 @@
 
 This guide is for **running Metatropics on CalcUA**, the Tier‑1 HPC at **VSC Antwerp**. On a cluster you normally **submit a job** with a script instead of starting Nextflow by hand on a login node; the `.sbatch` files here do that and point Metatropics at storage and containers in a way that fits CalcUA. Under the hood they use Slurm (the scheduler), Apptainer (containers on HPC), and the Nextflow profiles `vsc_calcua` or `vsc_calcua_gpu`.
 
-**Before you submit:** clone the Metatropics repository and set up `params_fastq.yaml` or `params_POD5.yaml` as in the **repository root README**.
-
 ## How to run
 
-1. **Edit the `.sbatch` you need** — set `#SBATCH` (account, partition, walltime), `PIPELINE_DIR`, and `PARAMS_FILE`
-2. **Submit from the Metatropics repository root**
+1. **Clone and configure** — Clone the Metatropics repository and set up `params_fastq.yaml` or `params_POD5.yaml` as in the **repository root README**.
+2. **Edit the `.sbatch` you need** — Set `#SBATCH` (account, partition, walltime), `PIPELINE_DIR`, and `PARAMS_FILE` if they differ from the defaults.
+3. **Submit from the Metatropics repository root** (the folder that contains `nf-metatropics/`). Pick the script that matches your input, then run the matching `sbatch` command below.
 
 | Your input | Script | Params file (typical) | Nextflow profile |
 |------------|--------|------------------------|------------------|
