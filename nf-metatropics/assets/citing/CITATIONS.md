@@ -60,11 +60,11 @@ References for the **programs and frameworks** used in the Metatropics pipeline.
 
 ### [minimap2](https://doi.org/10.1093/bioinformatics/bty191)
 
-> Li H. Minimap2: pairwise alignment for nucleotide sequences. *Bioinformatics*. 2018 Sep 15;34(18):3094-3100. doi: [10.1093/bioinformatics/bty191](https://doi.org/10.1093/bioinformatics/bty191). [https://github.com/lh3/minimap2](https://github.com/lh3/minimap2).
+> Li H. Minimap2: pairwise alignment for nucleotide sequences. *Bioinformatics*. 2018 Sep 15;34(18):3094-3100. doi: [10.1093/bioinformatics/bty191](https://doi.org/10.1093/bioinformatics/bty191).
 
 ### [NanoPlot](https://doi.org/10.1093/bioinformatics/bty149)
 
-> De Coster W, D'Hert S, Schultz DT, Cruts M, Van Broeckhoven C. NanoPack: visualizing and processing long-read sequencing data. *Bioinformatics*. 2018 Aug 1;34(15):2666-2669. doi: [10.1093/bioinformatics/bty149](https://doi.org/10.1093/bioinformatics/bty149). [https://github.com/wdecoster/NanoPlot](https://github.com/wdecoster/NanoPlot).
+> De Coster W, D'Hert S, Schultz DT, Cruts M, Van Broeckhoven C. NanoPack: visualizing and processing long-read sequencing data. *Bioinformatics*. 2018 Aug 1;34(15):2666-2669. doi: [10.1093/bioinformatics/bty149](https://doi.org/10.1093/bioinformatics/bty149). 
 
 ### [R](https://www.R-project.org/)
 
