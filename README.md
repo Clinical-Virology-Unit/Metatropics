@@ -93,7 +93,6 @@ This step removes low-quality reads and reads that match host background (e.g., 
 | `fastp` | Trimmed reads and FASTP reports. |
 | `nanoplot` | Read-length and quality summaries (NanoPlot). |
 | `multiqc` | **MultiQC** HTML report (`multiqc_report.html`)  |
-| `minimap2` | **BAMs** from aligning reads to the **human host** reference (host-genome alignment, not “the mapper” as such). |
 | `nohuman` | FASTQ of reads **not** mapping to the human reference (human-depleted). |
 | `nohost` | Optional: FASTQ after depletion against an extra host genome. |
 
@@ -105,7 +104,6 @@ Host-depleted reads are then mapped to the metagenomic database and summarized s
 |--------|----------|
 | `metamaps` | MetaMaps mapping and classification outputs (`mapDirectly`, `Classify`). |
 | `krona` | Krona HTML charts of taxonomic composition. |
-| `r` | Intermediate tabular and PDF summaries per sample (R-generated). |
 
 ### Per-virus reads
 
@@ -123,9 +121,7 @@ For each candidate virus, reads are aligned to the **viral reference** (**BAMs**
 |--------|----------|
 | `reffix` | Reference FASTA with **cleaned headers** for each virus. |
 | `medaka` | **BAMs** of reads aligned to each viral reference and **VCF** files with **variant calls** (differences from that reference). |
-| `samtools` | Mapping and coverage summaries for the `medaka` BAMs. |
-| `bam` | Per-position statistics for the viral-reference BAMs. |
-| `addingDepth` | Depth tables per virus per sample. |
+| `addingDepth` | Per-virus depth tables (coverage + consensus + classification). |
 
 ### Consensus
 
