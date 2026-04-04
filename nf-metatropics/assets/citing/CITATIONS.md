@@ -1,6 +1,6 @@
 # Citations
 
-To cite **Metatropics** itself, use the metadata in [`CITATION.cff`](../../../CITATION.cff) at the repository root (GitHub shows this under **Cite this repository**). **Below** are citations for the **programs and frameworks used in the Metatropics pipeline** (papers, DOIs, and official software links you can use in a manuscript).
+To cite **Metatropics** itself, use the metadata in [`CITATION.cff`](../../../CITATION.cff) (on GitHub: **Cite this repository**). **Below** are citations for the **programs and frameworks used in the Metatropics pipeline** (papers, DOIs, and official software links you can use in a manuscript).
 
 ---
 
