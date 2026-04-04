@@ -76,7 +76,7 @@ References for the **programs and frameworks** used in the Metatropics pipeline.
 
 ### [samtools](https://doi.org/10.1093/gigascience/giab008)
 
-> Danecek P, Bonfield JK, Liddle J, et al. Twelve years of SAMtools and BCFtools. *GigaScience*. 2021 Feb 16;10(2):giab008. doi: [10.1093/gigascience/giab008](https://doi.org/10.1093/gigascience/giab008). [https://www.htslib.org/](https://www.htslib.org/). Li H, et al. The Sequence Alignment/Map format and SAMtools. *Bioinformatics*. 2009 Aug 15;25(16):2078-2079. doi: [10.1093/bioinformatics/btp352](https://doi.org/10.1093/bioinformatics/btp352).
+> Li H, et al. The Sequence Alignment/Map format and SAMtools. *Bioinformatics*. 2009 Aug 15;25(16):2078-2079. doi: [10.1093/bioinformatics/btp352](https://doi.org/10.1093/bioinformatics/btp352).
 
 ### [seqtk](https://github.com/lh3/seqtk)
 
