@@ -11,12 +11,10 @@ Paths below are relative to your pipeline **`--outdir`**. The pipeline also crea
 | **`Basecalling/`** | POD5: Dorado basecalling and demultiplexing (optional). |
 | **`Reads/`** | Read QC, trimming, MultiQC, human / optional host depletion. |
 | **`Classification/`** | MetaMaps and Krona taxonomic outputs. |
-| **`Viral_reads/`** | Per-virus extracted FASTQs (`seqtk`). |
+| **`Viral_reads/`** | Per-virus extracted FASTQs. |
 | **`Variant_calling/`** | Viral references, Medaka alignments/variants, merged depth tables. |
 | **`Consensus/`** | iVar draft and Homopolish polished genomes. |
-| **`Summary/`** | Run-wide tables, read-count figure, coverage PDFs, Nextflow reports, validated samplesheet. |
-
-Unmapped process outputs (rare) are written under **`Other/<prefix>/`**.
+| **`Summary/`** | Summary tables, read-count figure, coverage PDF and Nextflow reports. |
 
 ---
 
