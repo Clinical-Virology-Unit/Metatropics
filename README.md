@@ -82,9 +82,9 @@ Results are written under your chosen `--outdir` and summarized below:
 | `basecalling` | Intermediate FASTQ from Dorado before demultiplexing. |
 | `demultiplexing` | Per-barcode FASTQ after demultiplexing. |
 
-### Reads, QC, host alignment, and depletion
+### Read preprocessing
 
-**Read quality control (QC)** comes first: fix naming, optionally subsample, trim, and build simple quality summaries. **Then** reads are aligned to the **human** host; reads that **do not** map to the human genome are written to **`nohuman`**. If you configure a second host, another depletion step produces **`nohost`**.
+This step removes low-quality reads and reads that match host background (e.g., human). The host-depleted read set is used for the rest of the pipeline.
 
 | Folder | Contents |
 |--------|----------|
@@ -99,7 +99,7 @@ Results are written under your chosen `--outdir` and summarized below:
 
 ### Taxonomic classification
 
-Host-depleted reads are mapped to the metagenomic database and summarized so you can see **which organisms (taxa) are present** in each sample.
+Host-depleted reads are then mapped to the metagenomic database and summarized so you can see **which organisms (taxa) are present** in each sample.
 
 | Folder | Contents |
 |--------|----------|
