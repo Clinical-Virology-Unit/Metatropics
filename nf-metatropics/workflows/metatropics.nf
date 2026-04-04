@@ -60,8 +60,6 @@ include { NANOPLOT                    } from '../modules/nf-core/nanoplot/main'
 include { METAMAPS_MAP                } from '../modules/local/metamaps/map'
 include { METAMAPS_CLASSIFY           } from '../modules/local/metamaps/classify'
 include { R_METAPLOT                  } from '../modules/local/r/metaplot'
-include { KRONA_KRONADB               } from '../modules/nf-core/krona/kronadb/main'
-include { KRONA_KTIMPORTTAXONOMY      } from '../modules/nf-core/krona/ktimporttaxonomy/main'
 include { REF_FASTA                   } from '../modules/local/ref_fasta'
 include { SEQTK_SUBSEQ                } from '../modules/nf-core/seqtk/subseq/main'
 include { REFFIX_FASTA                } from '../modules/local/reffix_fasta'
@@ -190,7 +188,6 @@ workflow METATROPICS {
     // Collect all outputs from METAMAPS_CLASSIFY
     ch_all_metamaps_classify = METAMAPS_CLASSIFY.out.classem.collect()
     .mix(METAMAPS_CLASSIFY.out.classem_original.collect())
-    .mix(METAMAPS_CLASSIFY.out.classkrona.collect())
     .mix(METAMAPS_CLASSIFY.out.classlength.collect())
     .mix(METAMAPS_CLASSIFY.out.classWIMP.collect())
     .mix(METAMAPS_CLASSIFY.out.classcov.collect())
@@ -219,12 +216,6 @@ workflow METATROPICS {
         tuple(meta, classification_results, length_and_identities, contig_coverage, total_reads, cleanup_done)
     }
     )
-    //KRONA_KRONADB();
-
-    //KRONA_KTIMPORTTAXONOMY(
-    //    METAMAPS_CLASSIFY.out.classkrona,
-    //    KRONA_KRONADB.out.db
-    //)
 
     reffasta_ch=(R_METAPLOT.out.reporttsv.join(METAMAPS_CLASSIFY.out.classem)).join(readsForMetamaps)
 
@@ -385,8 +376,6 @@ workflow METATROPICS {
     ch_versions = ch_versions.mix(METAMAPS_MAP.out.versions.first())
     ch_versions = ch_versions.mix(METAMAPS_CLASSIFY.out.versions.first())
     ch_versions = ch_versions.mix(R_METAPLOT.out.versions.first())
-    //ch_versions = ch_versions.mix(KRONA_KRONADB.out.versions.first())
-    //ch_versions = ch_versions.mix(KRONA_KTIMPORTTAXONOMY.out.versions.first())
     ch_versions = ch_versions.mix(SEQTK_SUBSEQ.out.versions.first())
     ch_versions = ch_versions.mix(MEDAKA.out.versions.first())
     ch_versions = ch_versions.mix(SAMTOOLS_COVERAGE.out.versions.first())
