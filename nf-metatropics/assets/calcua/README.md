@@ -2,6 +2,8 @@
 
 This guide is for **running Metatropics on CalcUA**, the Tier‑1 HPC at **VSC Antwerp**. On a cluster you normally **submit a job** with a script instead of starting Nextflow by hand on a login node; the `.sbatch` files here do that and point Metatropics at storage and containers in a way that fits CalcUA. Under the hood they use Slurm (the scheduler), Apptainer (containers on HPC), and the Nextflow profiles `vsc_calcua` or `vsc_calcua_gpu`.
 
+---
+
 ## How to run
 
 1. **Clone and configure** — Clone the Metatropics repository and set up `params_fastq.yaml` or `params_POD5.yaml` as in the **repository root README**.
@@ -55,3 +57,5 @@ Dorado is **NVIDIA/CUDA**: use **`ampere_gpu`** or **`pascal_gpu`**, not `arctur
 | `skylake` | 28 | 176 GB | 7 days |
 
 In Slurm-scheduled mode these are limits for individual pipeline tasks; for `single_node` runs they are effectively up to what you requested in `sbatch` (see comments in the FASTQ `.sbatch`). Process labels are tuned conservatively in [`../../conf/vsc_calcua_cpu.config`](../../conf/vsc_calcua_cpu.config) so the same run can work across these partitions.
+
+---

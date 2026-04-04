@@ -10,15 +10,21 @@
 
 **Metatropics** is an abbreviation of **Metagenomics for Tropical Fevers**, and reflects how the project began, with an emphasis on finding human viral pathogens in patients presenting with tropical fevers. The same pipeline has since been validated and applied outside that first setting, including for other febrile syndromes, for genomic surveillance, and for research and diagnostic questions around viral pathogens relevant to human health.
 
+---
+
 ## Pipeline summary
 
 ![Figure](./nf-metatropics/assets/logo/Metatropics.jpg)
+
+---
 
 ## 1. Clone the repository
 ```bash
 git clone https://github.com/DaanJansen94/Metatropics.git
 cd Metatropics
 ```
+
+---
 
 ## 2. Java and Nextflow
 You need **Java 17+** and **[Nextflow](https://www.nextflow.io/docs/latest/getstarted.html#installation) ≥ 22.10.1**. On Debian/Ubuntu you can do:
@@ -28,6 +34,8 @@ curl -sSL https://get.nextflow.io | bash
 chmod +x nextflow && sudo mv nextflow /usr/local/bin/
 nextflow -version
 ```
+
+---
 
 ## 3. Containers
 Use **[Docker](https://docs.docker.com/engine/install/)** on a typical Linux workstation (example below), or **[Singularity](https://sylabs.io/docs/) / [Apptainer](https://apptainer.org/docs/)** on many HPC clusters - then run with the matching Nextflow profile (e.g. `-profile docker`, `-profile singularity`).
@@ -39,6 +47,8 @@ sudo usermod -aG docker "$USER"   # then log out and back in (or `newgrp docker`
 docker run --rm hello-world
 ```
 
+---
+
 ## 4. Download databases
 Download and unpack the required database (Viral RefSeq and human host genomes):
 
@@ -48,6 +58,8 @@ wget -c https://zenodo.org/records/13132915/files/combined_databases.tar.gz
 tar -xzvf combined_databases.tar.gz
 rm combined_databases.tar.gz
 ```
+
+---
 
 ## 5. Configure paths (samplesheet, output, databases)
 
@@ -63,6 +75,8 @@ At the **repository root**, choose the params file to match how you start: **[`p
 
 Additional options: **[`nf-metatropics/assets/submission/all_options.md`](nf-metatropics/assets/submission/all_options.md)**.
 
+---
+
 ## 6. Running Metatropics
 
 With your `params_fastq.yaml` or `params_POD5.yaml` in place, run from the **repository root** (swap `-profile docker` for e.g. `-profile singularity`, if needed):
@@ -70,6 +84,8 @@ With your `params_fastq.yaml` or `params_POD5.yaml` in place, run from the **rep
 ```
 nextflow run nf-metatropics/ -profile docker -params-file params_fastq.yaml -resume
 ```
+
+---
 
 ## 7. Output
 
@@ -89,9 +105,13 @@ For a **quick overview of viruses found** in the run, open **`Summary/final/`** 
 
 For **each subfolder**, the **files and reports** written to `--outdir`, and what they are for, see [`nf-metatropics/assets/output/README.md`](nf-metatropics/assets/output/README.md).
 
+---
+
 ## 8. High performance computing
 
 You can run Metatropics on a **high-performance cluster** instead of a local workstation. For the Flemish Tier‑1 system **CalcUA** (VSC Antwerp), ready-made **Slurm** submission scripts and **Nextflow** profiles live under [`nf-metatropics/assets/calcua/`](nf-metatropics/assets/calcua/). **Setup, editing the batch scripts, and `sbatch` commands** are documented in the [CalcUA README](nf-metatropics/assets/calcua/README.md).
+
+---
 
 ## 9. Citation
 
