@@ -1,12 +1,13 @@
 # Metatropics — POD5 + Dorado basecalling (GPU)
 # Example samplesheet: nf-metatropics/assets/submission/POD5.csv
 
-input: /scratch/antwerpen/209/vsc20958/Metatropics_runs/Metatropics/nf-metatropics/assets/submission/POD5.csv
-input_dir: /scratch/antwerpen/209/vsc20958/Metatropics_runs/TEST_RUN_POD5/POD5
-outdir: /scratch/antwerpen/209/vsc20958/Metatropics_runs/TEST_RUN_POD5/Output
-Human_host_fasta: /scratch/antwerpen/209/vsc20958/Metatropics_runs/Metatropics/Databases/Human/chm13v2.0.fa
+input: /data/Daan/Projects/Squirrel/Input/POD5.csv
+input_dir: /data/Daan/Projects/Squirrel/Input/POD5
+outdir: /data/Daan/Projects/Squirrel/Output
+Human_host_fasta: /data/Daan/Projects/Metatropics/Databases/Human/chm13v2.0.fa
+
 #Other_host_fasta: /scratch/antwerpen/209/vsc20958/Metatropics_runs/Metatropics/Databases/Aedes/Aedes_aegypti.fasta
-dbmeta: /scratch/antwerpen/209/vsc20958/Metatropics_runs/Metatropics/Databases/ViralRefseq
+dbmeta: /data/Daan/Projects/Metatropics/Databases/ViralRefseq
 basecall: true
 usegpu: true
 kit_name: TWIST-96A-UDI
@@ -15,11 +16,11 @@ minLength: 200
 pair: true
 front: 25
 tail: 25
-minVirus: 0.01
-quality: 30
-depth: 30
-agreement: 0.8
-horizontal_coverage: 10
+minVirus: 0.001
+quality: 20
+depth: 20
+agreement: 0.7
+horizontal_coverage: 5
 rcoverage_figure: true
 
 perform_rarefaction: true
