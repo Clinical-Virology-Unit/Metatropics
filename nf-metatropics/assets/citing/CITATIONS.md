@@ -1,6 +1,6 @@
 # Citations
 
-References for the **programs and frameworks** used in the Metatropics pipeline (papers, DOIs, and official software links for your manuscript).
+References for the **programs and frameworks** used in the Metatropics pipeline.
 
 ---
 
