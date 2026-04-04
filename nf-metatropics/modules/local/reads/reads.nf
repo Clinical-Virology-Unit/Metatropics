@@ -1,9 +1,4 @@
 process ReadCount {
-    publishDir "${params.outdir}", mode: 'copy', overwrite: true, saveAs: { filename ->
-        if (filename.endsWith('read_counts.csv')) return filename
-        else if (filename.endsWith('read_distribution.pdf')) return filename
-        else null
-    }
     label 'process_medium'
     tag "ReadCount"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -34,47 +29,47 @@ process ReadCount {
     mkdir -p read_count read_count/nohuman read_count/nohost
     HOST_STATUS="${host_genome_status}"
 
-    # Copy raw reads from 'fix' folder when available
-    if [ -d "${outdir}/fix" ]; then
-        find ${outdir}/fix -name "*.fastq.gz" -type f -exec cp {} read_count/ \\;
+    # Copy raw reads from Reads/fix when available
+    if [ -d "${outdir}/Reads/fix" ]; then
+        find ${outdir}/Reads/fix -name "*.fastq.gz" -type f -exec cp {} read_count/ \\;
     else
-        echo "Directory ${outdir}/fix does not exist, skipping raw read copy"
+        echo "Directory ${outdir}/Reads/fix does not exist, skipping raw read copy"
     fi
 
-    # Copy trimmed reads from 'fastp' folder when available
-    if [ -d "${outdir}/fastp" ]; then
-        find ${outdir}/fastp -name "*.fastq.gz" -type f -exec cp {} read_count/ \\;
+    # Copy trimmed reads from Reads/fastp when available
+    if [ -d "${outdir}/Reads/fastp" ]; then
+        find ${outdir}/Reads/fastp -name "*.fastq.gz" -type f -exec cp {} read_count/ \\;
     else
-        echo "Directory ${outdir}/fastp does not exist, skipping trimmed read copy"
+        echo "Directory ${outdir}/Reads/fastp does not exist, skipping trimmed read copy"
     fi
 
-    # Copy human-depleted reads from 'nohuman' folder when available
+    # Copy human-depleted reads from Reads/nohuman when available
     if [[ "\$HOST_STATUS" == "human_only" || "\$HOST_STATUS" == "both" ]]; then
-        if [ -d "${outdir}/nohuman" ]; then
-            find ${outdir}/nohuman -name '*other.fastq.gz' -type f -exec cp {} read_count/nohuman/ \\;
+        if [ -d "${outdir}/Reads/nohuman" ]; then
+            find ${outdir}/Reads/nohuman -name '*other.fastq.gz' -type f -exec cp {} read_count/nohuman/ \\;
         else
-            echo "Directory ${outdir}/nohuman does not exist, skipping human-depleted copy"
+            echo "Directory ${outdir}/Reads/nohuman does not exist, skipping human-depleted copy"
         fi
     else
         echo "Human host depletion not enabled; skipping human-depleted copy"
     fi
 
-    # Copy host-depleted reads from 'nohost' folder if it exists
+    # Copy host-depleted reads from Reads/nohost if it exists
     if [[ "\$HOST_STATUS" == "other_only" || "\$HOST_STATUS" == "both" ]]; then
-        if [ -d "${outdir}/nohost" ]; then
-            find ${outdir}/nohost -name '*other.fastq.gz' -type f -exec cp {} read_count/nohost/ \\;
+        if [ -d "${outdir}/Reads/nohost" ]; then
+            find ${outdir}/Reads/nohost -name '*other.fastq.gz' -type f -exec cp {} read_count/nohost/ \\;
         else
-            echo "Directory ${outdir}/nohost does not exist, skipping host-depleted copy"
+            echo "Directory ${outdir}/Reads/nohost does not exist, skipping host-depleted copy"
         fi
     else
         echo "Additional host depletion not enabled; skipping host-depleted copy"
     fi
 
-    # Process viral reads from 'metamaps' folder
+    # Process viral reads from Classification/metamaps
     echo "Sample,ViralReads" > read_count/viral_read_counts.csv
-    if [ -d "${outdir}/metamaps" ]; then
+    if [ -d "${outdir}/Classification/metamaps" ]; then
         found_files=false
-        for file in ${outdir}/metamaps/*_classification_results.meta; do
+        for file in ${outdir}/Classification/metamaps/*_classification_results.meta; do
             if [ -f "\$file" ]; then
                 found_files=true
                 sample_name=\$(basename "\$file" _classification_results.meta)
@@ -86,9 +81,9 @@ process ReadCount {
             echo "No matching files found in metamaps folder"
         fi
     else
-        echo "Directory ${outdir}/metamaps does not exist, skipping viral read count extraction"
+        echo "Directory ${outdir}/Classification/metamaps does not exist, skipping viral read count extraction"
     fi
 
-    ReadCount.R ${params.outdir}/read_count/ ${host_genome_status}
+    ReadCount.R ${params.outdir}/Summary/read_count/ ${host_genome_status}
     """
 }
