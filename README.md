@@ -115,7 +115,7 @@ Reads that MetaMaps assigns to a given **virus** are extracted into separate FAS
 
 ### Variant calling (BAMs and references)
 
-For each candidate virus, reads are aligned to the **viral reference** (**BAMs**). **Variant calls**—differences from that reference—are derived from those alignments. 
+For each candidate virus, reads are aligned to the **viral reference** (**BAMs**). **Variant calls** - differences from that reference - are derived from those alignments. 
 
 | Folder | Contents |
 |--------|----------|
