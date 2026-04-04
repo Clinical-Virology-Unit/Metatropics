@@ -36,9 +36,9 @@ This stage removes low-quality reads and reads that match host background (e.g. 
 | `Reads/fix` | Per-sample FASTQ after naming / format fixes (compressed). |
 | `Reads/rarefaction` | Per-sample FASTQ after optional rarefaction subsampling. |
 | `Reads/fastp` | Trimmed reads and FASTP reports. |
-| `Reads/nanoplot` | Read-length and quality summaries (NanoPlot). |
-| `Reads/nohuman` | FASTQ of reads **not** mapping to the human reference (human-depleted). |
-| `Reads/nohost` | Optional: FASTQ after depletion against an extra host genome. |
+| `Reads/nanoplot` | Read-length and quality summaries (NanoPlot) on the **fixed** per-sample FASTQs (same inputs as `Reads/fix`), **before** fastp trimming. |
+| `Reads/nohuman` | Human-depleted reads or reads not mapping to the human reference (`*_other.fastq.gz`). |
+| `Reads/nohost` | Optional: FASTQ after extra host depletion (`*_other.fastq.gz`). |
 
 ---
 
