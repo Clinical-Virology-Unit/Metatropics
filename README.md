@@ -80,10 +80,12 @@ Results are written under your chosen `--outdir` and summarized below:
 | **`Basecalling/`** | Dorado basecalling and demultiplexing (optional). |
 | **`Reads/`** | Read QC, trimming, MultiQC, human / optional host depletion. |
 | **`Classification/`** | MetaMaps and Krona taxonomic outputs. |
-| **`Viral_reads/`** | Per-virus extracted FASTQs (`seqtk`). |
+| **`Viral_reads/`** | Per-virus extracted FASTQs. |
 | **`Variant_calling/`** | Viral references, Medaka alignments/variants, merged depth tables. |
 | **`Consensus/`** | iVar draft and Homopolish polished genomes. |
-| **`Summary/`** | Run-wide tables, read-count figure, coverage PDFs, Nextflow reports, validated samplesheet. |
+| **`Summary/`** | Summary tables, read-count figure, coverage PDFs and Nextflow reports |
+
+For a **quick overview of viruses found** in the run, open **`Summary/final/`** - it publishes the combined **final report** (`all.final_report.tsv`).
 
 For **each subfolder**, the **files and reports** written to `--outdir`, and what they are for, see [`nf-metatropics/assets/output/README.md`](nf-metatropics/assets/output/README.md).
 
