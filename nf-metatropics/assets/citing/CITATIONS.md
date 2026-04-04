@@ -28,11 +28,11 @@ References for the **programs and frameworks** used in the Metatropics pipeline.
 
 ### [bam-readcount](https://doi.org/10.21105/joss.03722)
 
-> Khanna A, Larson D, Srivatsan S, Mosior M, Abbott T, Kiwala S, Ley T, Duncavage E, Walter M, Walker J, Griffith O, Griffith M, Miller C. Bam-readcount - rapid generation of basepair-resolution sequence metrics. *J Open Source Softw*. 2022 Jan 29;7(69):3722. doi: [10.21105/joss.03722](https://doi.org/10.21105/joss.03722). [https://github.com/genome/bam-readcount](https://github.com/genome/bam-readcount).
+> Khanna A, Larson D, Srivatsan S, Mosior M, Abbott T, Kiwala S, Ley T, Duncavage E, Walter M, Walker J, Griffith O, Griffith M, Miller C. Bam-readcount - rapid generation of basepair-resolution sequence metrics. *J Open Source Softw*. 2022 Jan 29;7(69):3722. doi: [10.21105/joss.03722](https://doi.org/10.21105/joss.03722). 
 
 ### [BBMap / BBTools](https://doi.org/10.1371/journal.pone.0185056)
 
-> Bushnell B, Rood J, Singer E. BBMerge – Accurate paired shotgun read merging via overlap. *PLOS ONE*. 2017 Oct 26;12(10):e0185056. doi: [10.1371/journal.pone.0185056](https://doi.org/10.1371/journal.pone.0185056). [https://sourceforge.net/projects/bbmap/](https://sourceforge.net/projects/bbmap/).
+> Bushnell B, Rood J, Singer E. BBMerge – Accurate paired shotgun read merging via overlap. *PLOS ONE*. 2017 Oct 26;12(10):e0185056. doi: [10.1371/journal.pone.0185056](https://doi.org/10.1371/journal.pone.0185056). 
 
 ### [Dorado](https://github.com/nanoporetech/dorado)
 
