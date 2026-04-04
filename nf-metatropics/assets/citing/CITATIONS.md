@@ -1,8 +1,6 @@
 # Citations
 
-To cite **Metatropics** itself, use the metadata in [`CITATION.cff`](../../../CITATION.cff) at the repository root (GitHub shows this under **Cite this repository**). Everything below is a **reference list for papers**: journal articles, DOIs, and canonical software/project links you can paste into a bibliography—**not** run logs or file paths.
-
-Where a paper has a **DOI**, that is the single link used for the journal article (no duplicate PubMed/PMC links for the same work).
+To cite **Metatropics** itself, use the metadata in [`CITATION.cff`](../../../CITATION.cff) at the repository root (GitHub shows this under **Cite this repository**). **Below** are citations for the **programs and frameworks used in the Metatropics pipeline** (papers, DOIs, and official software links you can use in a manuscript).
 
 ---
 
@@ -89,4 +87,3 @@ Where a paper has a **DOI**, that is the single link used for the journal articl
 ## Notes
 
 - **Perl / shell / Python** one-liners in modules (e.g. header cleanup) are small utilities; they usually do not need a separate publication reference.
-- If you add or swap tools in a fork, update this list to match `modules/` and `workflows/`.
