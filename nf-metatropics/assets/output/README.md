@@ -10,7 +10,7 @@ Paths below are relative to your pipeline **`--outdir`**. The pipeline also crea
 |--------|------|
 | **`Basecalling/`** | POD5: Dorado basecalling and demultiplexing (optional). |
 | **`Reads/`** | Read QC, trimming, MultiQC, human / optional host depletion. |
-| **`Classification/`** | MetaMaps and Krona taxonomic outputs. |
+| **`Classification/`** | MetaMaps taxonomic outputs. |
 | **`Viral_reads/`** | Per-virus extracted FASTQs. |
 | **`Variant_calling/`** | Viral references, Medaka alignments/variants, merged depth tables. |
 | **`Consensus/`** | iVar draft and Homopolish polished genomes. |
@@ -50,7 +50,6 @@ Host-depleted reads are mapped to the metagenomic database and summarized so you
 | Path | Contents |
 |------|----------|
 | `Classification/metamaps` | MetaMaps mapping and classification (`mapDirectly`, `Classify`). |
-| `Classification/krona` | Krona HTML charts of taxonomic composition. |
 
 ---
 

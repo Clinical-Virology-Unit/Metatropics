@@ -95,7 +95,7 @@ Results are written under your chosen `--outdir` and summarized below:
 |--------|------|
 | **`Basecalling/`** | Dorado basecalling and demultiplexing (optional). |
 | **`Reads/`** | Read QC, trimming, MultiQC, human / optional host depletion. |
-| **`Classification/`** | MetaMaps and Krona taxonomic outputs. |
+| **`Classification/`** | MetaMaps taxonomic outputs. |
 | **`Viral_reads/`** | Per-virus extracted FASTQs. |
 | **`Variant_calling/`** | Viral references, Medaka alignments/variants, merged depth tables. |
 | **`Consensus/`** | iVar draft and Homopolish polished genomes. |
