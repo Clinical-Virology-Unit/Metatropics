@@ -99,7 +99,7 @@ Results are written under your chosen `--outdir` and summarized below:
 | **`Viral_reads/`** | Per-virus extracted FASTQs. |
 | **`Variant_calling/`** | Viral references, Medaka alignments/variants, merged depth tables. |
 | **`Consensus/`** | iVar draft and Homopolish polished genomes. |
-| **`Summary/`** | Summary tables, read-count figure, coverage PDFs and Nextflow reports |
+| **`Summary/`** | Final tables, read-count figure, coverage PDFs, software versions and Nextflow execution reports. |
 
 For a **quick overview of viruses found** in the run, open **`Summary/final/`** - it publishes the combined **final report** (`all.final_report.tsv`).
 

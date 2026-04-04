@@ -14,7 +14,7 @@ Paths below are relative to your pipeline **`--outdir`**. The pipeline also crea
 | **`Viral_reads/`** | Per-virus extracted FASTQs. |
 | **`Variant_calling/`** | Viral references, Medaka alignments/variants, merged depth tables. |
 | **`Consensus/`** | iVar draft and Homopolish polished genomes. |
-| **`Summary/`** | Summary tables, read-count figure, coverage PDF and Nextflow reports. |
+| **`Summary/`** | Final tables, read-count figure, coverage PDFs, software versions and Nextflow trace/reports. |
 
 ---
 
