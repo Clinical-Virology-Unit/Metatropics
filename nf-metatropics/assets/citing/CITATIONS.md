@@ -44,7 +44,7 @@ References for the **programs and frameworks** used in the Metatropics pipeline.
 
 ### [Homopolish](https://doi.org/10.1186/s13059-021-02282-6)
 
-> Huang YT, Liu PY, Shih PW. Homopolish: a method for the removal of systematic errors in nanopore sequencing by homologous polishing. *Genome Biol*. 2021 Mar 11;22:95. doi: [10.1186/s13059-021-02282-6](https://doi.org/10.1186/s13059-021-02282-6). [https://github.com/ythuang0522/homopolish](https://github.com/ythuang0522/homopolish).
+> Huang YT, Liu PY, Shih PW. Homopolish: a method for the removal of systematic errors in nanopore sequencing by homologous polishing. *Genome Biol*. 2021 Mar 11;22:95. doi: [10.1186/s13059-021-02282-6](https://doi.org/10.1186/s13059-021-02282-6). 
 
 ### [iVar](https://doi.org/10.1186/s13059-018-1618-7)
 
