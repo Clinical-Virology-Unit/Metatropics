@@ -73,7 +73,7 @@ nextflow run nf-metatropics/ -profile docker -params-file params_fastq.yaml -res
 
 ## 7. Output
 
-Results are written under your chosen `--outdir` with the important outputs summarized below:
+Results are written under your chosen `--outdir` and summarized below:
 
 ### POD5 basecalling and demultiplexing (optional)
 
