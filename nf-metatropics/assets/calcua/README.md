@@ -7,7 +7,7 @@ This guide is for **running Metatropics on CalcUA**, the Tier‑1 HPC at **VSC A
 ## How to run
 
 1. **Edit the `.sbatch` you need** — set `#SBATCH` (account, partition, walltime), `PIPELINE_DIR`, and `PARAMS_FILE` if they differ from the defaults.
-2. **Submit from the Metatropics repository root** (the directory that contains `nf-metatropics/`).
+2. **Submit from the Metatropics repository root**
 
 | Your input | Script | Params file (typical) | Nextflow profile |
 |------------|--------|------------------------|------------------|
