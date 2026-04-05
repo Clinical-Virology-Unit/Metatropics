@@ -23,20 +23,20 @@ Paths below are relative to your pipeline **`--outdir`**. The pipeline also crea
 | Path | Contents |
 |------|----------|
 | `Basecalling/basecalling` | Intermediate FASTQ from Dorado before demultiplexing. |
-| `Basecalling/demultiplexing` | Per-barcode FASTQ after demultiplexing. |
+| `Basecalling/demultiplexing` | Per-barcode FASTQ after demultiplexing (trims barcodes and adapters). |
 
 ---
 
 ## `Reads/`
 
-This stage removes low-quality reads and reads that match host background (e.g. human). The host-depleted read set feeds the rest of the pipeline. Alignments to host genomes are **not** copied to `outdir` (they stay in Nextflow `work/`); the table below lists the **published** FASTQs and QC reports.
+This stage removes **low-quality** reads, **short** reads, and reads that match **host** background (e.g. human). The host-depleted read set is feeded to the rest of the pipeline.
 
 | Path | Contents |
 |------|----------|
 | `Reads/fix` | Per-sample FASTQ after naming / format fixes (compressed). |
 | `Reads/rarefaction` | Per-sample FASTQ after optional rarefaction subsampling. |
-| `Reads/fastp` | Trimmed reads and FASTP reports. |
-| `Reads/nanoplot` | Read-length and quality summaries (NanoPlot) on the **fixed** per-sample FASTQs (same inputs as `Reads/fix`), **before** fastp trimming. |
+| `Reads/fastplong` | Trimmed reads and **fastplong** QC reports (HTML/JSON/log). |
+| `Reads/nanoplot` | Read-length and quality summaries (NanoPlot) on the **fixed** per-sample FASTQs (same inputs as `Reads/fix`), **before** fastplong trimming. |
 | `Reads/nohuman` | Human-depleted reads or reads not mapping to the human reference (`*_other.fastq.gz`). |
 | `Reads/nohost` | Optional: FASTQ after extra host depletion (`*_other.fastq.gz`). |
 

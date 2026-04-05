@@ -36,11 +36,11 @@ process ReadCount {
         echo "Directory ${outdir}/Reads/fix does not exist, skipping raw read copy"
     fi
 
-    # Copy trimmed reads from Reads/fastp when available
-    if [ -d "${outdir}/Reads/fastp" ]; then
-        find ${outdir}/Reads/fastp -name "*.fastq.gz" -type f -exec cp {} read_count/ \\;
+    # Copy trimmed reads from Reads/fastplong when available
+    if [ -d "${outdir}/Reads/fastplong" ]; then
+        find ${outdir}/Reads/fastplong -name "*.fastq.gz" -type f -exec cp {} read_count/ \\;
     else
-        echo "Directory ${outdir}/Reads/fastp does not exist, skipping trimmed read copy"
+        echo "Directory ${outdir}/Reads/fastplong does not exist, skipping trimmed read copy"
     fi
 
     # Copy human-depleted reads from Reads/nohuman when available

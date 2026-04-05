@@ -47,7 +47,7 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoft
 include { DORADO_ONT } from '../modules/local/dorado/ont'
 include { DORADO_DEMULTIPLEXING } from '../modules/local/dorado/demultiplexing'
 include { RAREFACTION		          } from '../modules/local/rarefaction/rarefaction'
-include { FASTP                       } from '../modules/nf-core/fastp/main'
+include { FASTPLONG                   } from '../modules/local/fastplong/main'
 include { NANOPLOT                    } from '../modules/nf-core/nanoplot/main'
 include { METAMAPS_MAP                } from '../modules/local/metamaps/map'
 include { METAMAPS_CLASSIFY           } from '../modules/local/metamaps/classify'
@@ -134,24 +134,20 @@ workflow METATROPICS {
         ch_reads_for_fastp = FIX.out.reads
     }
 
-    fastp_save_trimmed_fail = false
-    FASTP(
-        ch_reads_for_fastp,
-        [],
-        fastp_save_trimmed_fail,
-        []
+    FASTPLONG(
+        ch_reads_for_fastp
     )
 
     NANOPLOT(
          FIX.out.reads
      )
 
-    def readsAfterHuman = FASTP.out.reads
+    def readsAfterHuman = FASTPLONG.out.reads
     def readsForMetamaps
 
     if (params.Human_host_fasta) {
         HUMAN_MAPPING(
-            FASTP.out.reads
+            FASTPLONG.out.reads
         )
         readsAfterHuman = HUMAN_MAPPING.out.humanout
     }
@@ -363,7 +359,7 @@ workflow METATROPICS {
         MEDAKA.out.bamfiles.join(REFFIX_FASTA.out.fixedseqref)
     )
 
-    ch_versions = ch_versions.mix(FASTP.out.versions.first())
+    ch_versions = ch_versions.mix(FASTPLONG.out.versions.first())
     ch_versions = ch_versions.mix(NANOPLOT.out.versions.first())
     ch_versions = ch_versions.mix(METAMAPS_MAP.out.versions.first())
     ch_versions = ch_versions.mix(METAMAPS_CLASSIFY.out.versions.first())
