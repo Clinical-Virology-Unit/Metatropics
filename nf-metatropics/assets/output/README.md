@@ -64,9 +64,7 @@ Reads assigned to a given **virus** are extracted into FASTQs **per sample and p
 
 ## `Variant_calling/`
 
-For each candidate virus, reads are aligned to the **viral reference** (**BAMs**). **Variant calls** are differences from that reference.
-
-**Medaka** ([Oxford Nanopore documentation](https://nanoporetech.github.io/medaka/index.html)) uses **neural-network inference on pileups** of reads aligned to the reference (not raw signal). This pipeline runs **haploid variant calling** (`medaka_haploid_variant`), producing **BAM** and **VCF**. 
+For each candidate virus, **Medaka** ([Oxford Nanopore documentation](https://nanoporetech.github.io/medaka/index.html)) first writes a **BAM** of reads aligned to the **viral reference**. Medaka then uses that BAM in **haploid variant calling**, applying **neural-network inference on pileups** of those aligned reads (networks **trained for Oxford Nanopore** basecalled data), and emits a **VCF** describing differences from that reference.
 
 | Path | Contents |
 |------|----------|
@@ -78,7 +76,7 @@ For each candidate virus, reads are aligned to the **viral reference** (**BAMs**
 
 ## `Consensus/`
 
-A **consensus genome** is called per virus (iVar draft, **Homopolish** final genome).
+Consensus building takes the **Medaka-produced BAM** and feeds it to **iVar**, which calls a draft consensus sequence; **Homopolish** then polishes that draft. 
 
 | Path | Contents |
 |------|----------|
