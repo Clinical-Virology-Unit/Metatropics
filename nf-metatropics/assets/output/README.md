@@ -64,7 +64,7 @@ Reads assigned to a given **virus** are extracted into FASTQs **per sample and p
 
 ## `Variant_calling/`
 
-For each candidate virus, **Medaka** ([GitHub](https://github.com/nanoporetech/medaka)) first writes a **BAM** of reads aligned to the **viral reference**. Medaka then uses that BAM in **haploid variant calling**, applying **neural-network inference on pileups** of those aligned reads (networks **trained for Oxford Nanopore** basecalled data), and emits a **VCF** describing differences from that reference.
+For each candidate virus, ([MedakaGitHub] (https://github.com/nanoporetech/medaka)) first writes a **BAM** of reads aligned to the **viral reference**. Medaka then uses that BAM in **haploid variant calling**, applying **neural-network inference on pileups** of those aligned reads (networks **trained for Oxford Nanopore** basecalled data), and emits a **VCF** describing differences from that reference.
 
 | Path | Contents |
 |------|----------|
