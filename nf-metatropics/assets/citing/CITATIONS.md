@@ -38,9 +38,9 @@ References for the **programs and frameworks** used in the Metatropics pipeline.
 
 > Oxford Nanopore Technologies. Dorado (basecalling software). [https://github.com/nanoporetech/dorado](https://github.com/nanoporetech/dorado) (cite the release you used; follow ONT’s documentation for your chemistry).
 
-### [fastp](https://doi.org/10.1093/bioinformatics/bty560)
+### [fastplong](https://github.com/OpenGene/fastplong)
 
-> Chen S, Zhou Y, Chen Y, Gu J. fastp: an ultra-fast all-in-one FASTQ preprocessor. *Bioinformatics*. 2018 Sep 1;34(17):i884-i890. doi: [10.1093/bioinformatics/bty560](https://doi.org/10.1093/bioinformatics/bty560).
+> Chen S. fastplong: ultrafast preprocessing and quality control for long-read sequencing data (Nanopore, PacBio, etc.). [https://github.com/OpenGene/fastplong](https://github.com/OpenGene/fastplong) (cite the release you used).
 
 ### [Homopolish](https://doi.org/10.1186/s13059-021-02282-6)
 
