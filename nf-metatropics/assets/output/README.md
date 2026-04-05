@@ -66,6 +66,8 @@ Reads assigned to a given **virus** are extracted into FASTQs **per sample and p
 
 For each candidate virus, reads are aligned to the **viral reference** (**BAMs**). **Variant calls** are differences from that reference.
 
+**Medaka** ([Oxford Nanopore documentation](https://nanoporetech.github.io/medaka/index.html)) uses **neural-network inference on pileups** of reads aligned to the reference (not raw signal). This pipeline runs **haploid variant calling** (`medaka_haploid_variant`), producing **BAM** and **VCF**. 
+
 | Path | Contents |
 |------|----------|
 | `Variant_calling/reffix` | Reference FASTA with **cleaned headers** for each virus. |
