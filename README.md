@@ -14,7 +14,7 @@
 
 ## Pipeline summary
 
-![Figure](./nf-metatropics/assets/logo/Metatropics.jpg)
+![Figure](./nf-metatropics/assets/logo/MetaTropics_workflow.png)
 
 ---
 
