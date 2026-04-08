@@ -26,7 +26,7 @@ process RAREFACTION {
 
     # Check if the number of reads is at least 100
     if [ \$read_count -ge 100 ]; then
-        reformat.sh in=${reads} out=${prefix}_rarefied.fastq.gz samplebasestarget=$target_bases qin=33 ignorebadquality
+        reformat.sh in=${reads} out=${prefix}_rarefied.fastq.gz samplebasestarget=$target_bases qin=33 ignorebadquality overwrite=t
     else
         echo "Sample ${meta.id} has less than 100 reads. Skipping rarefaction."
     fi
