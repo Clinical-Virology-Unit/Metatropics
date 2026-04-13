@@ -1,3 +1,3 @@
-sample,single_end,barcode
-sample1,True,/absolute/path/to/sample1.fastq.gz
-sample2,True,/absolute/path/to/sample2.fastq.gz
+sample,barcode
+sample1,/absolute/path/to/sample1.fastq.gz
+sample2,/absolute/path/to/sample2.fastq.gz

@@ -19,7 +19,7 @@
                     "pattern": "^\\S+\\.csv$",
                     "schema": "assets/samplesheet_schema/schema_input.json",
                     "description": "Path to comma-separated file containing information about the samples in the experiment.",
-                    "help_text": "Path to the samplesheet CSV (columns: sample, single_end, barcode). Example layouts: nf-metatropics/assets/submission/fastq.csv (FASTQ paths) or POD5.csv (barcode labels for POD5). See nf-metatropics/assets/submission/README.md.",
+                    "help_text": "Path to the samplesheet CSV (columns: sample, barcode). Nanopore is always single-end; optional legacy column single_end is ignored. Examples: nf-metatropics/assets/submission/fastq.csv (FASTQ paths) or POD5.csv (barcode labels for POD5). See nf-metatropics/assets/submission/README.md.",
                     "fa_icon": "fas fa-file-csv"
                 },
                 "input_dir": {

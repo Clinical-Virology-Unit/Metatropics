@@ -6,3 +6,7 @@ work/
 # Local pulled databases (large, reproducible)
 /Databases/
 
+# pip install -e . (metatropics-cli)
+*.egg-info/
+metatropics_cli/**/__pycache__/
+
