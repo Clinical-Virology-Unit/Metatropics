@@ -7,6 +7,7 @@
 import argparse
 import csv
 import logging
+import re
 import sys
 from collections import Counter
 from pathlib import Path
@@ -24,11 +25,9 @@ class RowChecker:
 
     """
 
-    VALID_FORMATS = (
-        ".fq.gz",
-        ".fastq.gz",
-        "barcode[0-9]+",
-    )
+    # FASTQ paths in samplesheet (POD5/basecalling uses barcodeNN instead of a path).
+    FASTQ_PATH_SUFFIXES = (".fastq.gz", ".fq.gz", ".fastq", ".fq")
+    POD5_BARCODE_PATTERN = re.compile(r"^barcode\d+$", re.IGNORECASE)
 
     """
     def __init__(
@@ -81,6 +80,7 @@ class RowChecker:
 
         """
         self._validate_sample(row)
+        self._validate_barcode(row)
         #self._validate_first(row)
         #self._validate_second(row)
         #self._validate_pair(row)
@@ -119,12 +119,29 @@ class RowChecker:
     #    else:
     #        row[self._single_col] = True
 
+    def _validate_barcode(self, row):
+        """Barcode column: POD5 label (barcode01) or a FASTQ path ending in .fastq / .fastq.gz / .fq / .fq.gz."""
+        value = (row.get(self._second_col) or "").strip()
+        if not value:
+            raise AssertionError("The barcode column is required (FASTQ path or POD5 barcode label).")
+        if self.POD5_BARCODE_PATTERN.fullmatch(value):
+            return
+        lowered = value.lower()
+        if any(lowered.endswith(suf) for suf in self.FASTQ_PATH_SUFFIXES):
+            return
+        raise AssertionError(
+            f"Unrecognized barcode/path: {value!r}. "
+            f"Use a POD5 label like barcode01, or a FASTQ path ending in one of: "
+            f"{', '.join(self.FASTQ_PATH_SUFFIXES)}."
+        )
+
     def _validate_fastq_format(self, filename):
         """Assert that a given filename has one of the expected FASTQ extensions."""
-        if not any(filename.endswith(extension) for extension in self.VALID_FORMATS):
+        lowered = filename.lower()
+        if not any(lowered.endswith(extension) for extension in self.FASTQ_PATH_SUFFIXES):
             raise AssertionError(
                 f"The FASTQ file has an unrecognized extension: {filename}\n"
-                f"It should be one of: {', '.join(self.VALID_FORMATS)}"
+                f"It should be one of: {', '.join(self.FASTQ_PATH_SUFFIXES)}"
             )
 
     def validate_unique_samples(self):

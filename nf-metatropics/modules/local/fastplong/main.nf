@@ -27,13 +27,15 @@ process FASTPLONG {
     }
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def reads_name = new File(reads.toString()).name
+    def reads_stem = reads_name.endsWith('.gz') ? "${prefix}.fastq.gz" : "${prefix}.fastq"
     """
     set -euo pipefail
-    [ ! -f ${prefix}.fastq.gz ] && ln -sf $reads ${prefix}.fastq.gz
+    [ ! -f ${reads_stem} ] && ln -sf $reads ${reads_stem}
 
     # Long-read QC (replaces fastp): same trim/QC intent; -A disables adapter trimming.
     fastplong \\
-        -i ${prefix}.fastq.gz \\
+        -i ${reads_stem} \\
         -o ${prefix}.fastp.fastq.gz \\
         -z 4 \\
         -j ${prefix}.fastplong.json \\
