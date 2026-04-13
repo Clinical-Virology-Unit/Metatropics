@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "metatropics-cli"
+version = "0.0.7"
+description = "CLI helpers for the Metatropics Nextflow pipeline (FASTQ samplesheet generation)."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+
+[project.scripts]
+metatropics-samplesheet = "metatropics_cli.samplesheet:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["metatropics_cli*"]

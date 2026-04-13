@@ -86,6 +86,8 @@ class RowChecker:
         #self._validate_pair(row)
         #self._seen.add((row[self._sample_col], row[self._first_col])) ##Antonio replaced by the one below
         self._seen.add((row[self._sample_col], row[self._second_col]))
+        # Nanopore pipeline: reads are always single-end; ignore any user-supplied column.
+        row["single_end"] = "True"
         self.modified.append(row)
 
     def _validate_sample(self, row):
@@ -203,7 +205,7 @@ def check_samplesheet(file_in, file_out):
         https://raw.githubusercontent.com/nf-core/test-datasets/viralrecon/samplesheet/samplesheet_test_illumina_amplicon.csv
 
     """
-    required_columns = {"sample", "single_end", "barcode"}
+    required_columns = {"sample", "barcode"}
     # See https://docs.python.org/3.9/library/csv.html#id3 to read up on `newline=""`.
     with file_in.open(newline="") as in_handle:
         reader = csv.DictReader(in_handle, dialect=sniff_format(in_handle))
@@ -221,8 +223,8 @@ def check_samplesheet(file_in, file_out):
                 logger.critical(f"{str(error)} On line {i + 2}.")
                 sys.exit(1)
         checker.validate_unique_samples()
-    header = list(reader.fieldnames)
-    header.insert(1, "single_end")
+    # Normalised header: single_end is always True (nanopore); omit from user CSV if you prefer.
+    header = ["sample", "single_end", "barcode"]
     # See https://docs.python.org/3.9/library/csv.html#id3 to read up on `newline=""`.
     with file_out.open(mode="w", newline="") as out_handle:
         writer = csv.DictWriter(out_handle, header, delimiter=",")

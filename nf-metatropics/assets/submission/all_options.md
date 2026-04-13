@@ -4,7 +4,7 @@
 
 | Option | Type | Description |
 |--------|------|-------------|
-| `--input` | string | Path to comma-separated file containing information about the samples in the experiment. |
+| `--input` | string | Path to the samplesheet CSV (`sample`, `barcode`). *(FASTQ: run `pip install .` at the repository root, then **`metatropics-samplesheet -i .`** in the folder that contains your reads — writes **`samplesheet.csv`** there. Alternatively use the bash script in this folder; see the main **[README.md](../../../README.md)**, section 5.)* |
 | `--input_dir` | string | Input directory with POD5. Default: None. |
 | `--outdir` | string | Output directory for results. Use absolute paths on cloud storage. |
 
