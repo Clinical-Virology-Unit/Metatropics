@@ -8,5 +8,5 @@ work/
 
 # pip install -e . (metatropics-cli)
 *.egg-info/
-metatropics_cli/**/__pycache__/
+nf-metatropics/assets/submission/metatropics_samplesheet/**/__pycache__/
 

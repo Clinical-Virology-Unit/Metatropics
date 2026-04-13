@@ -73,6 +73,7 @@ def run_samplesheet(fastq_dir: Path, output: Path | None) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
+        prog="metatropics-samplesheet",
         description="Build Metatropics FASTQ samplesheet (columns: sample, barcode).",
     )
     parser.add_argument(
