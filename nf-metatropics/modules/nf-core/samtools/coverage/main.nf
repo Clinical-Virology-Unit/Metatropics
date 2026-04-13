@@ -12,6 +12,7 @@ process SAMTOOLS_COVERAGE {
 
     output:
     tuple val(meta), path("*.txt"), emit: coverage
+    tuple val(meta), path("*.bamstats"), emit: bamstats
     path "versions.yml"           , emit: versions
 
     when:
@@ -26,6 +27,32 @@ process SAMTOOLS_COVERAGE {
         $args \\
         -o ${prefix}.txt \\
         $input
+
+    samtools view -F 2308 $input | awk '{
+        nm = -1
+        for(i=12; i<=NF; i++) {
+            if(\$i ~ /^NM:i:/) {
+                nm = substr(\$i, 6) + 0
+                break
+            }
+        }
+        if(nm < 0) next
+        if(\$10 == "*") next
+        qlen = length(\$10)
+        if(qlen > 0) {
+            identity = 1 - (nm / qlen)
+            total_identity += identity
+            total_length += qlen
+            count++
+        }
+    }
+    END {
+        if(count > 0) {
+            printf "%.6f\\t%.1f\\n", total_identity/count, total_length/count
+        } else {
+            printf "0\\t0\\n"
+        }
+    }' > ${prefix}.bamstats
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

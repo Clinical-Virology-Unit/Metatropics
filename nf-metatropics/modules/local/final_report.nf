@@ -16,7 +16,7 @@ process FINAL_REPORT {
         gsub(/"/, "", \$1)
         gsub(/"/, "", \$2)
         gsub(/"/, "", \$4)
-        if (\$10 > ${horizontal_cov_threshold} || ${horizontal_cov_threshold} == 0) {  # Filter on horizontal coverage > threshold (or include all if threshold is 0)
+        if (\$5 > 0 && (\$10 > ${horizontal_cov_threshold} || ${horizontal_cov_threshold} == 0)) {
             print \$1"\\t"\$2"\\t"\$4"\\t"\$5"\\t"\$9"\\t"\$10"\\t"\$12"\\t"\$13"\\t"\$14
         }
     }' >> all.final_report.tsv
