@@ -6,7 +6,9 @@ work/
 # Local pulled databases (large, reproducible)
 /Databases/
 
-# pip install -e . (metatropics-cli)
+# pip / setuptools (metatropics-cli)
 *.egg-info/
+build/
+dist/
 nf-metatropics/assets/submission/metatropics_samplesheet/**/__pycache__/
 
