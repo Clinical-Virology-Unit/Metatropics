@@ -11,8 +11,8 @@ requires-python = ">=3.9"
 license = { text = "MIT" }
 
 [project.scripts]
-metatropics-samplesheet = "metatropics_cli.samplesheet:main"
+metatropics-samplesheet = "metatropics_samplesheet.samplesheet:main"
 
 [tool.setuptools.packages.find]
-where = ["."]
-include = ["metatropics_cli*"]
+where = ["nf-metatropics/assets/submission"]
+include = ["metatropics_samplesheet*"]
