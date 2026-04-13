@@ -7,6 +7,7 @@ my $depthSAM = $ARGV[0];
 my $tsvNF = $ARGV[1];
 my $finalFile = $ARGV[2];
 my $consensus = $ARGV[3];
+my $bamStats = $ARGV[4];
 
 
 sub updateReport {
@@ -15,22 +16,18 @@ sub updateReport {
   $id=~s/\.txt|//g;
   $id=~s/.+\.//g;
   $id=~s/(_[^_]+)_/$1./g;
-  #print "$id\n";
 
   my $line = `grep -w $id $inputs[1]`;
   chomp($line);
-  #print "$line";
   my @parameters = split(/\t/,$line);
 
   my $depth = `tail -n 1 $inputs[0]`;
   chomp($depth);
-  #print "$depth";
   my @samtoolDepth = split(/\t/,$depth);
 
   my $sequence = `grep -v \"\>\" $inputs[2]`;
   chomp($sequence);
   $sequence=~s/\n//g;
-  #print "$sequence";
   my @bases = split(//,$sequence);
   my ($A,$T,$C,$G,$N)=0;
   foreach my $base (@bases){
@@ -47,24 +44,35 @@ sub updateReport {
     }
   }
   my $knowBases=$A+$T+$C+$G;
-  #print "$A $T $C $G $N $knowBases $samtoolDepth[2]\n";
-  my $consensusCov=($knowBases/$samtoolDepth[2])*100;
-  my $N_percent=($N/$samtoolDepth[2])*100;
 
-  #my $results = "$parameters[0]\t$parameters[1]\t$parameters[2]\t$parameters[3]\t$parameters[4]\t$parameters[5]\t$parameters[6]\t$samtoolDepth[5]\t$samtoolDepth[6]\t$consensusCov\t$N_percent\t$parameters[9]\t$parameters[10]\t$samtoolDepth[7]\n";
-  my $results = "$parameters[1]\t$parameters[2]\t$parameters[3]\t$parameters[4]\t$parameters[5]\t$parameters[6]\t$parameters[7]\t$samtoolDepth[5]\t$samtoolDepth[6]\t$consensusCov\t$N_percent\t$parameters[10]\t$parameters[11]\t$samtoolDepth[7]\n";
+  # Skip this virus if no BAM-mapped reads or consensus has no callable bases
+  # (no position passed the quality/depth/agreement thresholds)
+  if ($samtoolDepth[3] == 0 || $knowBases == 0) {
+    return "";
+  }
 
-  #print "$results";
+  # Read BAM-derived read identity and mean length
+  my $bamstats_line = `cat $inputs[3]`;
+  chomp($bamstats_line);
+  my @bamstats = split(/\t/, $bamstats_line);
+  my $mean_identity = $bamstats[0];
+  my $mean_length = $bamstats[1];
+
+  # All metrics derived from BAM alignment:
+  #   samtoolDepth[3] = numreads    (mapped reads in BAM)
+  #   samtoolDepth[5] = coverage    (horizontal coverage %)
+  #   samtoolDepth[6] = meandepth   (vertical coverage)
+  #   samtoolDepth[7] = meanbaseq   (mean base quality)
+  #   mean_identity   = mean read identity from NM tags
+  #   mean_length     = mean mapped read length
+  my $results = "$parameters[1]\t$parameters[2]\t$parameters[3]\t$parameters[4]\t$samtoolDepth[3]\t$parameters[6]\t$parameters[7]\t$samtoolDepth[5]\t$samtoolDepth[6]\t$samtoolDepth[5]\t0\t$mean_identity\t$mean_length\t$samtoolDepth[7]\n";
 
   return $results;
-
-
 }
 
 if(-e $finalFile){
   open(FIN,">>$finalFile");
-  #print FIN "mais um\n";
-  my $update = updateReport($depthSAM,$tsvNF,$consensus);
+  my $update = updateReport($depthSAM,$tsvNF,$consensus,$bamStats);
   print FIN $update;
   close FIN;
 
@@ -76,14 +84,11 @@ if(-e $finalFile){
     chomp($line);
     if($line=~m/VirusName/){
       my @temp=split(/\t/,$line);
-      print FIN "$temp[0]\t$temp[1]\t$temp[2]\t$temp[3]\t$temp[4]\t$temp[5]\t$temp[6]\t\"Coverage\"\t\"DepthAverage\"\t\"ConsensusCov\"\t\"N_content\"\t$temp[9]\t$temp[10]\tMeanBaseQuality\n";
+      print FIN "$temp[0]\t$temp[1]\t$temp[2]\t$temp[3]\t$temp[4]\t$temp[5]\t$temp[6]\t\"Coverage\"\t\"DepthAverage\"\t\"HorizontalCoverage\"\t\"N_content\"\t$temp[9]\t$temp[10]\tMeanBaseQuality\n";
     }
-  close TSV;
-  my $update = updateReport($depthSAM,$tsvNF,$consensus);
-  print FIN $update;
-  close TSV;
-  close FIN;
-
-
   }
+  close TSV;
+  my $update = updateReport($depthSAM,$tsvNF,$consensus,$bamStats);
+  print FIN $update;
+  close FIN;
 }

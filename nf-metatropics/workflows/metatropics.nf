@@ -63,7 +63,6 @@ include { IVAR_CONSENSUS              } from '../modules/nf-core/ivar/consensus/
 include { HOMOPOLISH_POLISHING        } from '../modules/local/homopolish/polishing'
 include { ADDING_DEPTH                } from '../modules/local/adding_depth'
 include { FINAL_REPORT                } from '../modules/local/final_report'
-include { BAM_READCOUNT               } from '../modules/local/bam/readcount'
 include { CLEANUP		              } from '../modules/local/cleanup/cleanup'
 include { CLEANUP_INTERMEDIATE		  } from '../modules/local/cleanup/cleanup_intermediate'
 
@@ -336,15 +335,21 @@ workflow METATROPICS {
         [[virus: virus], entry[1]]
     }.groupTuple()//.view()
 
-    covcon_ch = (SAMTOOLS_COVERAGE.out.coverage.join(HOMOPOLISH_POLISHING.out.polishconsensus)).map { entry ->
-    [[id: entry[0].id, single_end: entry[0].single_end], entry[1], entry[2]]
+    covconstat_ch = (SAMTOOLS_COVERAGE.out.coverage
+        .join(HOMOPOLISH_POLISHING.out.polishconsensus)
+        .join(SAMTOOLS_COVERAGE.out.bamstats)
+    ).map { entry ->
+        // entry = [meta, coverage_txt, consensus, bamstats]
+        [[id: entry[0].id, single_end: entry[0].single_end], entry[1], entry[2], entry[3]]
     }
 
-    addingdepthin_ch = (covcon_ch.combine(R_METAPLOT.out.reporttsv, by: 0)).map { entry ->
+    addingdepthin_ch = (covconstat_ch.combine(R_METAPLOT.out.reporttsv, by: 0)).map { entry ->
+        // entry = [meta_simple, coverage_txt, consensus, bamstats, report_tsv]
         def id = entry[0].id
         def singleEnd = entry[0].single_end
         def virus = entry[1].getBaseName().replaceFirst(/.+\./,"")
-        [[id: id, single_end: singleEnd, virus: virus], entry[1], entry[2], entry[3]]
+        // Order matches ADDING_DEPTH input: meta, depth, consensus, bamstats, report
+        [[id: id, single_end: singleEnd, virus: virus], entry[1], entry[2], entry[3], entry[4]]
     }
 
     ADDING_DEPTH(
@@ -355,9 +360,6 @@ workflow METATROPICS {
         (ADDING_DEPTH.out.repdepth.map{it[1]}).collect()
     )
 
-    BAM_READCOUNT(
-        MEDAKA.out.bamfiles.join(REFFIX_FASTA.out.fixedseqref)
-    )
 
     ch_versions = ch_versions.mix(FASTPLONG.out.versions.first())
     ch_versions = ch_versions.mix(NANOPLOT.out.versions.first())
