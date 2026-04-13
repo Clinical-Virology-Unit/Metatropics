@@ -16,7 +16,7 @@
             "barcode": {
                 "type": "string",
                 "minLength": 1,
-                "description": "FASTQ path (.fastq.gz / .fq.gz) or barcode label (e.g. barcode01) for POD5/basecalling runs."
+                "description": "FASTQ path (.fastq, .fq, .fastq.gz, .fq.gz) or barcode label (e.g. barcode01) for POD5/basecalling runs."
             }
         },
         "required": ["sample", "barcode"]

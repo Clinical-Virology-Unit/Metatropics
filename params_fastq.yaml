@@ -1,5 +1,5 @@
 # Metatropics — FASTQ input (no POD5 basecalling).
-# Samplesheet: nf-metatropics/assets/submission/README.md — pip install -e . then metatropics-samplesheet -i . (or PYTHONPATH=nf-metatropics/assets/submission python3 -m metatropics_samplesheet)
+# Samplesheet: nf-metatropics/assets/submission/README.md — pip install . then metatropics-samplesheet -i .
 
 input: /data/Daan/Projects/Ane_test/Input/samplesheet.csv
 outdir: /data/Daan/Projects/Ane_test/Outdir
@@ -13,7 +13,7 @@ minLength: 200
 pair: true
 front: 25
 tail: 25
-minVirus: 0.01
+minVirus: 0.001
 quality: 7
 depth: 20
 agreement: 0.7
