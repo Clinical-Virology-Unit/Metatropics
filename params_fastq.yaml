@@ -1,8 +1,8 @@
 # Metatropics — FASTQ input (no POD5 basecalling).
 # Samplesheet: nf-metatropics/assets/submission/README.md — pip install . then metatropics-samplesheet -i .
 
-input: /data/Daan/Projects/Ane_test/Input/samplesheet.csv
-outdir: /data/Daan/Projects/Ane_test/Outdir
+input: /data/Daan/Projects/singe_doubl_cap/Input/samplesheet.csv
+outdir: /data/Daan/Projects/singe_doubl_cap/Output
 Human_host_fasta: /data/Daan/Projects/Metatropics/Databases/Human/chm13v2.0.fa
 #Other_host_fasta: /path/to/optional_host.fasta
 dbmeta: /data/Daan/Projects/Metatropics/Databases/ViralRefseq
@@ -13,13 +13,13 @@ minLength: 200
 pair: true
 front: 25
 tail: 25
-minVirus: 0.0001
-quality: 7
+minVirus: 0.01
+quality: 30
 depth: 20
 agreement: 0.7
 rcoverage_figure: true
 
-perform_rarefaction: false
+perform_rarefaction: true
 target_bases: 500000000
 
 enable_docker_cleanup: false
