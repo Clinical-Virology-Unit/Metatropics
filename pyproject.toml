@@ -1,18 +1,22 @@
 [build-system]
-requires = ["setuptools>=61"]
+requires = ["setuptools>=45", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "metatropics-cli"
-version = "0.0.7"
-description = "CLI helpers for the Metatropics Nextflow pipeline (FASTQ samplesheet generation)."
+name = "virasign"
+version = "0.0.6"
+description = "Virasign: Viral Read ASSIGNment from nanopore sequencing"
 readme = "README.md"
-requires-python = ">=3.9"
-license = { text = "MIT" }
+license = { text = "GPL-3.0-or-later" }
+requires-python = ">=3.7,<3.14"
 
 [project.scripts]
+virasign = "virasign.virasign:main"
+metatropics_samplesheet = "metatropics_samplesheet.samplesheet:main"
 metatropics-samplesheet = "metatropics_samplesheet.samplesheet:main"
+
+[tool.setuptools]
+package-dir = {"" = "nf-metatropics/assets/submission"}
 
 [tool.setuptools.packages.find]
 where = ["nf-metatropics/assets/submission"]
-include = ["metatropics_samplesheet*"]

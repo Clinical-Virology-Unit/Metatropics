@@ -1,0 +1,686 @@
+Apr-20 17:07:54.211 [main] DEBUG nextflow.cli.Launcher - $> nextflow run nf-metatropics/ -profile singularity -params-file params_fastq.yaml -resume
+Apr-20 17:07:54.486 [main] DEBUG nextflow.cli.CmdRun - N E X T F L O W  ~  version 25.10.0
+Apr-20 17:07:55.877 [main] DEBUG nextflow.config.ConfigBuilder - Found config base: /data/Daan/Projects/Metatropics/nf-metatropics/nextflow.config
+Apr-20 17:07:55.881 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /data/Daan/Projects/Metatropics/nf-metatropics/nextflow.config
+Apr-20 17:07:55.900 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `singularity`
+Apr-20 17:07:56.293 [main] DEBUG nextflow.plugin.PluginsFacade - Using Default plugin manager
+Apr-20 17:07:56.302 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Apr-20 17:07:56.304 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Apr-20 17:07:56.306 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.12.0 in 'deployment' mode
+Apr-20 17:07:56.319 [main] DEBUG nextflow.plugin.PluginsFacade - Using Default plugin manager
+Apr-20 17:07:57.638 [main] DEBUG nextflow.config.ConfigBuilder - Available config profiles: [bih, cfc_dev, uzl_omics, ifb_core, embl_hd, denbi_qbic, alice, mjolnir_globe, uppmax, giga, incliva, ilifu, ki_luria, uge, icr_alma, rosalind_uge, lugh, mccleary, unibe_ibu, vai, czbiohub_aws, jax, roslin, iris, tes, scw, unc_longleaf, tigem, tubingen_apg, apollo, ipop_up, vsc_calcua, pdc_kth, ceci_nic5, ccga_cau, humantechnopole, stjude, daisybio, eddie, medair, biowulf, mahuika, bi, bigpurple, adcra, cedars, pawsey_setonix, vsc_kul_uhasselt, purdue_gautschi, pawsey_nimbus, rki, ucl_myriad, utd_ganymede, charliecloud, fred_hutch, seattlechildrens, icr_davros, ceres, purdue_negishi, munin, arm, rosalind, hasta, cfc, uzh, shu_bmrc, ebi_codon_slurm, ebc, ccga_dx, crick, ku_sund_danhead, marvin, lrz_cm4, purdue_bell, biohpc_gen, shifter, mana, mamba, york_viking, unc_lccc, wehi, awsbatch, wustl_htcf, arcc, ceci_dragon2, imperial, maestro, cannon, genotoul, nci_gadi, vsc_calcua_gpu, abims, vsc_calcua_cpu, eva_grace, janelia, nu_genomics, googlebatch, oist, sahmri, kaust, alliance_canada, mpcdf, leicester, vsc_ugent, create, sage, cambridge, jex, podman, ebi_codon, cheaha, xanadu, nyu_hpc, test, marjorie, computerome, ucd_sonic, seg_globe, mssm, sanger, dkfz, bluebear, pasteur, einstein, ethz_euler, m3c, test_full, imb, ucl_cscluster, tuos_stanage, azurebatch, seadragon, crukmi, csiro_petrichor, qmul_apocrita, docker, engaging, gis, hypatia, psmn, eva, unity, cropdiversityhpc, nygc, fgcz, conda, crg, singularity, mpcdf_viper, dirac, self_hosted_runner, tufts, uw_hyak_pedslabs, binac2, hki_genie, debug, genouest, cbe, unsw_katana, utd_juno, phoenix, gitpod, seawulf, uod_hpc, fub_curta, lovelace, uct_hpc, aws_tower, fsu_draco]
+Apr-20 17:07:57.678 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; embedded=false; plugins-dir=/home/itg.be/djansen/.nextflow/plugins; core-plugins: nf-amazon@3.4.1,nf-azure@1.20.2,nf-cloudcache@0.5.0,nf-codecommit@0.5.0,nf-console@1.3.0,nf-google@1.23.3,nf-k8s@1.2.2,nf-tower@1.17.1,nf-wave@1.16.1
+Apr-20 17:07:57.682 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Apr-20 17:07:57.682 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Apr-20 17:07:57.683 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.12.0 in 'deployment' mode
+Apr-20 17:07:57.694 [main] DEBUG nextflow.util.RetryConfig - Missing nextflow session - using default retry config
+Apr-20 17:07:57.721 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Apr-20 17:07:57.723 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Apr-20 17:07:57.723 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins resolved requirement=[]
+Apr-20 17:07:57.729 [main] DEBUG n.secret.LocalSecretsProvider - Secrets store: /home/itg.be/djansen/.nextflow/secrets/store.json
+Apr-20 17:07:57.731 [main] DEBUG nextflow.secret.SecretsLoader - Discovered secrets providers: [nextflow.secret.LocalSecretsProvider@1b1252c8] - activable => nextflow.secret.LocalSecretsProvider@1b1252c8
+Apr-20 17:07:57.732 [main] DEBUG nextflow.cli.CmdRun - Applied DSL=2 from script declaration
+Apr-20 17:07:57.748 [main] DEBUG nextflow.cli.CmdRun - Launching `nf-metatropics/main.nf` [elegant_curie] DSL2 - revision: d909ac1015
+Apr-20 17:07:57.795 [main] DEBUG nextflow.Session - Session UUID: 58f07832-cb60-4c64-82b2-e79e168f33df
+Apr-20 17:07:57.796 [main] DEBUG nextflow.Session - Run name: elegant_curie
+Apr-20 17:07:57.796 [main] DEBUG nextflow.Session - Executor pool size: 16
+Apr-20 17:07:57.806 [main] DEBUG nextflow.file.FilePorter - File porter settings maxRetries=3; maxTransfers=50; pollTimeout=null
+Apr-20 17:07:57.814 [main] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'FileTransfer' minSize=10; maxSize=48; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Apr-20 17:07:57.879 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 25.10.0 build 10289
+  Created: 22-10-2025 16:26 UTC (18:26 CEST)
+  System: Linux 5.15.0-94-generic
+  Runtime: Groovy 4.0.28 on OpenJDK 64-Bit Server VM 17.0.10+7
+  Encoding: UTF-8 (UTF-8)
+  Process: 4008341@arezendeprox [127.0.1.1]
+  CPUs: 16 - Mem: 125.8 GB (30.3 GB) - Swap: 100 MB (0)
+Apr-20 17:07:57.995 [main] DEBUG nextflow.Session - Work-dir: /data/Daan/Projects/Metatropics/work [ext2/ext3]
+Apr-20 17:07:58.098 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Apr-20 17:07:58.107 [main] DEBUG nextflow.Session - Observer factory (v2): LinObserverFactory
+Apr-20 17:07:58.110 [main] DEBUG nextflow.Session - Observer factory (v2): DefaultObserverFactory
+Apr-20 17:07:58.176 [main] DEBUG nextflow.cache.CacheFactory - Using Nextflow cache factory: nextflow.cache.DefaultCacheFactory
+Apr-20 17:07:58.185 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 17; maxThreads: 1000
+Apr-20 17:07:58.326 [main] DEBUG nextflow.Session - Session start
+Apr-20 17:07:58.337 [main] DEBUG nextflow.trace.TraceFileObserver - Workflow started -- trace file: /data/Daan/Projects/T_DCT/Output_l/Summary/pipeline_info/execution_trace_2026-04-20_17-07-57.txt
+Apr-20 17:07:58.342 [main] DEBUG nextflow.Session - Using default localLib path: /data/Daan/Projects/Metatropics/nf-metatropics/lib
+Apr-20 17:07:58.346 [main] DEBUG nextflow.Session - Adding to the classpath library: /data/Daan/Projects/Metatropics/nf-metatropics/lib
+Apr-20 17:07:58.347 [main] DEBUG nextflow.Session - Adding to the classpath library: /data/Daan/Projects/Metatropics/nf-metatropics/lib/nfcore_external_java_deps.jar
+Apr-20 17:07:59.140 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Apr-20 17:07:59.190 [main] INFO  nextflow.Nextflow - 
+
+-[2m----------------------------------------------------[0m-
+                                        [0;32m,--.[0;30m/[0;32m,-.[0m
+[0;34m        ___     __   __   __   ___     [0;32m/,-._.--~'[0m
+[0;34m  |\ | |__  __ /  ` /  \ |__) |__         [0;33m}  {[0m
+[0;34m  | \| |       \__, \__/ |  \ |___     [0;32m\`-._,-`-,[0m
+                                        [0;32m`._,._,'[0m
+[0;35m  nf-core/metatropics v0.0.7[0m
+-[2m----------------------------------------------------[0m-
+[1mCore Nextflow options[0m
+  [0;34mrunName         : [0;32melegant_curie[0m
+  [0;34mcontainerEngine : [0;32msingularity[0m
+  [0;34mlaunchDir       : [0;32m/data/Daan/Projects/Metatropics[0m
+  [0;34mworkDir         : [0;32m/data/Daan/Projects/Metatropics/work[0m
+  [0;34mprojectDir      : [0;32m/data/Daan/Projects/Metatropics/nf-metatropics[0m
+  [0;34muserName        : [0;32mdjansen[0m
+  [0;34mprofile         : [0;32msingularity[0m
+  [0;34mconfigFiles     : [0;32m/data/Daan/Projects/Metatropics/nf-metatropics/nextflow.config[0m
+
+[1mInput/output options[0m
+  [0;34minput           : [0;32m/data/Daan/Projects/T_DCT/Input/samplesheet.csv[0m
+  [0;34minput_dir       : [0;32mnull[0m
+  [0;34moutdir          : [0;32m/data/Daan/Projects/T_DCT/Output_l[0m
+
+[1mReference genome options[0m
+  [0;34mHuman_host_fasta: [0;32m/data/Daan/Projects/Metatropics/Databases1/Human/chm13v2.0.fa[0m
+
+[1mMax job request options[0m
+  [0;34mmax_memory      : [0;32m64.GB[0m
+
+[1mGeneric options[0m
+  [0;34mmodel           : [0;32mhac[0m
+  [0;34mminVirus        : [0;32m0.01[0m
+  [0;34mdbmeta          : [0;32m/data/Daan/Projects/Metatropics/Databases1/ViralRefseq[0m
+  [0;34mnrdb            : [0;32mnull[0m
+  [0;34mpair            : [0;32mtrue[0m
+  [0;34mquality         : [0;32m30[0m
+  [0;34mdepth           : [0;32m20[0m
+  [0;34mfront           : [0;32m25[0m
+  [0;34mtail            : [0;32m25[0m
+
+!! Only displaying parameters that differ from the pipeline defaults !!
+-[2m----------------------------------------------------[0m-
+If you use nf-core/metatropics for your analysis please cite:
+
+* The nf-core framework
+  https://doi.org/10.1038/s41587-020-0439-x
+
+* Software dependencies
+  https://github.com/nf-core/metatropics/blob/main/nf-metatropics/assets/citing/CITATIONS.md
+-[2m----------------------------------------------------[0m-
+Apr-20 17:08:02.112 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name NFCORE_METATROPICS:METATROPICS:INPUT_CHECK_METATROPICS:SAMPLESHEET_CHECK_METATROPICS
+Apr-20 17:08:02.114 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:SAMPLESHEET_CHECK_METATROPICS` matches process NFCORE_METATROPICS:METATROPICS:INPUT_CHECK_METATROPICS:SAMPLESHEET_CHECK_METATROPICS
+Apr-20 17:08:02.127 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:08:02.127 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:08:02.137 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+Apr-20 17:08:02.144 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=16; memory=125.8 GB; capacity=16; pollInterval=100ms; dumpInterval=5m
+Apr-20 17:08:02.146 [main] DEBUG n.processor.TaskPollingMonitor - >>> barrier register (monitor: local)
+Apr-20 17:08:02.163 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:INPUT_CHECK_METATROPICS:SAMPLESHEET_CHECK_METATROPICS': maxForks=0; fair=false; array=0
+Apr-20 17:08:02.221 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES
+Apr-20 17:08:02.222 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:FIX_NAMES` matches process NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES
+Apr-20 17:08:02.225 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:08:02.226 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:08:02.227 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES': maxForks=0; fair=false; array=0
+Apr-20 17:08:02.233 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_low` matches labels `process_low` for process with name NFCORE_METATROPICS:METATROPICS:RAREFACTION
+Apr-20 17:08:02.234 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:RAREFACTION` matches process NFCORE_METATROPICS:METATROPICS:RAREFACTION
+Apr-20 17:08:02.239 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:08:02.239 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:08:02.240 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:RAREFACTION': maxForks=0; fair=false; array=0
+Apr-20 17:08:02.242 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name NFCORE_METATROPICS:METATROPICS:FASTPLONG
+Apr-20 17:08:02.243 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:FASTPLONG` matches process NFCORE_METATROPICS:METATROPICS:FASTPLONG
+Apr-20 17:08:02.246 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:08:02.246 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:08:02.247 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:FASTPLONG': maxForks=0; fair=false; array=0
+Apr-20 17:08:02.250 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name NFCORE_METATROPICS:METATROPICS:NANOPLOT
+Apr-20 17:08:02.251 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:NANOPLOT` matches process NFCORE_METATROPICS:METATROPICS:NANOPLOT
+Apr-20 17:08:02.253 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:08:02.253 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:08:02.254 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:NANOPLOT': maxForks=0; fair=false; array=0
+Apr-20 17:08:02.260 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN
+Apr-20 17:08:02.261 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:MINIMAP2_ALIGN` matches process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN
+Apr-20 17:08:02.263 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:08:02.263 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:08:02.264 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN': maxForks=0; fair=false; array=0
+Apr-20 17:08:02.267 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT
+Apr-20 17:08:02.268 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:SAMTOOLS_SORT` matches process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT
+Apr-20 17:08:02.270 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:08:02.270 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:08:02.271 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT': maxForks=0; fair=false; array=0
+Apr-20 17:08:02.276 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_low` matches labels `process_low` for process with name NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ
+Apr-20 17:08:02.278 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:SAMTOOLS_hFASTQ` matches process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ
+Apr-20 17:08:02.281 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:08:02.282 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:08:02.283 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ': maxForks=0; fair=false; array=0
+Apr-20 17:08:02.290 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name NFCORE_METATROPICS:METATROPICS:VIRASIGN_DB
+Apr-20 17:08:02.292 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:08:02.292 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:08:02.293 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:VIRASIGN_DB': maxForks=0; fair=false; array=0
+Apr-20 17:08:02.296 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name NFCORE_METATROPICS:METATROPICS:VIRASIGN_CLASSIFICATION
+Apr-20 17:08:02.301 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:VIRASIGN_CLASSIFICATION` matches process NFCORE_METATROPICS:METATROPICS:VIRASIGN_CLASSIFICATION
+Apr-20 17:08:02.304 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:08:02.304 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:08:02.305 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:VIRASIGN_CLASSIFICATION': maxForks=0; fair=false; array=0
+Apr-20 17:08:02.325 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name NFCORE_METATROPICS:METATROPICS:VIRASIGN_SUMMARY
+Apr-20 17:08:02.326 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:VIRASIGN_SUMMARY` matches process NFCORE_METATROPICS:METATROPICS:VIRASIGN_SUMMARY
+Apr-20 17:08:02.328 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:08:02.329 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:08:02.329 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:VIRASIGN_SUMMARY': maxForks=0; fair=false; array=0
+Apr-20 17:08:02.333 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_high` matches labels `process_high` for process with name NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP
+Apr-20 17:08:02.334 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:METAMAPS_MAP` matches process NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP
+Apr-20 17:08:02.337 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:08:02.338 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:08:02.339 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP': maxForks=0; fair=false; array=0
+Apr-20 17:08:02.355 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_high` matches labels `process_high` for process with name NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY
+Apr-20 17:08:02.356 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:METAMAPS_CLASSIFY` matches process NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY
+Apr-20 17:08:02.360 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:08:02.360 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:08:02.360 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY': maxForks=0; fair=false; array=0
+Apr-20 17:08:02.391 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_high` matches labels `process_high` for process with name NFCORE_METATROPICS:METATROPICS:R_METAPLOT
+Apr-20 17:08:02.392 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:R_METAPLOT` matches process NFCORE_METATROPICS:METATROPICS:R_METAPLOT
+Apr-20 17:08:02.394 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:08:02.394 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:08:02.395 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:R_METAPLOT': maxForks=0; fair=false; array=0
+Apr-20 17:08:02.410 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:REF_FASTA` matches process NFCORE_METATROPICS:METATROPICS:REF_FASTA
+Apr-20 17:08:02.421 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:08:02.421 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:08:02.422 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:REF_FASTA': maxForks=0; fair=false; array=0
+Apr-20 17:08:02.439 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:REFFIX_FASTA` matches process NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA
+Apr-20 17:08:02.442 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:08:02.442 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:08:02.444 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA': maxForks=0; fair=false; array=0
+Apr-20 17:08:02.448 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ
+Apr-20 17:08:02.449 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:SEQTK_SUBSEQ` matches process NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ
+Apr-20 17:08:02.452 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:08:02.452 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:08:02.453 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ': maxForks=0; fair=false; array=0
+Apr-20 17:08:02.456 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name NFCORE_METATROPICS:METATROPICS:MEDAKA
+Apr-20 17:08:02.457 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:MEDAKA` matches process NFCORE_METATROPICS:METATROPICS:MEDAKA
+Apr-20 17:08:02.459 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:08:02.459 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:08:02.459 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:MEDAKA': maxForks=0; fair=false; array=0
+Apr-20 17:08:02.466 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name NFCORE_METATROPICS:METATROPICS:ReadCount
+Apr-20 17:08:02.467 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:ReadCount` matches process NFCORE_METATROPICS:METATROPICS:ReadCount
+Apr-20 17:08:02.469 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:08:02.469 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:08:02.469 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:ReadCount': maxForks=0; fair=false; array=0
+Apr-20 17:08:02.474 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name NFCORE_METATROPICS:METATROPICS:RCOVERAGE
+Apr-20 17:08:02.475 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:RCOVERAGE` matches process NFCORE_METATROPICS:METATROPICS:RCOVERAGE
+Apr-20 17:08:02.476 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:08:02.477 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:08:02.477 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:RCOVERAGE': maxForks=0; fair=false; array=0
+Apr-20 17:08:02.481 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE
+Apr-20 17:08:02.482 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:SAMTOOLS_COVERAGE` matches process NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE
+Apr-20 17:08:02.484 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:08:02.484 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:08:02.485 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE': maxForks=0; fair=false; array=0
+Apr-20 17:08:02.491 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name NFCORE_METATROPICS:METATROPICS:IVAR_CONSENSUS
+Apr-20 17:08:02.491 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:IVAR_CONSENSUS` matches process NFCORE_METATROPICS:METATROPICS:IVAR_CONSENSUS
+Apr-20 17:08:02.493 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:08:02.494 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:08:02.495 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:IVAR_CONSENSUS': maxForks=0; fair=false; array=0
+Apr-20 17:08:02.499 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name NFCORE_METATROPICS:METATROPICS:HOMOPOLISH_POLISHING
+Apr-20 17:08:02.500 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:HOMOPOLISH_POLISHING` matches process NFCORE_METATROPICS:METATROPICS:HOMOPOLISH_POLISHING
+Apr-20 17:08:02.503 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:08:02.503 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:08:02.504 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:HOMOPOLISH_POLISHING': maxForks=0; fair=false; array=0
+Apr-20 17:08:02.521 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:ADDING_DEPTH` matches process NFCORE_METATROPICS:METATROPICS:ADDING_DEPTH
+Apr-20 17:08:02.523 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:08:02.524 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:08:02.525 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:ADDING_DEPTH': maxForks=0; fair=false; array=0
+Apr-20 17:08:02.529 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:FINAL_REPORT` matches process NFCORE_METATROPICS:METATROPICS:FINAL_REPORT
+Apr-20 17:08:02.531 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:08:02.531 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:08:02.532 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:FINAL_REPORT': maxForks=0; fair=false; array=0
+Apr-20 17:08:02.583 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name NFCORE_METATROPICS:METATROPICS:CUSTOM_DUMPSOFTWAREVERSIONS
+Apr-20 17:08:02.584 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:CUSTOM_DUMPSOFTWAREVERSIONS` matches process NFCORE_METATROPICS:METATROPICS:CUSTOM_DUMPSOFTWAREVERSIONS
+Apr-20 17:08:02.588 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:08:02.588 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:08:02.589 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:CUSTOM_DUMPSOFTWAREVERSIONS': maxForks=0; fair=false; array=0
+Apr-20 17:08:02.594 [main] DEBUG nextflow.Session - Workflow process names [dsl2]: SAMTOOLS_COVERAGE, NFCORE_METATROPICS:METATROPICS:ReadCount, NFCORE_METATROPICS:METATROPICS:REF_FASTA, IVAR_CONSENSUS, NFCORE_METATROPICS:METATROPICS:VIRASIGN_SUMMARY, FINAL_REPORT, SAMPLESHEET_CHECK_METATROPICS, DORADO_DEMULTIPLEXING, NFCORE_METATROPICS:METATROPICS:ADDING_DEPTH, METAMAPS_CLASSIFY, NFCORE_METATROPICS:METATROPICS:VIRASIGN_DB, FASTPLONG, NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP, NFCORE_METATROPICS:METATROPICS:FASTPLONG, NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY, NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE, NFCORE_METATROPICS:METATROPICS:CUSTOM_DUMPSOFTWAREVERSIONS, RAREFACTION, NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA, RCOVERAGE, NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ, NFCORE_METATROPICS:METATROPICS:VIRASIGN_CLASSIFICATION, NFCORE_METATROPICS:METATROPICS:INPUT_CHECK_METATROPICS:SAMPLESHEET_CHECK_METATROPICS, CLEANUP_INTERMEDIATE, NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES, VIRASIGN_SUMMARY, NFCORE_METATROPICS:METATROPICS:MEDAKA, NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT, NANOPLOT, REF_FASTA, NFCORE_METATROPICS:METATROPICS:RAREFACTION, HOMOPOLISH_POLISHING, VIRASIGN_CLASSIFICATION, SAMTOOLS_hFASTQ, FIX_NAMES, NFCORE_METATROPICS:METATROPICS:IVAR_CONSENSUS, NFCORE_METATROPICS:METATROPICS:R_METAPLOT, SEQTK_SUBSEQ, REFFIX_FASTA, SAMTOOLS_SORT, NFCORE_METATROPICS:METATROPICS:NANOPLOT, ADDING_DEPTH, CLEANUP, NFCORE_METATROPICS:METATROPICS:RCOVERAGE, DORADO_ONT, METAMAPS_MAP, NFCORE_METATROPICS:METATROPICS:HOMOPOLISH_POLISHING, NFCORE_METATROPICS:METATROPICS:FINAL_REPORT, NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ, R_METAPLOT, SAMTOOLS_hoFASTQ, MINIMAP2_ALIGN, CUSTOM_DUMPSOFTWAREVERSIONS, MEDAKA, NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN, ReadCount, VIRASIGN_DB
+Apr-20 17:08:02.608 [main] DEBUG nextflow.Session - Igniting dataflow network (28)
+Apr-20 17:08:02.609 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:INPUT_CHECK_METATROPICS:SAMPLESHEET_CHECK_METATROPICS
+Apr-20 17:08:02.609 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES
+Apr-20 17:08:02.609 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:RAREFACTION
+Apr-20 17:08:02.609 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:FASTPLONG
+Apr-20 17:08:02.609 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:NANOPLOT
+Apr-20 17:08:02.609 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN
+Apr-20 17:08:02.609 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT
+Apr-20 17:08:02.610 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ
+Apr-20 17:08:02.610 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:VIRASIGN_DB
+Apr-20 17:08:02.610 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:VIRASIGN_CLASSIFICATION
+Apr-20 17:08:02.610 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:VIRASIGN_SUMMARY
+Apr-20 17:08:02.610 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP
+Apr-20 17:08:02.610 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY
+Apr-20 17:08:02.610 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:R_METAPLOT
+Apr-20 17:08:02.610 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:REF_FASTA
+Apr-20 17:08:02.612 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA
+Apr-20 17:08:02.613 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ
+Apr-20 17:08:02.613 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:MEDAKA
+Apr-20 17:08:02.613 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:ReadCount
+Apr-20 17:08:02.613 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:RCOVERAGE
+Apr-20 17:08:02.615 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE
+Apr-20 17:08:02.615 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:IVAR_CONSENSUS
+Apr-20 17:08:02.615 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:HOMOPOLISH_POLISHING
+Apr-20 17:08:02.616 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:ADDING_DEPTH
+Apr-20 17:08:02.616 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:FINAL_REPORT
+Apr-20 17:08:02.616 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:CUSTOM_DUMPSOFTWAREVERSIONS
+Apr-20 17:08:02.617 [main] DEBUG nextflow.script.ScriptRunner - Parsed script files:
+  Script_2c6875308f8ded42: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/ref_fasta.nf
+  Script_992eb44bdfe81433: /data/Daan/Projects/Metatropics/nf-metatropics/main.nf
+  Script_16ff458ee69ffc3c: /data/Daan/Projects/Metatropics/nf-metatropics/workflows/subworkflows/local/host_mapping.nf
+  Script_dbfccfb2b1e6442c: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/homopolish/polishing.nf
+  Script_3cc25f7c984bf62d: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/virasign/classification.nf
+  Script_cd27272ecc5668b8: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/virasign/prepare_db.nf
+  Script_4bc48be322e9e5ed: /data/Daan/Projects/Metatropics/nf-metatropics/workflows/metatropics.nf
+  Script_7566355ae1e48ce1: /data/Daan/Projects/Metatropics/nf-metatropics/modules/nf-core/medaka/main.nf
+  Script_608ac5f5f599c6d2: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/dorado/demultiplexing.nf
+  Script_3b86d7be5ff3f15b: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/reads/reads.nf
+  Script_c001c2e6fdb4c89f: /data/Daan/Projects/Metatropics/nf-metatropics/modules/nf-core/nanoplot/main.nf
+  Script_67e73fd6ebce9cc7: /data/Daan/Projects/Metatropics/nf-metatropics/modules/nf-core/samtools/coverage/main.nf
+  Script_fae070f40f21e58c: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/final_report.nf
+  Script_fd574adb05612859: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/metamaps/classify.nf
+  Script_d292ab3c842da2d1: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/fastplong/main.nf
+  Script_9411245b861afa36: /data/Daan/Projects/Metatropics/nf-metatropics/workflows/subworkflows/local/input_check_metatropics.nf
+  Script_c903170070735cc9: /data/Daan/Projects/Metatropics/nf-metatropics/modules/nf-core/samtools/sort/main.nf
+  Script_959f309d6d18f9a1: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/reffix_fasta.nf
+  Script_dcedd8fbe779b3f1: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/metamaps/map.nf
+  Script_d542b94372d08742: /data/Daan/Projects/Metatropics/nf-metatropics/workflows/subworkflows/local/subfix_names.nf
+  Script_7d5c5808f7bc82b6: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/virasign/build_html.nf
+  Script_ea0e4ed31b389063: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/cleanup/cleanup_intermediate.nf
+  Script_9df09287b9ee2cda: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/cleanup/cleanup.nf
+  Script_c82378af6b779c81: /data/Daan/Projects/Metatropics/nf-metatropics/modules/nf-core/custom/dumpsoftwareversions/main.nf
+  Script_87b10afa6015438e: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/dorado/ont.nf
+  Script_e7e397a0e41aa7dc: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/samplesheet_check_metatropics.nf
+  Script_d08be40554f3e0c1: /data/Daan/Projects/Metatropics/nf-metatropics/modules/nf-core/ivar/consensus/main.nf
+  Script_8c6d41e0ac42fe11: /data/Daan/Projects/Metatropics/nf-metatropics/modules/nf-core/samtools/fastq/main2.nf
+  Script_b042555cc99d6398: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/rcoverage/rcoverage.nf
+  Script_17e7cbce4d4e27bf: /data/Daan/Projects/Metatropics/nf-metatropics/modules/nf-core/samtools/fastq/main.nf
+  Script_de0d4f9c42c81aae: /data/Daan/Projects/Metatropics/nf-metatropics/modules/nf-core/seqtk/subseq/main.nf
+  Script_4ab75aa128436c7c: /data/Daan/Projects/Metatropics/nf-metatropics/workflows/subworkflows/local/human_mapping.nf
+  Script_d0b67b30329ccdf1: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/adding_depth.nf
+  Script_4a0e6c26e792ff5d: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/r/metaplot.nf
+  Script_bd2b12297101132e: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/rarefaction/rarefaction.nf
+  Script_911844893e962d96: /data/Daan/Projects/Metatropics/nf-metatropics/modules/nf-core/minimap2/align/main.nf
+  Script_d6e42eaba6b356ca: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/fix_names.nf
+Apr-20 17:08:02.620 [main] DEBUG nextflow.script.ScriptRunner - > Awaiting termination 
+Apr-20 17:08:02.620 [main] DEBUG nextflow.Session - Session await
+Apr-20 17:08:02.670 [Actor Thread 12] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=library://jansendaan94_v2/metatropics/virasign:latest; path=/data/Daan/Projects/Metatropics/work/singularity/jansendaan94_v2-metatropics-virasign-latest.img
+Apr-20 17:08:02.670 [Actor Thread 15] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=library://daanjansen94/metatropics/python3:v3; path=/data/Daan/Projects/Metatropics/work/singularity/daanjansen94-metatropics-python3-v3.img
+Apr-20 17:08:02.780 [Actor Thread 13] INFO  nextflow.processor.TaskProcessor - [1a/27f629] Cached process > NFCORE_METATROPICS:METATROPICS:INPUT_CHECK_METATROPICS:SAMPLESHEET_CHECK_METATROPICS (samplesheet.csv)
+Apr-20 17:08:02.780 [Actor Thread 14] INFO  nextflow.processor.TaskProcessor - [9a/3b5c09] Cached process > NFCORE_METATROPICS:METATROPICS:VIRASIGN_DB (VIRASIGN_DB)
+Apr-20 17:08:02.838 [Actor Thread 10] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=library://daanjansen94/metatropics/bbmap:38.86; path=/data/Daan/Projects/Metatropics/work/singularity/daanjansen94-metatropics-bbmap-38.86.img
+Apr-20 17:08:02.843 [Actor Thread 13] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'PublishDir' minSize=10; maxSize=48; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Apr-20 17:08:02.855 [Actor Thread 22] INFO  nextflow.processor.TaskProcessor - [f9/df7545] Cached process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES (LASVnegRUN1_p6_T1_other_T1)
+Apr-20 17:08:02.856 [Actor Thread 7] INFO  nextflow.processor.TaskProcessor - [56/d47537] Cached process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES (LASVnegRUN1_H2O_9_T1_other_T1)
+Apr-20 17:08:02.856 [Actor Thread 18] INFO  nextflow.processor.TaskProcessor - [4b/a9e129] Cached process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES (LASVnegRUN1_p3_T1_other_T1)
+Apr-20 17:08:02.856 [Actor Thread 5] INFO  nextflow.processor.TaskProcessor - [7a/22b482] Cached process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES (LASVnegRUN1_p12_T1_other_T1)
+Apr-20 17:08:02.857 [Actor Thread 4] INFO  nextflow.processor.TaskProcessor - [c8/a376ce] Cached process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES (LASVnegRUN1_p14_T1_other_T1)
+Apr-20 17:08:02.858 [Actor Thread 1] INFO  nextflow.processor.TaskProcessor - [b2/8a5fc8] Cached process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES (LASVnegRUN1_p2_T1_other_T1)
+Apr-20 17:08:02.862 [Actor Thread 2] INFO  nextflow.processor.TaskProcessor - [aa/4cdc38] Cached process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES (LASVnegRUN1_p1_T1_other_T1)
+Apr-20 17:08:02.862 [Actor Thread 6] INFO  nextflow.processor.TaskProcessor - [44/155640] Cached process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES (LASVnegRUN1_p10_T1_other_T1)
+Apr-20 17:08:02.860 [Actor Thread 3] INFO  nextflow.processor.TaskProcessor - [b4/bd180c] Cached process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES (LASVnegRUN1_p13_T1_other_T1)
+Apr-20 17:08:02.861 [Actor Thread 8] INFO  nextflow.processor.TaskProcessor - [a9/386342] Cached process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES (LASVnegRUN1_H2O_10_T1_other_T1)
+Apr-20 17:08:02.868 [Actor Thread 24] INFO  nextflow.processor.TaskProcessor - [45/606979] Cached process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES (LASVnegRUN1_p8_T1_other_T1)
+Apr-20 17:08:02.869 [Actor Thread 23] INFO  nextflow.processor.TaskProcessor - [00/544d50] Cached process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES (LASVnegRUN1_p7_T1_other_T1)
+Apr-20 17:08:02.871 [Actor Thread 20] INFO  nextflow.processor.TaskProcessor - [b8/a379b7] Cached process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES (LASVnegRUN1_p5_T1_other_T1)
+Apr-20 17:08:02.891 [Actor Thread 15] INFO  nextflow.processor.TaskProcessor - [88/fcba68] Cached process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES (LASVnegRUN1_p11_T1_other_T1)
+Apr-20 17:08:02.893 [Actor Thread 25] INFO  nextflow.processor.TaskProcessor - [5d/6a8af5] Cached process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES (LASVnegRUN1_p9_T1_other_T1)
+Apr-20 17:08:02.895 [Actor Thread 11] INFO  nextflow.processor.TaskProcessor - [a8/fe2b53] Cached process > NFCORE_METATROPICS:METATROPICS:RAREFACTION (LASVnegRUN1_H2O_9_T1_other_T1)
+Apr-20 17:08:02.897 [Actor Thread 22] INFO  nextflow.processor.TaskProcessor - [d7/9690d9] Cached process > NFCORE_METATROPICS:METATROPICS:RAREFACTION (LASVnegRUN1_p3_T1_other_T1)
+Apr-20 17:08:02.897 [Actor Thread 28] INFO  nextflow.processor.TaskProcessor - [86/3b6bb6] Cached process > NFCORE_METATROPICS:METATROPICS:RAREFACTION (LASVnegRUN1_p1_T1_other_T1)
+Apr-20 17:08:02.900 [Actor Thread 26] INFO  nextflow.processor.TaskProcessor - [67/049742] Cached process > NFCORE_METATROPICS:METATROPICS:RAREFACTION (LASVnegRUN1_p13_T1_other_T1)
+Apr-20 17:08:02.907 [Actor Thread 19] INFO  nextflow.processor.TaskProcessor - [9d/b5be0e] Cached process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES (LASVnegRUN1_p4_T1_other_T1)
+Apr-20 17:08:02.907 [Actor Thread 14] INFO  nextflow.processor.TaskProcessor - [66/5d19c7] Cached process > NFCORE_METATROPICS:METATROPICS:RAREFACTION (LASVnegRUN1_p6_T1_other_T1)
+Apr-20 17:08:02.911 [Actor Thread 13] INFO  nextflow.processor.TaskProcessor - [7a/163064] Cached process > NFCORE_METATROPICS:METATROPICS:RAREFACTION (LASVnegRUN1_H2O_10_T1_other_T1)
+Apr-20 17:08:02.914 [Actor Thread 31] INFO  nextflow.processor.TaskProcessor - [8d/0a2702] Cached process > NFCORE_METATROPICS:METATROPICS:RAREFACTION (LASVnegRUN1_p10_T1_other_T1)
+Apr-20 17:08:02.914 [Actor Thread 4] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=library://daanjansen94/metatropics/nanoplot:v1.41.0; path=/data/Daan/Projects/Metatropics/work/singularity/daanjansen94-metatropics-nanoplot-v1.41.0.img
+Apr-20 17:08:02.919 [Actor Thread 24] INFO  nextflow.processor.TaskProcessor - [68/7d79fd] Cached process > NFCORE_METATROPICS:METATROPICS:RAREFACTION (LASVnegRUN1_p14_T1_other_T1)
+Apr-20 17:08:02.927 [Actor Thread 16] INFO  nextflow.processor.TaskProcessor - [3c/c9666f] Cached process > NFCORE_METATROPICS:METATROPICS:RAREFACTION (LASVnegRUN1_p5_T1_other_T1)
+Apr-20 17:08:02.929 [Actor Thread 2] INFO  nextflow.processor.TaskProcessor - [4a/f87929] Cached process > NFCORE_METATROPICS:METATROPICS:RAREFACTION (LASVnegRUN1_p8_T1_other_T1)
+Apr-20 17:08:02.937 [Actor Thread 33] INFO  nextflow.processor.TaskProcessor - [fd/b9909f] Cached process > NFCORE_METATROPICS:METATROPICS:RAREFACTION (LASVnegRUN1_p2_T1_other_T1)
+Apr-20 17:08:02.937 [Actor Thread 7] INFO  nextflow.processor.TaskProcessor - [2e/afa7fa] Cached process > NFCORE_METATROPICS:METATROPICS:NANOPLOT (LASVnegRUN1_H2O_9_T1_other_T1)
+Apr-20 17:08:02.945 [Actor Thread 34] INFO  nextflow.processor.TaskProcessor - [77/9080e5] Cached process > NFCORE_METATROPICS:METATROPICS:RAREFACTION (LASVnegRUN1_p7_T1_other_T1)
+Apr-20 17:08:02.948 [Actor Thread 3] INFO  nextflow.processor.TaskProcessor - [62/bf9aad] Cached process > NFCORE_METATROPICS:METATROPICS:RAREFACTION (LASVnegRUN1_p12_T1_other_T1)
+Apr-20 17:08:02.958 [Actor Thread 22] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=library://jansendaan94_v2/metatropics/fastplong:0.4.1; path=/data/Daan/Projects/Metatropics/work/singularity/jansendaan94_v2-metatropics-fastplong-0.4.1.img
+Apr-20 17:08:02.967 [Actor Thread 17] INFO  nextflow.processor.TaskProcessor - [6d/ae25e0] Cached process > NFCORE_METATROPICS:METATROPICS:NANOPLOT (LASVnegRUN1_p1_T1_other_T1)
+Apr-20 17:08:02.982 [Actor Thread 9] INFO  nextflow.processor.TaskProcessor - [a8/dad790] Cached process > NFCORE_METATROPICS:METATROPICS:NANOPLOT (LASVnegRUN1_p13_T1_other_T1)
+Apr-20 17:08:03.003 [Actor Thread 4] INFO  nextflow.processor.TaskProcessor - [a9/a72824] Cached process > NFCORE_METATROPICS:METATROPICS:RAREFACTION (LASVnegRUN1_p4_T1_other_T1)
+Apr-20 17:08:03.009 [Actor Thread 6] INFO  nextflow.processor.TaskProcessor - [22/bdff85] Cached process > NFCORE_METATROPICS:METATROPICS:RAREFACTION (LASVnegRUN1_p11_T1_other_T1)
+Apr-20 17:08:03.013 [Actor Thread 8] INFO  nextflow.processor.TaskProcessor - [61/4233eb] Cached process > NFCORE_METATROPICS:METATROPICS:NANOPLOT (LASVnegRUN1_p12_T1_other_T1)
+Apr-20 17:08:03.019 [Actor Thread 15] INFO  nextflow.processor.TaskProcessor - [f2/2cb0a0] Cached process > NFCORE_METATROPICS:METATROPICS:FASTPLONG (LASVnegRUN1_H2O_9_T1_other_T1)
+Apr-20 17:08:03.039 [Actor Thread 21] INFO  nextflow.processor.TaskProcessor - [f2/d32934] Cached process > NFCORE_METATROPICS:METATROPICS:NANOPLOT (LASVnegRUN1_p6_T1_other_T1)
+Apr-20 17:08:03.045 [Actor Thread 22] INFO  nextflow.processor.TaskProcessor - [f4/d41590] Cached process > NFCORE_METATROPICS:METATROPICS:RAREFACTION (LASVnegRUN1_p9_T1_other_T1)
+Apr-20 17:08:03.052 [Actor Thread 5] INFO  nextflow.processor.TaskProcessor - [82/e9a00a] Cached process > NFCORE_METATROPICS:METATROPICS:NANOPLOT (LASVnegRUN1_p7_T1_other_T1)
+Apr-20 17:08:03.056 [Actor Thread 24] INFO  nextflow.processor.TaskProcessor - [fa/86a248] Cached process > NFCORE_METATROPICS:METATROPICS:FASTPLONG (LASVnegRUN1_p8_T1_other_T1)
+Apr-20 17:08:03.058 [Actor Thread 32] INFO  nextflow.processor.TaskProcessor - [99/91633b] Cached process > NFCORE_METATROPICS:METATROPICS:NANOPLOT (LASVnegRUN1_p10_T1_other_T1)
+Apr-20 17:08:03.058 [Actor Thread 31] INFO  nextflow.processor.TaskProcessor - [50/a4d601] Cached process > NFCORE_METATROPICS:METATROPICS:FASTPLONG (LASVnegRUN1_p5_T1_other_T1)
+Apr-20 17:08:03.059 [Actor Thread 2] INFO  nextflow.processor.TaskProcessor - [a8/2fbd55] Cached process > NFCORE_METATROPICS:METATROPICS:FASTPLONG (LASVnegRUN1_p14_T1_other_T1)
+Apr-20 17:08:03.060 [Actor Thread 27] INFO  nextflow.processor.TaskProcessor - [92/63c583] Cached process > NFCORE_METATROPICS:METATROPICS:NANOPLOT (LASVnegRUN1_p3_T1_other_T1)
+Apr-20 17:08:03.063 [Actor Thread 23] INFO  nextflow.processor.TaskProcessor - [25/2b4488] Cached process > NFCORE_METATROPICS:METATROPICS:NANOPLOT (LASVnegRUN1_p5_T1_other_T1)
+Apr-20 17:08:03.071 [Actor Thread 1] INFO  nextflow.processor.TaskProcessor - [f6/5eb4ba] Cached process > NFCORE_METATROPICS:METATROPICS:NANOPLOT (LASVnegRUN1_p14_T1_other_T1)
+Apr-20 17:08:03.072 [Actor Thread 20] INFO  nextflow.processor.TaskProcessor - [a9/c327e1] Cached process > NFCORE_METATROPICS:METATROPICS:NANOPLOT (LASVnegRUN1_p8_T1_other_T1)
+Apr-20 17:08:03.072 [Actor Thread 30] INFO  nextflow.processor.TaskProcessor - [1d/3a4c3f] Cached process > NFCORE_METATROPICS:METATROPICS:NANOPLOT (LASVnegRUN1_H2O_10_T1_other_T1)
+Apr-20 17:08:03.080 [Actor Thread 18] INFO  nextflow.processor.TaskProcessor - [a2/0068a6] Cached process > NFCORE_METATROPICS:METATROPICS:NANOPLOT (LASVnegRUN1_p2_T1_other_T1)
+Apr-20 17:08:03.072 [Actor Thread 33] INFO  nextflow.processor.TaskProcessor - [62/61dcc2] Cached process > NFCORE_METATROPICS:METATROPICS:FASTPLONG (LASVnegRUN1_p1_T1_other_T1)
+Apr-20 17:08:03.084 [Actor Thread 37] INFO  nextflow.processor.TaskProcessor - [de/43170a] Cached process > NFCORE_METATROPICS:METATROPICS:FASTPLONG (LASVnegRUN1_p6_T1_other_T1)
+Apr-20 17:08:03.087 [Actor Thread 3] INFO  nextflow.processor.TaskProcessor - [6d/8d1378] Cached process > NFCORE_METATROPICS:METATROPICS:FASTPLONG (LASVnegRUN1_p3_T1_other_T1)
+Apr-20 17:08:03.090 [Actor Thread 36] INFO  nextflow.processor.TaskProcessor - [11/5a945e] Cached process > NFCORE_METATROPICS:METATROPICS:FASTPLONG (LASVnegRUN1_p12_T1_other_T1)
+Apr-20 17:08:03.092 [Actor Thread 34] INFO  nextflow.processor.TaskProcessor - [4a/6dcff9] Cached process > NFCORE_METATROPICS:METATROPICS:NANOPLOT (LASVnegRUN1_p4_T1_other_T1)
+Apr-20 17:08:03.094 [Actor Thread 11] INFO  nextflow.processor.TaskProcessor - [d6/8b2adf] Cached process > NFCORE_METATROPICS:METATROPICS:FASTPLONG (LASVnegRUN1_p13_T1_other_T1)
+Apr-20 17:08:03.096 [Actor Thread 28] INFO  nextflow.processor.TaskProcessor - [15/e8d791] Cached process > NFCORE_METATROPICS:METATROPICS:NANOPLOT (LASVnegRUN1_p9_T1_other_T1)
+Apr-20 17:08:03.098 [Actor Thread 9] INFO  nextflow.processor.TaskProcessor - [d6/f63f7f] Cached process > NFCORE_METATROPICS:METATROPICS:FASTPLONG (LASVnegRUN1_H2O_10_T1_other_T1)
+Apr-20 17:08:03.101 [Actor Thread 26] INFO  nextflow.processor.TaskProcessor - [c3/f6f5d9] Cached process > NFCORE_METATROPICS:METATROPICS:NANOPLOT (LASVnegRUN1_p11_T1_other_T1)
+Apr-20 17:08:03.101 [Actor Thread 19] INFO  nextflow.processor.TaskProcessor - [d7/15ef5a] Cached process > NFCORE_METATROPICS:METATROPICS:FASTPLONG (LASVnegRUN1_p4_T1_other_T1)
+Apr-20 17:08:03.102 [Actor Thread 35] INFO  nextflow.processor.TaskProcessor - [66/2de396] Cached process > NFCORE_METATROPICS:METATROPICS:FASTPLONG (LASVnegRUN1_p2_T1_other_T1)
+Apr-20 17:08:03.109 [Actor Thread 14] INFO  nextflow.processor.TaskProcessor - [44/dd888d] Cached process > NFCORE_METATROPICS:METATROPICS:FASTPLONG (LASVnegRUN1_p7_T1_other_T1)
+Apr-20 17:08:03.109 [Actor Thread 10] INFO  nextflow.processor.TaskProcessor - [9c/a8ba26] Cached process > NFCORE_METATROPICS:METATROPICS:FASTPLONG (LASVnegRUN1_p11_T1_other_T1)
+Apr-20 17:08:03.110 [Actor Thread 21] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=library://daanjansen94/metatropics/minimap:v2.28; path=/data/Daan/Projects/Metatropics/work/singularity/daanjansen94-metatropics-minimap-v2.28.img
+Apr-20 17:08:03.115 [Actor Thread 39] INFO  nextflow.processor.TaskProcessor - [d3/62b16e] Cached process > NFCORE_METATROPICS:METATROPICS:FASTPLONG (LASVnegRUN1_p10_T1_other_T1)
+Apr-20 17:08:03.120 [Actor Thread 32] INFO  nextflow.processor.TaskProcessor - [25/ae9324] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN (LASVnegRUN1_p8_T1_other_T1)
+Apr-20 17:08:03.121 [Actor Thread 6] INFO  nextflow.processor.TaskProcessor - [cd/fb769b] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN (LASVnegRUN1_p14_T1_other_T1)
+Apr-20 17:08:03.128 [Actor Thread 12] INFO  nextflow.processor.TaskProcessor - [4c/01735f] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN (LASVnegRUN1_p13_T1_other_T1)
+Apr-20 17:08:03.122 [Actor Thread 13] INFO  nextflow.processor.TaskProcessor - [c6/30774f] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN (LASVnegRUN1_p3_T1_other_T1)
+Apr-20 17:08:03.132 [Actor Thread 43] INFO  nextflow.processor.TaskProcessor - [58/97fd40] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN (LASVnegRUN1_H2O_9_T1_other_T1)
+Apr-20 17:08:03.136 [Actor Thread 30] INFO  nextflow.processor.TaskProcessor - [52/80b75e] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN (LASVnegRUN1_p12_T1_other_T1)
+Apr-20 17:08:03.137 [Actor Thread 5] INFO  nextflow.processor.TaskProcessor - [00/3cbd76] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN (LASVnegRUN1_p5_T1_other_T1)
+Apr-20 17:08:03.143 [Actor Thread 36] INFO  nextflow.processor.TaskProcessor - [20/b8e22a] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN (LASVnegRUN1_H2O_10_T1_other_T1)
+Apr-20 17:08:03.146 [Actor Thread 44] INFO  nextflow.processor.TaskProcessor - [ef/6c78d8] Cached process > NFCORE_METATROPICS:METATROPICS:FASTPLONG (LASVnegRUN1_p9_T1_other_T1)
+Apr-20 17:08:03.155 [Actor Thread 23] INFO  nextflow.processor.TaskProcessor - [d2/6a3a3f] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN (LASVnegRUN1_p11_T1_other_T1)
+Apr-20 17:08:03.155 [Actor Thread 9] INFO  nextflow.processor.TaskProcessor - [49/143152] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN (LASVnegRUN1_p10_T1_other_T1)
+Apr-20 17:08:03.155 [Actor Thread 19] INFO  nextflow.processor.TaskProcessor - [39/a26fcc] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN (LASVnegRUN1_p2_T1_other_T1)
+Apr-20 17:08:03.156 [Actor Thread 20] INFO  nextflow.processor.TaskProcessor - [21/096986] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN (LASVnegRUN1_p6_T1_other_T1)
+Apr-20 17:08:03.158 [Actor Thread 14] INFO  nextflow.processor.TaskProcessor - [d8/a91ac3] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN (LASVnegRUN1_p7_T1_other_T1)
+Apr-20 17:08:03.167 [Actor Thread 3] INFO  nextflow.processor.TaskProcessor - [35/00ad26] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN (LASVnegRUN1_p1_T1_other_T1)
+Apr-20 17:08:03.169 [Actor Thread 34] INFO  nextflow.processor.TaskProcessor - [79/0eb14f] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN (LASVnegRUN1_p4_T1_other_T1)
+Apr-20 17:08:03.173 [Actor Thread 26] INFO  nextflow.processor.TaskProcessor - [3b/13d6e6] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN (LASVnegRUN1_p9_T1_other_T1)
+Apr-20 17:08:03.240 [Actor Thread 6] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:08:03.242 [Actor Thread 26] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:08:03.245 [Actor Thread 3] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:08:03.246 [Actor Thread 34] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:08:03.248 [Actor Thread 14] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:08:03.256 [Actor Thread 20] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:08:03.258 [Actor Thread 9] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:08:03.260 [Actor Thread 19] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:08:03.264 [Actor Thread 23] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:08:03.267 [Actor Thread 19] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=library://daanjansen94/metatropics/samtools:v1.17; path=/data/Daan/Projects/Metatropics/work/singularity/daanjansen94-metatropics-samtools-v1.17.img
+Apr-20 17:08:03.274 [Actor Thread 35] INFO  nextflow.processor.TaskProcessor - [56/9a358e] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT (LASVnegRUN1_p6_T1_other_T1)
+Apr-20 17:08:03.275 [Actor Thread 5] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:08:03.276 [Actor Thread 35] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:08:03.276 [Actor Thread 44] INFO  nextflow.processor.TaskProcessor - [fe/a23f12] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT (LASVnegRUN1_p9_T1_other_T1)
+Apr-20 17:08:03.277 [Actor Thread 36] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:08:03.277 [Actor Thread 6] INFO  nextflow.processor.TaskProcessor - [3e/1adcf9] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT (LASVnegRUN1_p10_T1_other_T1)
+Apr-20 17:08:03.279 [Actor Thread 43] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:08:03.279 [Actor Thread 44] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:08:03.281 [Actor Thread 3] INFO  nextflow.processor.TaskProcessor - [b4/0a729e] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT (LASVnegRUN1_p4_T1_other_T1)
+Apr-20 17:08:03.282 [Actor Thread 6] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:08:03.283 [Actor Thread 10] INFO  nextflow.processor.TaskProcessor - [a4/95cfea] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT (LASVnegRUN1_p14_T1_other_T1)
+Apr-20 17:08:03.284 [Actor Thread 20] INFO  nextflow.processor.TaskProcessor - [8a/78afb0] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT (LASVnegRUN1_p11_T1_other_T1)
+Apr-20 17:08:03.284 [Actor Thread 30] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:08:03.289 [Actor Thread 3] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:08:03.290 [Actor Thread 13] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:08:03.291 [Actor Thread 12] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:08:03.292 [Actor Thread 32] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:08:03.293 [Actor Thread 10] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:08:03.285 [Actor Thread 39] INFO  nextflow.processor.TaskProcessor - [de/74c44f] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT (LASVnegRUN1_p7_T1_other_T1)
+Apr-20 17:08:03.298 [Actor Thread 28] INFO  nextflow.processor.TaskProcessor - [90/4d7db9] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT (LASVnegRUN1_p5_T1_other_T1)
+Apr-20 17:08:03.298 [Actor Thread 15] INFO  nextflow.processor.TaskProcessor - [2d/fb6713] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ (LASVnegRUN1_p6_T1_other_T1)
+Apr-20 17:08:03.288 [Actor Thread 9] INFO  nextflow.processor.TaskProcessor - [60/35ec0e] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT (LASVnegRUN1_p2_T1_other_T1)
+Apr-20 17:08:03.300 [Actor Thread 26] INFO  nextflow.processor.TaskProcessor - [fe/b21d5b] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT (LASVnegRUN1_p1_T1_other_T1)
+Apr-20 17:08:03.301 [Actor Thread 19] INFO  nextflow.processor.TaskProcessor - [06/6c55cd] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ (LASVnegRUN1_p10_T1_other_T1)
+Apr-20 17:08:03.302 [Actor Thread 43] INFO  nextflow.processor.TaskProcessor - [ca/5d47c8] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT (LASVnegRUN1_p12_T1_other_T1)
+Apr-20 17:08:03.303 [Actor Thread 37] INFO  nextflow.processor.TaskProcessor - [5b/5f26fc] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT (LASVnegRUN1_H2O_10_T1_other_T1)
+Apr-20 17:08:03.307 [Actor Thread 20] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:08:03.307 [Actor Thread 30] INFO  nextflow.processor.TaskProcessor - [11/620484] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT (LASVnegRUN1_p3_T1_other_T1)
+Apr-20 17:08:03.309 [Actor Thread 43] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:08:03.309 [Actor Thread 19] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:08:03.310 [Actor Thread 37] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:08:03.311 [Actor Thread 15] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:08:03.312 [Actor Thread 26] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:08:03.316 [Actor Thread 39] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:08:03.317 [Actor Thread 23] INFO  nextflow.processor.TaskProcessor - [61/9169e4] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT (LASVnegRUN1_H2O_9_T1_other_T1)
+Apr-20 17:08:03.320 [Actor Thread 9] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:08:03.321 [Actor Thread 19] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=library://daanjansen94/metatropics/metamaps:v0.1; path=/data/Daan/Projects/Metatropics/work/singularity/daanjansen94-metatropics-metamaps-v0.1.img
+Apr-20 17:08:03.322 [Actor Thread 23] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:08:03.322 [Actor Thread 44] INFO  nextflow.processor.TaskProcessor - [be/1b39f6] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ (LASVnegRUN1_p4_T1_other_T1)
+Apr-20 17:08:03.325 [Actor Thread 44] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:08:03.325 [Actor Thread 25] INFO  nextflow.processor.TaskProcessor - [75/9f7311] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT (LASVnegRUN1_p8_T1_other_T1)
+Apr-20 17:08:03.326 [Actor Thread 1] INFO  nextflow.processor.TaskProcessor - [80/9c58d2] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT (LASVnegRUN1_p13_T1_other_T1)
+Apr-20 17:08:03.326 [Actor Thread 36] INFO  nextflow.processor.TaskProcessor - [06/9c9d30] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ (LASVnegRUN1_p9_T1_other_T1)
+Apr-20 17:08:03.326 [Actor Thread 13] INFO  nextflow.processor.TaskProcessor - [d3/e74e42] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ (LASVnegRUN1_p14_T1_other_T1)
+Apr-20 17:08:03.325 [Actor Thread 30] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:08:03.332 [Actor Thread 28] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:08:03.333 [Actor Thread 34] INFO  nextflow.processor.TaskProcessor - [e9/d212e9] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ (LASVnegRUN1_p11_T1_other_T1)
+Apr-20 17:08:03.335 [Actor Thread 13] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:08:03.336 [Actor Thread 1] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:08:03.336 [Actor Thread 36] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:08:03.337 [Actor Thread 25] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:08:03.344 [Actor Thread 34] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:08:03.350 [Actor Thread 33] INFO  nextflow.processor.TaskProcessor - [6d/f15661] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP (LASVnegRUN1_p10_T1_other_T1)
+Apr-20 17:08:03.350 [Actor Thread 13] INFO  nextflow.processor.TaskProcessor - [f1/a9728a] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP (LASVnegRUN1_p9_T1_other_T1)
+Apr-20 17:08:03.350 [Actor Thread 2] INFO  nextflow.processor.TaskProcessor - [fb/acd53c] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP (LASVnegRUN1_p14_T1_other_T1)
+Apr-20 17:08:03.357 [Actor Thread 20] INFO  nextflow.processor.TaskProcessor - [cd/c60593] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP (LASVnegRUN1_p6_T1_other_T1)
+Apr-20 17:08:03.361 [Actor Thread 44] INFO  nextflow.processor.TaskProcessor - [89/66bf15] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ (LASVnegRUN1_p8_T1_other_T1)
+Apr-20 17:08:03.363 [Actor Thread 14] INFO  nextflow.processor.TaskProcessor - [c0/6b34b8] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ (LASVnegRUN1_p12_T1_other_T1)
+Apr-20 17:08:03.363 [Actor Thread 39] INFO  nextflow.processor.TaskProcessor - [c3/d09a4c] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ (LASVnegRUN1_p7_T1_other_T1)
+Apr-20 17:08:03.364 [Actor Thread 9] INFO  nextflow.processor.TaskProcessor - [e3/82a26c] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ (LASVnegRUN1_p2_T1_other_T1)
+Apr-20 17:08:03.381 [Actor Thread 44] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:08:03.374 [Actor Thread 12] INFO  nextflow.processor.TaskProcessor - [66/de5c2d] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ (LASVnegRUN1_p3_T1_other_T1)
+Apr-20 17:08:03.377 [Actor Thread 37] INFO  nextflow.processor.TaskProcessor - [9f/d8eaff] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ (LASVnegRUN1_H2O_10_T1_other_T1)
+Apr-20 17:08:03.389 [Actor Thread 32] INFO  nextflow.processor.TaskProcessor - [15/7ea23a] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ (LASVnegRUN1_p1_T1_other_T1)
+Apr-20 17:08:03.389 [Actor Thread 15] INFO  nextflow.processor.TaskProcessor - [5b/98380c] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ (LASVnegRUN1_H2O_9_T1_other_T1)
+Apr-20 17:08:03.389 [Actor Thread 42] INFO  nextflow.processor.TaskProcessor - [4d/53a9ef] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ (LASVnegRUN1_p13_T1_other_T1)
+Apr-20 17:08:03.390 [Actor Thread 35] INFO  nextflow.processor.TaskProcessor - [61/645f41] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP (LASVnegRUN1_p4_T1_other_T1)
+Apr-20 17:08:03.392 [Actor Thread 10] INFO  nextflow.processor.TaskProcessor - [5e/79984d] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP (LASVnegRUN1_p11_T1_other_T1)
+Apr-20 17:08:03.398 [Actor Thread 12] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:08:03.401 [Actor Thread 39] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:08:03.402 [Actor Thread 23] INFO  nextflow.processor.TaskProcessor - [47/4ed4f6] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ (LASVnegRUN1_p5_T1_other_T1)
+Apr-20 17:08:03.404 [Actor Thread 36] INFO  nextflow.processor.TaskProcessor - [f5/9c56a0] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP (LASVnegRUN1_p8_T1_other_T1)
+Apr-20 17:08:03.405 [Actor Thread 9] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:08:03.407 [Actor Thread 30] INFO  nextflow.processor.TaskProcessor - [d6/f19267] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY (LASVnegRUN1_p10_T1_other_T1)
+Apr-20 17:08:03.407 [Actor Thread 20] INFO  nextflow.processor.TaskProcessor - [eb/ce203e] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY (LASVnegRUN1_p6_T1_other_T1)
+Apr-20 17:08:03.412 [Actor Thread 21] INFO  nextflow.processor.TaskProcessor - [7d/e04cc9] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY (LASVnegRUN1_p14_T1_other_T1)
+Apr-20 17:08:03.417 [Actor Thread 28] INFO  nextflow.processor.TaskProcessor - [cd/7f49ea] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP (LASVnegRUN1_p3_T1_other_T1)
+Apr-20 17:08:03.418 [Actor Thread 14] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:08:03.421 [Actor Thread 15] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:08:03.422 [Actor Thread 2] INFO  nextflow.processor.TaskProcessor - [ba/fc0bca] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP (LASVnegRUN1_p7_T1_other_T1)
+Apr-20 17:08:03.423 [Actor Thread 42] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:08:03.427 [Actor Thread 1] INFO  nextflow.processor.TaskProcessor - [7f/410e5a] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY (LASVnegRUN1_p9_T1_other_T1)
+Apr-20 17:08:03.437 [Actor Thread 37] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:08:03.438 [Actor Thread 27] INFO  nextflow.processor.TaskProcessor - [77/1f7268] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP (LASVnegRUN1_p2_T1_other_T1)
+Apr-20 17:08:03.442 [Actor Thread 9] INFO  nextflow.processor.TaskProcessor - [8c/bb07b5] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP (LASVnegRUN1_p13_T1_other_T1)
+Apr-20 17:08:03.451 [Actor Thread 4] INFO  nextflow.processor.TaskProcessor - [db/b813f7] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP (LASVnegRUN1_p12_T1_other_T1)
+Apr-20 17:08:03.447 [Actor Thread 7] INFO  nextflow.processor.TaskProcessor - [9e/7862be] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP (LASVnegRUN1_H2O_9_T1_other_T1)
+Apr-20 17:08:03.449 [Actor Thread 32] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:08:03.452 [Actor Thread 10] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=library://daanjansen94/metatropics/nf:r_plots_v4.2.2; path=/data/Daan/Projects/Metatropics/work/singularity/daanjansen94-metatropics-nf-r_plots_v4.2.2.img
+Apr-20 17:08:03.457 [Actor Thread 23] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:08:03.468 [Actor Thread 16] INFO  nextflow.processor.TaskProcessor - [cc/aec5c2] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP (LASVnegRUN1_H2O_10_T1_other_T1)
+Apr-20 17:08:03.469 [Actor Thread 45] INFO  nextflow.processor.TaskProcessor - [f0/b4ccdc] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY (LASVnegRUN1_p11_T1_other_T1)
+Apr-20 17:08:03.469 [Actor Thread 13] INFO  nextflow.processor.TaskProcessor - [5e/2eefde] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY (LASVnegRUN1_p7_T1_other_T1)
+Apr-20 17:08:03.488 [Actor Thread 21] INFO  nextflow.processor.TaskProcessor - [0a/2eccb8] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY (LASVnegRUN1_p8_T1_other_T1)
+Apr-20 17:08:03.493 [Actor Thread 40] INFO  nextflow.processor.TaskProcessor - [2a/c46a85] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP (LASVnegRUN1_p5_T1_other_T1)
+Apr-20 17:08:03.502 [Actor Thread 12] INFO  nextflow.processor.TaskProcessor - [98/48449c] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY (LASVnegRUN1_p3_T1_other_T1)
+Apr-20 17:08:03.505 [Actor Thread 38] INFO  nextflow.processor.TaskProcessor - [53/1d784e] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY (LASVnegRUN1_p13_T1_other_T1)
+Apr-20 17:08:03.509 [Actor Thread 14] INFO  nextflow.processor.TaskProcessor - [e3/ebf1ae] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY (LASVnegRUN1_p4_T1_other_T1)
+Apr-20 17:08:03.517 [Actor Thread 22] INFO  nextflow.processor.TaskProcessor - [a9/b5387d] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY (LASVnegRUN1_H2O_9_T1_other_T1)
+Apr-20 17:08:03.518 [Actor Thread 37] INFO  nextflow.processor.TaskProcessor - [6c/1f0cf7] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP (LASVnegRUN1_p1_T1_other_T1)
+Apr-20 17:08:03.520 [Actor Thread 27] INFO  nextflow.processor.TaskProcessor - [85/86650f] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY (LASVnegRUN1_p12_T1_other_T1)
+Apr-20 17:08:03.522 [Actor Thread 5] INFO  nextflow.processor.TaskProcessor - [97/15ebb4] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY (LASVnegRUN1_p2_T1_other_T1)
+Apr-20 17:08:03.527 [Actor Thread 1] INFO  nextflow.processor.TaskProcessor - [4e/12cecf] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY (LASVnegRUN1_p5_T1_other_T1)
+Apr-20 17:08:03.529 [Actor Thread 41] INFO  nextflow.processor.TaskProcessor - [31/8ae11a] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY (LASVnegRUN1_H2O_10_T1_other_T1)
+Apr-20 17:08:03.548 [Actor Thread 42] INFO  nextflow.processor.TaskProcessor - [93/0427de] Cached process > NFCORE_METATROPICS:METATROPICS:VIRASIGN_CLASSIFICATION (LASVnegRUN1_H2O_9_T1_other_T1)
+Apr-20 17:08:03.555 [Actor Thread 19] INFO  nextflow.processor.TaskProcessor - [c0/f3bde2] Cached process > NFCORE_METATROPICS:METATROPICS:VIRASIGN_CLASSIFICATION (LASVnegRUN1_p14_T1_other_T1)
+Apr-20 17:08:03.557 [Actor Thread 19] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:VIRASIGN_CLASSIFICATION > Skipping output binding because one or more optional files are missing: fileoutparam<1>
+Apr-20 17:08:03.564 [Actor Thread 36] INFO  nextflow.processor.TaskProcessor - [5c/61e396] Cached process > NFCORE_METATROPICS:METATROPICS:VIRASIGN_CLASSIFICATION (LASVnegRUN1_p13_T1_other_T1)
+Apr-20 17:08:03.565 [Actor Thread 15] INFO  nextflow.processor.TaskProcessor - [57/4e0e91] Cached process > NFCORE_METATROPICS:METATROPICS:VIRASIGN_CLASSIFICATION (LASVnegRUN1_p12_T1_other_T1)
+Apr-20 17:08:03.568 [Actor Thread 34] INFO  nextflow.processor.TaskProcessor - [fb/4eb702] Cached process > NFCORE_METATROPICS:METATROPICS:VIRASIGN_CLASSIFICATION (LASVnegRUN1_p3_T1_other_T1)
+Apr-20 17:08:03.569 [Actor Thread 18] INFO  nextflow.processor.TaskProcessor - [f1/4cd619] Cached process > NFCORE_METATROPICS:METATROPICS:VIRASIGN_CLASSIFICATION (LASVnegRUN1_p10_T1_other_T1)
+Apr-20 17:08:03.570 [Actor Thread 36] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:VIRASIGN_CLASSIFICATION > Skipping output binding because one or more optional files are missing: fileoutparam<1>
+Apr-20 17:08:03.576 [Actor Thread 38] INFO  nextflow.processor.TaskProcessor - [29/53f8f2] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY (LASVnegRUN1_p1_T1_other_T1)
+Apr-20 17:08:03.577 [Actor Thread 3] INFO  nextflow.processor.TaskProcessor - [4d/d9350d] Cached process > NFCORE_METATROPICS:METATROPICS:VIRASIGN_CLASSIFICATION (LASVnegRUN1_p11_T1_other_T1)
+Apr-20 17:08:03.581 [Actor Thread 20] INFO  nextflow.processor.TaskProcessor - [25/78a990] Cached process > NFCORE_METATROPICS:METATROPICS:VIRASIGN_CLASSIFICATION (LASVnegRUN1_H2O_10_T1_other_T1)
+Apr-20 17:08:03.586 [Actor Thread 29] INFO  nextflow.processor.TaskProcessor - [9f/599a74] Cached process > NFCORE_METATROPICS:METATROPICS:VIRASIGN_CLASSIFICATION (LASVnegRUN1_p2_T1_other_T1)
+Apr-20 17:08:03.581 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:08:03.588 [Actor Thread 39] INFO  nextflow.processor.TaskProcessor - [d1/141905] Cached process > NFCORE_METATROPICS:METATROPICS:VIRASIGN_CLASSIFICATION (LASVnegRUN1_p7_T1_other_T1)
+Apr-20 17:08:03.588 [Actor Thread 11] INFO  nextflow.processor.TaskProcessor - [e5/ea676b] Cached process > NFCORE_METATROPICS:METATROPICS:VIRASIGN_CLASSIFICATION (LASVnegRUN1_p9_T1_other_T1)
+Apr-20 17:08:03.583 [Actor Thread 24] INFO  nextflow.processor.TaskProcessor - [cc/62e971] Cached process > NFCORE_METATROPICS:METATROPICS:VIRASIGN_CLASSIFICATION (LASVnegRUN1_p1_T1_other_T1)
+Apr-20 17:08:03.588 [Actor Thread 6] INFO  nextflow.processor.TaskProcessor - [ef/d6b5ab] Cached process > NFCORE_METATROPICS:METATROPICS:VIRASIGN_CLASSIFICATION (LASVnegRUN1_p4_T1_other_T1)
+Apr-20 17:08:03.588 [Actor Thread 9] INFO  nextflow.processor.TaskProcessor - [e3/4c4f38] Cached process > NFCORE_METATROPICS:METATROPICS:VIRASIGN_CLASSIFICATION (LASVnegRUN1_p5_T1_other_T1)
+Apr-20 17:08:03.589 [Actor Thread 8] INFO  nextflow.processor.TaskProcessor - [2a/125ec1] Cached process > NFCORE_METATROPICS:METATROPICS:VIRASIGN_CLASSIFICATION (LASVnegRUN1_p6_T1_other_T1)
+Apr-20 17:08:03.591 [Task submitter] INFO  nextflow.Session - [9e/d8deb9] Submitted process > NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p7_T1_other_T1)
+Apr-20 17:08:03.593 [Actor Thread 33] INFO  nextflow.processor.TaskProcessor - [03/a01721] Cached process > NFCORE_METATROPICS:METATROPICS:VIRASIGN_CLASSIFICATION (LASVnegRUN1_p8_T1_other_T1)
+Apr-20 17:08:03.632 [Actor Thread 10] INFO  nextflow.processor.TaskProcessor - [bc/02544e] Cached process > NFCORE_METATROPICS:METATROPICS:VIRASIGN_SUMMARY (VIRASIGN_SUMMARY)
+Apr-20 17:08:05.953 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 165; name: NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p7_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/9e/d8deb96373d93c9b6f9df4f4269b06]
+Apr-20 17:08:05.955 [Task monitor] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'TaskFinalizer' minSize=10; maxSize=48; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Apr-20 17:08:05.969 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:08:05.972 [Task submitter] INFO  nextflow.Session - [a8/2a534c] Submitted process > NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p11_T1_other_T1)
+Apr-20 17:08:05.978 [Actor Thread 3] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=library://daanjansen94/metatropics/samtools:minimap2_v1.16_v2.28; path=/data/Daan/Projects/Metatropics/work/singularity/daanjansen94-metatropics-samtools-minimap2_v1.16_v2.28.img
+Apr-20 17:08:06.996 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:08:06.997 [Task submitter] INFO  nextflow.Session - [b7/6da948] Submitted process > NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_p7_T1_other_T1)
+Apr-20 17:08:07.722 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 164; name: NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p11_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/a8/2a534c7c01c2d8f3aac0919a1e878f]
+Apr-20 17:08:07.730 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:08:07.731 [Task submitter] INFO  nextflow.Session - [90/db9558] Submitted process > NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p10_T1_other_T1)
+Apr-20 17:08:07.952 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 180; name: NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_p7_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/b7/6da9487af3c40a8d660b38a1d1996a]
+Apr-20 17:08:07.959 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:08:07.960 [Task submitter] INFO  nextflow.Session - [02/d4b63e] Submitted process > NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_p11_T1_other_T1)
+Apr-20 17:08:07.980 [Actor Thread 11] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=library://daanjansen94/metatropics/seqtk:v1.3; path=/data/Daan/Projects/Metatropics/work/singularity/daanjansen94-metatropics-seqtk-v1.3.img
+Apr-20 17:08:08.970 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:08:08.974 [Task submitter] INFO  nextflow.Session - [00/fdf88b] Submitted process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p7_T1_other_T1.novirus)
+Apr-20 17:08:08.982 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:08:08.982 [Task submitter] INFO  nextflow.Session - [e7/ae49df] Submitted process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p7_T1_other_T1_classification_results.novirus.fastq)
+Apr-20 17:08:09.062 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 182; name: NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p7_T1_other_T1.novirus); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/00/fdf88b70c23f87f7a53fb24632c367]
+Apr-20 17:08:09.091 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 181; name: NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_p11_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/02/d4b63e942ec6c19875b6657ad17fce]
+Apr-20 17:08:09.183 [SIGINT handler] DEBUG nextflow.Session - Session aborted -- Cause: SIGINT
+Apr-20 17:08:09.193 [Task monitor] DEBUG n.processor.TaskPollingMonitor - <<< barrier arrives (monitor: local) - terminating tasks monitor poll loop
+Apr-20 17:08:09.240 [SIGINT handler] DEBUG nextflow.Session - The following nodes are still active:
+[process] NFCORE_METATROPICS:METATROPICS:REF_FASTA
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] NFCORE_METATROPICS:METATROPICS:MEDAKA
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] NFCORE_METATROPICS:METATROPICS:ReadCount
+  status=ACTIVE
+  port 0: (value) bound ; channel: outdir
+  port 1: (value) OPEN  ; channel: medaka_files
+  port 2: (value) bound ; channel: host_genome_status
+  port 3: (cntrl) -     ; channel: $
+
+[process] NFCORE_METATROPICS:METATROPICS:RCOVERAGE
+  status=ACTIVE
+  port 0: (value) OPEN  ; channel: coveragefiles
+  port 1: (cntrl) -     ; channel: $
+
+[process] NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] NFCORE_METATROPICS:METATROPICS:IVAR_CONSENSUS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: save_mpileup
+  port 2: (cntrl) -     ; channel: $
+
+[process] NFCORE_METATROPICS:METATROPICS:HOMOPOLISH_POLISHING
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] NFCORE_METATROPICS:METATROPICS:ADDING_DEPTH
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] NFCORE_METATROPICS:METATROPICS:FINAL_REPORT
+  status=ACTIVE
+  port 0: (value) OPEN  ; channel: report
+  port 1: (cntrl) -     ; channel: $
+
+[process] NFCORE_METATROPICS:METATROPICS:CUSTOM_DUMPSOFTWAREVERSIONS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: versions
+  port 1: (value) OPEN  ; channel: rcoverage_done
+  port 2: (cntrl) -     ; channel: $
+
+Apr-20 17:08:09.246 [SIGINT handler] INFO  nextflow.Nextflow - -[0;35m[nf-core/metatropics][0;31m Pipeline completed with errors[0m-
+Apr-20 17:08:09.254 [SIGINT handler] WARN  n.processor.TaskPollingMonitor - Killing running tasks (2)
+Apr-20 17:08:09.261 [SIGINT handler] DEBUG n.executor.local.LocalTaskHandler - Unable to kill NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p10_T1_other_T1) -- command: kill -TERM 4009270; exit: 1 
+ bash: line 1: kill: (4009270) - No such process
+
+Apr-20 17:08:09.267 [SIGINT handler] DEBUG n.executor.local.LocalTaskHandler - Unable to kill NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p7_T1_other_T1_classification_results.novirus.fastq) -- command: kill -TERM 4009640; exit: 1 
+ bash: line 1: kill: (4009640) - No such process
+
+Apr-20 17:08:09.272 [SIGINT handler] DEBUG n.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=5; failedCount=0; ignoredCount=0; cachedCount=163; pendingCount=19; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=2; succeedDuration=40.1s; failedDuration=0ms; cachedDuration=2h 59m 41s;loadCpus=0; loadMemory=0; peakRunning=4; peakCpus=15; peakMemory=66 GB; ]
+Apr-20 17:08:09.337 [SIGINT handler] DEBUG nextflow.trace.ReportObserver - Workflow completed -- rendering execution report
+Apr-20 17:08:10.017 [SIGINT handler] DEBUG nextflow.trace.TimelineObserver - Workflow completed -- rendering execution timeline
+Apr-20 17:08:10.095 [SIGINT handler] DEBUG nextflow.trace.TraceFileObserver - Workflow completed -- saving trace file
+Apr-20 17:08:10.104 [main] DEBUG nextflow.Session - Session await > all processes finished
+Apr-20 17:08:10.104 [main] DEBUG nextflow.Session - Session await > all barriers passed
+Apr-20 17:08:10.112 [Actor Thread 33] DEBUG nextflow.processor.TaskProcessor - Handling unexpected condition for
+  task: name=NFCORE_METATROPICS:METATROPICS:RCOVERAGE; work-dir=null
+  error [java.lang.InterruptedException]: java.lang.InterruptedException
+Apr-20 17:08:10.113 [main] DEBUG n.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=5; failedCount=0; ignoredCount=0; cachedCount=163; pendingCount=19; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=2; succeedDuration=40.1s; failedDuration=0ms; cachedDuration=2h 59m 41s;loadCpus=0; loadMemory=0; peakRunning=4; peakCpus=15; peakMemory=66 GB; ]
+Apr-20 17:08:10.129 [main] DEBUG nextflow.trace.ReportObserver - Workflow completed -- rendering execution report
+Apr-20 17:08:10.169 [Actor Thread 43] DEBUG nextflow.sort.BigSort - Sort completed -- entries: 54; slices: 1; internal sort time: 0.047 s; external sort time: 0.01 s; total time: 0.057 s
+Apr-20 17:08:10.174 [Actor Thread 43] DEBUG nextflow.file.FileCollector - >> temp file exists? false
+Apr-20 17:08:10.175 [Actor Thread 43] DEBUG nextflow.file.FileCollector - Missed collect-file cache -- cause: java.nio.file.NoSuchFileException: /data/Daan/Projects/Metatropics/work/collect-file/8ca6c66c38d8a1abb9325ae0ae45af84
+Apr-20 17:08:10.225 [Actor Thread 43] DEBUG nextflow.file.FileCollector - Saved collect-files list to: /data/Daan/Projects/Metatropics/work/collect-file/8ca6c66c38d8a1abb9325ae0ae45af84
+Apr-20 17:08:10.244 [Actor Thread 43] DEBUG nextflow.file.FileCollector - Deleting file collector temp dir: /tmp/nxf-9177627196510065102
+Apr-20 17:08:10.444 [main] WARN  nextflow.trace.ReportObserver - Failed to render execution report -- see the log file for details
+nextflow.exception.AbortOperationException: Report file already exists: /data/Daan/Projects/T_DCT/Output_l/Summary/pipeline_info/execution_report_2026-04-20_17-07-57.html -- enable the 'report.overwrite' option in your config file to overwrite existing files
+	at nextflow.trace.TraceHelper.newFileWriter(TraceHelper.groovy:67)
+	at nextflow.trace.ReportObserver.renderHtml(ReportObserver.groovy:243)
+	at nextflow.trace.ReportObserver.onFlowComplete(ReportObserver.groovy:129)
+	at nextflow.Session$_notifyFlowComplete_lambda39.doCall(Session.groovy:1121)
+	at nextflow.Session.notifyEvent(Session.groovy:1151)
+	at nextflow.Session.notifyFlowComplete(Session.groovy:1121)
+	at nextflow.Session.shutdown0(Session.groovy:779)
+	at nextflow.Session.destroy(Session.groovy:724)
+	at nextflow.script.ScriptRunner.shutdown(ScriptRunner.groovy:263)
+	at nextflow.script.ScriptRunner.execute(ScriptRunner.groovy:147)
+	at nextflow.cli.CmdRun.run(CmdRun.groovy:428)
+	at nextflow.cli.Launcher.run(Launcher.groovy:515)
+	at nextflow.cli.Launcher.main(Launcher.groovy:675)
+Caused by: java.nio.file.FileAlreadyExistsException: /data/Daan/Projects/T_DCT/Output_l/Summary/pipeline_info/execution_report_2026-04-20_17-07-57.html
+	at java.base/sun.nio.fs.UnixException.translateToIOException(UnixException.java:94)
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:106)
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:111)
+	at java.base/sun.nio.fs.UnixFileSystemProvider.newByteChannel(UnixFileSystemProvider.java:218)
+	at java.base/java.nio.file.spi.FileSystemProvider.newOutputStream(FileSystemProvider.java:484)
+	at java.base/java.nio.file.Files.newOutputStream(Files.java:228)
+	at java.base/java.nio.file.Files.newBufferedWriter(Files.java:3008)
+	at nextflow.trace.TraceHelper.newFileWriter(TraceHelper.groovy:64)
+	... 12 common frames omitted
+Apr-20 17:08:10.450 [main] DEBUG nextflow.trace.TimelineObserver - Workflow completed -- rendering execution timeline
+Apr-20 17:08:10.492 [main] WARN  nextflow.trace.TimelineObserver - Failed to render execution timeline -- see the log file for details
+nextflow.exception.AbortOperationException: Timeline file already exists: /data/Daan/Projects/T_DCT/Output_l/Summary/pipeline_info/execution_timeline_2026-04-20_17-07-57.html -- enable the 'timeline.overwrite' option in your config file to overwrite existing files
+	at nextflow.trace.TraceHelper.newFileWriter(TraceHelper.groovy:67)
+	at nextflow.trace.TimelineObserver.renderHtml(TimelineObserver.groovy:164)
+	at nextflow.trace.TimelineObserver.onFlowComplete(TimelineObserver.groovy:91)
+	at nextflow.Session$_notifyFlowComplete_lambda39.doCall(Session.groovy:1121)
+	at nextflow.Session.notifyEvent(Session.groovy:1151)
+	at nextflow.Session.notifyFlowComplete(Session.groovy:1121)
+	at nextflow.Session.shutdown0(Session.groovy:779)
+	at nextflow.Session.destroy(Session.groovy:724)
+	at nextflow.script.ScriptRunner.shutdown(ScriptRunner.groovy:263)
+	at nextflow.script.ScriptRunner.execute(ScriptRunner.groovy:147)
+	at nextflow.cli.CmdRun.run(CmdRun.groovy:428)
+	at nextflow.cli.Launcher.run(Launcher.groovy:515)
+	at nextflow.cli.Launcher.main(Launcher.groovy:675)
+Caused by: java.nio.file.FileAlreadyExistsException: /data/Daan/Projects/T_DCT/Output_l/Summary/pipeline_info/execution_timeline_2026-04-20_17-07-57.html
+	at java.base/sun.nio.fs.UnixException.translateToIOException(UnixException.java:94)
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:106)
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:111)
+	at java.base/sun.nio.fs.UnixFileSystemProvider.newByteChannel(UnixFileSystemProvider.java:218)
+	at java.base/java.nio.file.spi.FileSystemProvider.newOutputStream(FileSystemProvider.java:484)
+	at java.base/java.nio.file.Files.newOutputStream(Files.java:228)
+	at java.base/java.nio.file.Files.newBufferedWriter(Files.java:3008)
+	at nextflow.trace.TraceHelper.newFileWriter(TraceHelper.groovy:64)
+	... 12 common frames omitted
+Apr-20 17:08:10.492 [main] DEBUG nextflow.trace.TraceFileObserver - Workflow completed -- saving trace file
+Apr-20 17:08:10.500 [main] DEBUG nextflow.cache.CacheDB - Closing CacheDB done
+Apr-20 17:08:10.526 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye

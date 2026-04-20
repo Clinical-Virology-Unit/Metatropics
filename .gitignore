@@ -1,14 +1,2 @@
-# Nextflow runtime / temporary artifacts (repo root)
-.nextflow/
-.nextflow.log*
-work/
-
-# Local pulled databases (large, reproducible)
-/Databases/
-
-# pip / setuptools (metatropics-cli)
-*.egg-info/
-build/
-dist/
-nf-metatropics/assets/submission/metatropics_samplesheet/**/__pycache__/
-
+Databases/
+Databases1/
