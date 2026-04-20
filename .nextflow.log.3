@@ -1,0 +1,1029 @@
+Apr-20 17:39:19.794 [main] DEBUG nextflow.cli.Launcher - $> nextflow run nf-metatropics/ -profile singularity -params-file params_fastq.yaml -resume
+Apr-20 17:39:20.345 [main] DEBUG nextflow.cli.CmdRun - N E X T F L O W  ~  version 25.10.0
+Apr-20 17:39:22.357 [main] DEBUG nextflow.config.ConfigBuilder - Found config base: /data/Daan/Projects/Metatropics/nf-metatropics/nextflow.config
+Apr-20 17:39:22.361 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /data/Daan/Projects/Metatropics/nf-metatropics/nextflow.config
+Apr-20 17:39:22.377 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `singularity`
+Apr-20 17:39:22.996 [main] DEBUG nextflow.plugin.PluginsFacade - Using Default plugin manager
+Apr-20 17:39:23.027 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Apr-20 17:39:23.030 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Apr-20 17:39:23.033 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.12.0 in 'deployment' mode
+Apr-20 17:39:23.057 [main] DEBUG nextflow.plugin.PluginsFacade - Using Default plugin manager
+Apr-20 17:39:25.391 [main] DEBUG nextflow.config.ConfigBuilder - Available config profiles: [bih, cfc_dev, uzl_omics, ifb_core, embl_hd, denbi_qbic, alice, mjolnir_globe, uppmax, giga, incliva, ilifu, ki_luria, uge, icr_alma, rosalind_uge, lugh, mccleary, unibe_ibu, vai, czbiohub_aws, jax, roslin, iris, tes, scw, unc_longleaf, tigem, tubingen_apg, apollo, ipop_up, vsc_calcua, pdc_kth, ceci_nic5, ccga_cau, humantechnopole, stjude, daisybio, eddie, medair, biowulf, mahuika, bi, bigpurple, adcra, cedars, pawsey_setonix, vsc_kul_uhasselt, purdue_gautschi, pawsey_nimbus, rki, ucl_myriad, utd_ganymede, charliecloud, fred_hutch, seattlechildrens, icr_davros, ceres, purdue_negishi, munin, arm, rosalind, hasta, cfc, uzh, shu_bmrc, ebi_codon_slurm, ebc, ccga_dx, crick, ku_sund_danhead, marvin, lrz_cm4, purdue_bell, biohpc_gen, shifter, mana, mamba, york_viking, unc_lccc, wehi, awsbatch, wustl_htcf, arcc, ceci_dragon2, imperial, maestro, cannon, genotoul, nci_gadi, vsc_calcua_gpu, abims, vsc_calcua_cpu, eva_grace, janelia, nu_genomics, googlebatch, oist, sahmri, kaust, alliance_canada, mpcdf, leicester, vsc_ugent, create, sage, cambridge, jex, podman, ebi_codon, cheaha, xanadu, nyu_hpc, test, marjorie, computerome, ucd_sonic, seg_globe, mssm, sanger, dkfz, bluebear, pasteur, einstein, ethz_euler, m3c, test_full, imb, ucl_cscluster, tuos_stanage, azurebatch, seadragon, crukmi, csiro_petrichor, qmul_apocrita, docker, engaging, gis, hypatia, psmn, eva, unity, cropdiversityhpc, nygc, fgcz, conda, crg, singularity, mpcdf_viper, dirac, self_hosted_runner, tufts, uw_hyak_pedslabs, binac2, hki_genie, debug, genouest, cbe, unsw_katana, utd_juno, phoenix, gitpod, seawulf, uod_hpc, fub_curta, lovelace, uct_hpc, aws_tower, fsu_draco]
+Apr-20 17:39:25.539 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; embedded=false; plugins-dir=/home/itg.be/djansen/.nextflow/plugins; core-plugins: nf-amazon@3.4.1,nf-azure@1.20.2,nf-cloudcache@0.5.0,nf-codecommit@0.5.0,nf-console@1.3.0,nf-google@1.23.3,nf-k8s@1.2.2,nf-tower@1.17.1,nf-wave@1.16.1
+Apr-20 17:39:25.549 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Apr-20 17:39:25.550 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Apr-20 17:39:25.553 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.12.0 in 'deployment' mode
+Apr-20 17:39:25.577 [main] DEBUG nextflow.util.RetryConfig - Missing nextflow session - using default retry config
+Apr-20 17:39:25.634 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Apr-20 17:39:25.637 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Apr-20 17:39:25.637 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins resolved requirement=[]
+Apr-20 17:39:25.694 [main] DEBUG n.secret.LocalSecretsProvider - Secrets store: /home/itg.be/djansen/.nextflow/secrets/store.json
+Apr-20 17:39:25.697 [main] DEBUG nextflow.secret.SecretsLoader - Discovered secrets providers: [nextflow.secret.LocalSecretsProvider@41a16eb3] - activable => nextflow.secret.LocalSecretsProvider@41a16eb3
+Apr-20 17:39:25.699 [main] DEBUG nextflow.cli.CmdRun - Applied DSL=2 from script declaration
+Apr-20 17:39:25.721 [main] DEBUG nextflow.cli.CmdRun - Launching `nf-metatropics/main.nf` [sad_wing] DSL2 - revision: d909ac1015
+Apr-20 17:39:25.844 [main] DEBUG nextflow.Session - Session UUID: 58f07832-cb60-4c64-82b2-e79e168f33df
+Apr-20 17:39:25.845 [main] DEBUG nextflow.Session - Run name: sad_wing
+Apr-20 17:39:25.846 [main] DEBUG nextflow.Session - Executor pool size: 16
+Apr-20 17:39:25.879 [main] DEBUG nextflow.file.FilePorter - File porter settings maxRetries=3; maxTransfers=50; pollTimeout=null
+Apr-20 17:39:25.893 [main] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'FileTransfer' minSize=10; maxSize=48; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Apr-20 17:39:25.927 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 25.10.0 build 10289
+  Created: 22-10-2025 16:26 UTC (18:26 CEST)
+  System: Linux 5.15.0-94-generic
+  Runtime: Groovy 4.0.28 on OpenJDK 64-Bit Server VM 17.0.10+7
+  Encoding: UTF-8 (UTF-8)
+  Process: 4120826@arezendeprox [127.0.1.1]
+  CPUs: 16 - Mem: 125.8 GB (28.2 GB) - Swap: 100 MB (0)
+Apr-20 17:39:26.025 [main] DEBUG nextflow.Session - Work-dir: /data/Daan/Projects/Metatropics/work [ext2/ext3]
+Apr-20 17:39:26.069 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Apr-20 17:39:26.079 [main] DEBUG nextflow.Session - Observer factory (v2): LinObserverFactory
+Apr-20 17:39:26.081 [main] DEBUG nextflow.Session - Observer factory (v2): DefaultObserverFactory
+Apr-20 17:39:26.135 [main] DEBUG nextflow.cache.CacheFactory - Using Nextflow cache factory: nextflow.cache.DefaultCacheFactory
+Apr-20 17:39:26.144 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 17; maxThreads: 1000
+Apr-20 17:39:26.326 [main] DEBUG nextflow.Session - Session start
+Apr-20 17:39:26.333 [main] DEBUG nextflow.trace.TraceFileObserver - Workflow started -- trace file: /data/Daan/Projects/T_DCT/Output_l/Summary/pipeline_info/execution_trace_2026-04-20_17-39-24.txt
+Apr-20 17:39:26.362 [main] DEBUG nextflow.Session - Using default localLib path: /data/Daan/Projects/Metatropics/nf-metatropics/lib
+Apr-20 17:39:26.368 [main] DEBUG nextflow.Session - Adding to the classpath library: /data/Daan/Projects/Metatropics/nf-metatropics/lib
+Apr-20 17:39:26.368 [main] DEBUG nextflow.Session - Adding to the classpath library: /data/Daan/Projects/Metatropics/nf-metatropics/lib/nfcore_external_java_deps.jar
+Apr-20 17:39:27.729 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Apr-20 17:39:27.776 [main] INFO  nextflow.Nextflow - 
+
+-[2m----------------------------------------------------[0m-
+                                        [0;32m,--.[0;30m/[0;32m,-.[0m
+[0;34m        ___     __   __   __   ___     [0;32m/,-._.--~'[0m
+[0;34m  |\ | |__  __ /  ` /  \ |__) |__         [0;33m}  {[0m
+[0;34m  | \| |       \__, \__/ |  \ |___     [0;32m\`-._,-`-,[0m
+                                        [0;32m`._,._,'[0m
+[0;35m  nf-core/metatropics v0.0.7[0m
+-[2m----------------------------------------------------[0m-
+[1mCore Nextflow options[0m
+  [0;34mrunName         : [0;32msad_wing[0m
+  [0;34mcontainerEngine : [0;32msingularity[0m
+  [0;34mlaunchDir       : [0;32m/data/Daan/Projects/Metatropics[0m
+  [0;34mworkDir         : [0;32m/data/Daan/Projects/Metatropics/work[0m
+  [0;34mprojectDir      : [0;32m/data/Daan/Projects/Metatropics/nf-metatropics[0m
+  [0;34muserName        : [0;32mdjansen[0m
+  [0;34mprofile         : [0;32msingularity[0m
+  [0;34mconfigFiles     : [0;32m/data/Daan/Projects/Metatropics/nf-metatropics/nextflow.config[0m
+
+[1mInput/output options[0m
+  [0;34minput           : [0;32m/data/Daan/Projects/T_DCT/Input/samplesheet.csv[0m
+  [0;34minput_dir       : [0;32mnull[0m
+  [0;34moutdir          : [0;32m/data/Daan/Projects/T_DCT/Output_l[0m
+
+[1mReference genome options[0m
+  [0;34mHuman_host_fasta: [0;32m/data/Daan/Projects/Metatropics/Databases1/Human/chm13v2.0.fa[0m
+
+[1mMax job request options[0m
+  [0;34mmax_memory      : [0;32m64.GB[0m
+
+[1mGeneric options[0m
+  [0;34mmodel           : [0;32mhac[0m
+  [0;34mminVirus        : [0;32m0.01[0m
+  [0;34mdbmeta          : [0;32m/data/Daan/Projects/Metatropics/Databases1/ViralRefseq[0m
+  [0;34mnrdb            : [0;32mnull[0m
+  [0;34mpair            : [0;32mtrue[0m
+  [0;34mquality         : [0;32m30[0m
+  [0;34mdepth           : [0;32m20[0m
+  [0;34mfront           : [0;32m25[0m
+  [0;34mtail            : [0;32m25[0m
+
+!! Only displaying parameters that differ from the pipeline defaults !!
+-[2m----------------------------------------------------[0m-
+If you use nf-core/metatropics for your analysis please cite:
+
+* The nf-core framework
+  https://doi.org/10.1038/s41587-020-0439-x
+
+* Software dependencies
+  https://github.com/nf-core/metatropics/blob/main/nf-metatropics/assets/citing/CITATIONS.md
+-[2m----------------------------------------------------[0m-
+Apr-20 17:39:32.235 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name NFCORE_METATROPICS:METATROPICS:INPUT_CHECK_METATROPICS:SAMPLESHEET_CHECK_METATROPICS
+Apr-20 17:39:32.239 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:SAMPLESHEET_CHECK_METATROPICS` matches process NFCORE_METATROPICS:METATROPICS:INPUT_CHECK_METATROPICS:SAMPLESHEET_CHECK_METATROPICS
+Apr-20 17:39:32.262 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:39:32.263 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:39:32.274 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+Apr-20 17:39:32.282 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=16; memory=125.8 GB; capacity=16; pollInterval=100ms; dumpInterval=5m
+Apr-20 17:39:32.285 [main] DEBUG n.processor.TaskPollingMonitor - >>> barrier register (monitor: local)
+Apr-20 17:39:32.313 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:INPUT_CHECK_METATROPICS:SAMPLESHEET_CHECK_METATROPICS': maxForks=0; fair=false; array=0
+Apr-20 17:39:32.421 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES
+Apr-20 17:39:32.423 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:FIX_NAMES` matches process NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES
+Apr-20 17:39:32.430 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:39:32.430 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:39:32.432 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES': maxForks=0; fair=false; array=0
+Apr-20 17:39:32.446 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_low` matches labels `process_low` for process with name NFCORE_METATROPICS:METATROPICS:RAREFACTION
+Apr-20 17:39:32.449 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:RAREFACTION` matches process NFCORE_METATROPICS:METATROPICS:RAREFACTION
+Apr-20 17:39:32.464 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:39:32.464 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:39:32.466 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:RAREFACTION': maxForks=0; fair=false; array=0
+Apr-20 17:39:32.472 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name NFCORE_METATROPICS:METATROPICS:FASTPLONG
+Apr-20 17:39:32.473 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:FASTPLONG` matches process NFCORE_METATROPICS:METATROPICS:FASTPLONG
+Apr-20 17:39:32.479 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:39:32.479 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:39:32.480 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:FASTPLONG': maxForks=0; fair=false; array=0
+Apr-20 17:39:32.485 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name NFCORE_METATROPICS:METATROPICS:NANOPLOT
+Apr-20 17:39:32.487 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:NANOPLOT` matches process NFCORE_METATROPICS:METATROPICS:NANOPLOT
+Apr-20 17:39:32.496 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:39:32.497 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:39:32.499 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:NANOPLOT': maxForks=0; fair=false; array=0
+Apr-20 17:39:32.511 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN
+Apr-20 17:39:32.513 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:MINIMAP2_ALIGN` matches process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN
+Apr-20 17:39:32.517 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:39:32.518 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:39:32.519 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN': maxForks=0; fair=false; array=0
+Apr-20 17:39:32.526 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT
+Apr-20 17:39:32.527 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:SAMTOOLS_SORT` matches process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT
+Apr-20 17:39:32.531 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:39:32.531 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:39:32.532 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT': maxForks=0; fair=false; array=0
+Apr-20 17:39:32.536 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_low` matches labels `process_low` for process with name NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ
+Apr-20 17:39:32.538 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:SAMTOOLS_hFASTQ` matches process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ
+Apr-20 17:39:32.547 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:39:32.548 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:39:32.549 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ': maxForks=0; fair=false; array=0
+Apr-20 17:39:32.568 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_high` matches labels `process_high` for process with name NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP
+Apr-20 17:39:32.569 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:METAMAPS_MAP` matches process NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP
+Apr-20 17:39:32.575 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:39:32.576 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:39:32.579 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP': maxForks=0; fair=false; array=0
+Apr-20 17:39:32.612 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_high` matches labels `process_high` for process with name NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY
+Apr-20 17:39:32.613 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:METAMAPS_CLASSIFY` matches process NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY
+Apr-20 17:39:32.617 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:39:32.617 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:39:32.618 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY': maxForks=0; fair=false; array=0
+Apr-20 17:39:32.757 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_high` matches labels `process_high` for process with name NFCORE_METATROPICS:METATROPICS:R_METAPLOT
+Apr-20 17:39:32.758 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:R_METAPLOT` matches process NFCORE_METATROPICS:METATROPICS:R_METAPLOT
+Apr-20 17:39:32.761 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:39:32.761 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:39:32.762 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:R_METAPLOT': maxForks=0; fair=false; array=0
+Apr-20 17:39:32.769 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:REF_FASTA` matches process NFCORE_METATROPICS:METATROPICS:REF_FASTA
+Apr-20 17:39:32.772 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:39:32.772 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:39:32.773 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:REF_FASTA': maxForks=0; fair=false; array=0
+Apr-20 17:39:32.784 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:REFFIX_FASTA` matches process NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA
+Apr-20 17:39:32.786 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:39:32.786 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:39:32.787 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA': maxForks=0; fair=false; array=0
+Apr-20 17:39:32.791 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ
+Apr-20 17:39:32.792 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:SEQTK_SUBSEQ` matches process NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ
+Apr-20 17:39:32.793 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:39:32.793 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:39:32.794 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ': maxForks=0; fair=false; array=0
+Apr-20 17:39:32.800 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name NFCORE_METATROPICS:METATROPICS:MEDAKA
+Apr-20 17:39:32.801 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:MEDAKA` matches process NFCORE_METATROPICS:METATROPICS:MEDAKA
+Apr-20 17:39:32.802 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:39:32.803 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:39:32.803 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:MEDAKA': maxForks=0; fair=false; array=0
+Apr-20 17:39:32.808 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name NFCORE_METATROPICS:METATROPICS:ReadCount
+Apr-20 17:39:32.808 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:ReadCount` matches process NFCORE_METATROPICS:METATROPICS:ReadCount
+Apr-20 17:39:32.811 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:39:32.811 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:39:32.812 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:ReadCount': maxForks=0; fair=false; array=0
+Apr-20 17:39:32.817 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name NFCORE_METATROPICS:METATROPICS:RCOVERAGE
+Apr-20 17:39:32.818 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:RCOVERAGE` matches process NFCORE_METATROPICS:METATROPICS:RCOVERAGE
+Apr-20 17:39:32.821 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:39:32.821 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:39:32.822 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:RCOVERAGE': maxForks=0; fair=false; array=0
+Apr-20 17:39:32.827 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE
+Apr-20 17:39:32.828 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:SAMTOOLS_COVERAGE` matches process NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE
+Apr-20 17:39:32.831 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:39:32.831 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:39:32.832 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE': maxForks=0; fair=false; array=0
+Apr-20 17:39:32.842 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_medium` matches labels `process_medium` for process with name NFCORE_METATROPICS:METATROPICS:IVAR_CONSENSUS
+Apr-20 17:39:32.842 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:IVAR_CONSENSUS` matches process NFCORE_METATROPICS:METATROPICS:IVAR_CONSENSUS
+Apr-20 17:39:32.846 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:39:32.846 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:39:32.847 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:IVAR_CONSENSUS': maxForks=0; fair=false; array=0
+Apr-20 17:39:32.851 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name NFCORE_METATROPICS:METATROPICS:HOMOPOLISH_POLISHING
+Apr-20 17:39:32.852 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:HOMOPOLISH_POLISHING` matches process NFCORE_METATROPICS:METATROPICS:HOMOPOLISH_POLISHING
+Apr-20 17:39:32.854 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:39:32.855 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:39:32.856 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:HOMOPOLISH_POLISHING': maxForks=0; fair=false; array=0
+Apr-20 17:39:32.878 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:ADDING_DEPTH` matches process NFCORE_METATROPICS:METATROPICS:ADDING_DEPTH
+Apr-20 17:39:32.880 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:39:32.880 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:39:32.881 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:ADDING_DEPTH': maxForks=0; fair=false; array=0
+Apr-20 17:39:32.886 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:FINAL_REPORT` matches process NFCORE_METATROPICS:METATROPICS:FINAL_REPORT
+Apr-20 17:39:32.887 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:39:32.887 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:39:32.888 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:FINAL_REPORT': maxForks=0; fair=false; array=0
+Apr-20 17:39:32.938 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:process_single` matches labels `process_single` for process with name NFCORE_METATROPICS:METATROPICS:CUSTOM_DUMPSOFTWAREVERSIONS
+Apr-20 17:39:32.939 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:CUSTOM_DUMPSOFTWAREVERSIONS` matches process NFCORE_METATROPICS:METATROPICS:CUSTOM_DUMPSOFTWAREVERSIONS
+Apr-20 17:39:32.941 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Apr-20 17:39:32.941 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Apr-20 17:39:32.942 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'NFCORE_METATROPICS:METATROPICS:CUSTOM_DUMPSOFTWAREVERSIONS': maxForks=0; fair=false; array=0
+Apr-20 17:39:32.946 [main] DEBUG nextflow.Session - Workflow process names [dsl2]: SAMTOOLS_COVERAGE, NFCORE_METATROPICS:METATROPICS:ReadCount, NFCORE_METATROPICS:METATROPICS:REF_FASTA, IVAR_CONSENSUS, FINAL_REPORT, SAMPLESHEET_CHECK_METATROPICS, DORADO_DEMULTIPLEXING, NFCORE_METATROPICS:METATROPICS:ADDING_DEPTH, METAMAPS_CLASSIFY, FASTPLONG, NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP, NFCORE_METATROPICS:METATROPICS:FASTPLONG, NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY, NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE, NFCORE_METATROPICS:METATROPICS:CUSTOM_DUMPSOFTWAREVERSIONS, RAREFACTION, NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA, RCOVERAGE, NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ, NFCORE_METATROPICS:METATROPICS:INPUT_CHECK_METATROPICS:SAMPLESHEET_CHECK_METATROPICS, CLEANUP_INTERMEDIATE, NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES, VIRASIGN_SUMMARY, NFCORE_METATROPICS:METATROPICS:MEDAKA, NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT, NANOPLOT, REF_FASTA, NFCORE_METATROPICS:METATROPICS:RAREFACTION, HOMOPOLISH_POLISHING, VIRASIGN_CLASSIFICATION, SAMTOOLS_hFASTQ, FIX_NAMES, NFCORE_METATROPICS:METATROPICS:IVAR_CONSENSUS, NFCORE_METATROPICS:METATROPICS:R_METAPLOT, SEQTK_SUBSEQ, REFFIX_FASTA, SAMTOOLS_SORT, NFCORE_METATROPICS:METATROPICS:NANOPLOT, ADDING_DEPTH, CLEANUP, NFCORE_METATROPICS:METATROPICS:RCOVERAGE, DORADO_ONT, METAMAPS_MAP, NFCORE_METATROPICS:METATROPICS:HOMOPOLISH_POLISHING, NFCORE_METATROPICS:METATROPICS:FINAL_REPORT, NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ, R_METAPLOT, CUSTOM_DUMPSOFTWAREVERSIONS, MINIMAP2_ALIGN, SAMTOOLS_hoFASTQ, MEDAKA, NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN, ReadCount, VIRASIGN_DB
+Apr-20 17:39:32.954 [main] DEBUG nextflow.Session - Igniting dataflow network (25)
+Apr-20 17:39:32.956 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:INPUT_CHECK_METATROPICS:SAMPLESHEET_CHECK_METATROPICS
+Apr-20 17:39:32.958 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES
+Apr-20 17:39:32.958 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:RAREFACTION
+Apr-20 17:39:32.958 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:FASTPLONG
+Apr-20 17:39:32.958 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:NANOPLOT
+Apr-20 17:39:32.958 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN
+Apr-20 17:39:32.958 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT
+Apr-20 17:39:32.958 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ
+Apr-20 17:39:32.958 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP
+Apr-20 17:39:32.958 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY
+Apr-20 17:39:32.958 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:R_METAPLOT
+Apr-20 17:39:32.959 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:REF_FASTA
+Apr-20 17:39:32.959 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA
+Apr-20 17:39:32.959 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ
+Apr-20 17:39:32.959 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:MEDAKA
+Apr-20 17:39:32.960 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:ReadCount
+Apr-20 17:39:32.960 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:RCOVERAGE
+Apr-20 17:39:32.960 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE
+Apr-20 17:39:32.960 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:IVAR_CONSENSUS
+Apr-20 17:39:32.960 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:HOMOPOLISH_POLISHING
+Apr-20 17:39:32.960 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:ADDING_DEPTH
+Apr-20 17:39:32.960 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:FINAL_REPORT
+Apr-20 17:39:32.960 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > NFCORE_METATROPICS:METATROPICS:CUSTOM_DUMPSOFTWAREVERSIONS
+Apr-20 17:39:32.961 [main] DEBUG nextflow.script.ScriptRunner - Parsed script files:
+  Script_2c6875308f8ded42: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/ref_fasta.nf
+  Script_992eb44bdfe81433: /data/Daan/Projects/Metatropics/nf-metatropics/main.nf
+  Script_16ff458ee69ffc3c: /data/Daan/Projects/Metatropics/nf-metatropics/workflows/subworkflows/local/host_mapping.nf
+  Script_dbfccfb2b1e6442c: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/homopolish/polishing.nf
+  Script_3cc25f7c984bf62d: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/virasign/classification.nf
+  Script_cd27272ecc5668b8: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/virasign/prepare_db.nf
+  Script_4bc48be322e9e5ed: /data/Daan/Projects/Metatropics/nf-metatropics/workflows/metatropics.nf
+  Script_7566355ae1e48ce1: /data/Daan/Projects/Metatropics/nf-metatropics/modules/nf-core/medaka/main.nf
+  Script_608ac5f5f599c6d2: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/dorado/demultiplexing.nf
+  Script_3b86d7be5ff3f15b: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/reads/reads.nf
+  Script_c001c2e6fdb4c89f: /data/Daan/Projects/Metatropics/nf-metatropics/modules/nf-core/nanoplot/main.nf
+  Script_67e73fd6ebce9cc7: /data/Daan/Projects/Metatropics/nf-metatropics/modules/nf-core/samtools/coverage/main.nf
+  Script_fae070f40f21e58c: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/final_report.nf
+  Script_fd574adb05612859: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/metamaps/classify.nf
+  Script_9411245b861afa36: /data/Daan/Projects/Metatropics/nf-metatropics/workflows/subworkflows/local/input_check_metatropics.nf
+  Script_d292ab3c842da2d1: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/fastplong/main.nf
+  Script_c903170070735cc9: /data/Daan/Projects/Metatropics/nf-metatropics/modules/nf-core/samtools/sort/main.nf
+  Script_959f309d6d18f9a1: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/reffix_fasta.nf
+  Script_dcedd8fbe779b3f1: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/metamaps/map.nf
+  Script_d542b94372d08742: /data/Daan/Projects/Metatropics/nf-metatropics/workflows/subworkflows/local/subfix_names.nf
+  Script_7d5c5808f7bc82b6: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/virasign/build_html.nf
+  Script_c82378af6b779c81: /data/Daan/Projects/Metatropics/nf-metatropics/modules/nf-core/custom/dumpsoftwareversions/main.nf
+  Script_ea0e4ed31b389063: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/cleanup/cleanup_intermediate.nf
+  Script_9df09287b9ee2cda: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/cleanup/cleanup.nf
+  Script_87b10afa6015438e: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/dorado/ont.nf
+  Script_e7e397a0e41aa7dc: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/samplesheet_check_metatropics.nf
+  Script_d08be40554f3e0c1: /data/Daan/Projects/Metatropics/nf-metatropics/modules/nf-core/ivar/consensus/main.nf
+  Script_8c6d41e0ac42fe11: /data/Daan/Projects/Metatropics/nf-metatropics/modules/nf-core/samtools/fastq/main2.nf
+  Script_b042555cc99d6398: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/rcoverage/rcoverage.nf
+  Script_17e7cbce4d4e27bf: /data/Daan/Projects/Metatropics/nf-metatropics/modules/nf-core/samtools/fastq/main.nf
+  Script_de0d4f9c42c81aae: /data/Daan/Projects/Metatropics/nf-metatropics/modules/nf-core/seqtk/subseq/main.nf
+  Script_4ab75aa128436c7c: /data/Daan/Projects/Metatropics/nf-metatropics/workflows/subworkflows/local/human_mapping.nf
+  Script_4a0e6c26e792ff5d: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/r/metaplot.nf
+  Script_d0b67b30329ccdf1: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/adding_depth.nf
+  Script_bd2b12297101132e: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/rarefaction/rarefaction.nf
+  Script_911844893e962d96: /data/Daan/Projects/Metatropics/nf-metatropics/modules/nf-core/minimap2/align/main.nf
+  Script_d6e42eaba6b356ca: /data/Daan/Projects/Metatropics/nf-metatropics/modules/local/fix_names.nf
+Apr-20 17:39:32.961 [main] DEBUG nextflow.script.ScriptRunner - > Awaiting termination 
+Apr-20 17:39:32.961 [main] DEBUG nextflow.Session - Session await
+Apr-20 17:39:33.021 [Actor Thread 15] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=library://daanjansen94/metatropics/python3:v3; path=/data/Daan/Projects/Metatropics/work/singularity/daanjansen94-metatropics-python3-v3.img
+Apr-20 17:39:33.111 [Actor Thread 17] INFO  nextflow.processor.TaskProcessor - [1a/27f629] Cached process > NFCORE_METATROPICS:METATROPICS:INPUT_CHECK_METATROPICS:SAMPLESHEET_CHECK_METATROPICS (samplesheet.csv)
+Apr-20 17:39:33.167 [Actor Thread 1] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=library://daanjansen94/metatropics/bbmap:38.86; path=/data/Daan/Projects/Metatropics/work/singularity/daanjansen94-metatropics-bbmap-38.86.img
+Apr-20 17:39:33.201 [Actor Thread 13] INFO  nextflow.processor.TaskProcessor - [44/155640] Cached process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES (LASVnegRUN1_p10_T1_other_T1)
+Apr-20 17:39:33.203 [Actor Thread 2] INFO  nextflow.processor.TaskProcessor - [f9/df7545] Cached process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES (LASVnegRUN1_p6_T1_other_T1)
+Apr-20 17:39:33.203 [Actor Thread 14] INFO  nextflow.processor.TaskProcessor - [88/fcba68] Cached process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES (LASVnegRUN1_p11_T1_other_T1)
+Apr-20 17:39:33.203 [Actor Thread 11] INFO  nextflow.processor.TaskProcessor - [56/d47537] Cached process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES (LASVnegRUN1_H2O_9_T1_other_T1)
+Apr-20 17:39:33.204 [Actor Thread 3] INFO  nextflow.processor.TaskProcessor - [9d/b5be0e] Cached process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES (LASVnegRUN1_p4_T1_other_T1)
+Apr-20 17:39:33.205 [Actor Thread 4] INFO  nextflow.processor.TaskProcessor - [4b/a9e129] Cached process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES (LASVnegRUN1_p3_T1_other_T1)
+Apr-20 17:39:33.206 [Actor Thread 5] INFO  nextflow.processor.TaskProcessor - [b2/8a5fc8] Cached process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES (LASVnegRUN1_p2_T1_other_T1)
+Apr-20 17:39:33.207 [Actor Thread 8] INFO  nextflow.processor.TaskProcessor - [b8/a379b7] Cached process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES (LASVnegRUN1_p5_T1_other_T1)
+Apr-20 17:39:33.207 [Actor Thread 17] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'PublishDir' minSize=10; maxSize=48; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Apr-20 17:39:33.209 [Actor Thread 9] INFO  nextflow.processor.TaskProcessor - [a9/386342] Cached process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES (LASVnegRUN1_H2O_10_T1_other_T1)
+Apr-20 17:39:33.209 [Actor Thread 7] INFO  nextflow.processor.TaskProcessor - [c8/a376ce] Cached process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES (LASVnegRUN1_p14_T1_other_T1)
+Apr-20 17:39:33.210 [Actor Thread 15] INFO  nextflow.processor.TaskProcessor - [b4/bd180c] Cached process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES (LASVnegRUN1_p13_T1_other_T1)
+Apr-20 17:39:33.226 [Actor Thread 6] INFO  nextflow.processor.TaskProcessor - [aa/4cdc38] Cached process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES (LASVnegRUN1_p1_T1_other_T1)
+Apr-20 17:39:33.226 [Actor Thread 20] INFO  nextflow.processor.TaskProcessor - [5d/6a8af5] Cached process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES (LASVnegRUN1_p9_T1_other_T1)
+Apr-20 17:39:33.244 [Actor Thread 19] INFO  nextflow.processor.TaskProcessor - [45/606979] Cached process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES (LASVnegRUN1_p8_T1_other_T1)
+Apr-20 17:39:33.259 [Actor Thread 18] INFO  nextflow.processor.TaskProcessor - [00/544d50] Cached process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES (LASVnegRUN1_p7_T1_other_T1)
+Apr-20 17:39:33.265 [Actor Thread 10] INFO  nextflow.processor.TaskProcessor - [7a/22b482] Cached process > NFCORE_METATROPICS:METATROPICS:FIX:FIX_NAMES (LASVnegRUN1_p12_T1_other_T1)
+Apr-20 17:39:33.270 [Actor Thread 2] INFO  nextflow.processor.TaskProcessor - [22/bdff85] Cached process > NFCORE_METATROPICS:METATROPICS:RAREFACTION (LASVnegRUN1_p11_T1_other_T1)
+Apr-20 17:39:33.272 [Actor Thread 4] INFO  nextflow.processor.TaskProcessor - [a9/a72824] Cached process > NFCORE_METATROPICS:METATROPICS:RAREFACTION (LASVnegRUN1_p4_T1_other_T1)
+Apr-20 17:39:33.275 [Actor Thread 7] INFO  nextflow.processor.TaskProcessor - [8d/0a2702] Cached process > NFCORE_METATROPICS:METATROPICS:RAREFACTION (LASVnegRUN1_p10_T1_other_T1)
+Apr-20 17:39:33.279 [Actor Thread 8] INFO  nextflow.processor.TaskProcessor - [a8/fe2b53] Cached process > NFCORE_METATROPICS:METATROPICS:RAREFACTION (LASVnegRUN1_H2O_9_T1_other_T1)
+Apr-20 17:39:33.282 [Actor Thread 20] INFO  nextflow.processor.TaskProcessor - [d7/9690d9] Cached process > NFCORE_METATROPICS:METATROPICS:RAREFACTION (LASVnegRUN1_p3_T1_other_T1)
+Apr-20 17:39:33.285 [Actor Thread 11] INFO  nextflow.processor.TaskProcessor - [66/5d19c7] Cached process > NFCORE_METATROPICS:METATROPICS:RAREFACTION (LASVnegRUN1_p6_T1_other_T1)
+Apr-20 17:39:33.287 [Actor Thread 1] INFO  nextflow.processor.TaskProcessor - [67/049742] Cached process > NFCORE_METATROPICS:METATROPICS:RAREFACTION (LASVnegRUN1_p13_T1_other_T1)
+Apr-20 17:39:33.316 [Actor Thread 21] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=library://jansendaan94_v2/metatropics/fastplong:0.4.1; path=/data/Daan/Projects/Metatropics/work/singularity/jansendaan94_v2-metatropics-fastplong-0.4.1.img
+Apr-20 17:39:33.324 [Actor Thread 21] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=library://daanjansen94/metatropics/nanoplot:v1.41.0; path=/data/Daan/Projects/Metatropics/work/singularity/daanjansen94-metatropics-nanoplot-v1.41.0.img
+Apr-20 17:39:33.329 [Actor Thread 22] INFO  nextflow.processor.TaskProcessor - [7a/163064] Cached process > NFCORE_METATROPICS:METATROPICS:RAREFACTION (LASVnegRUN1_H2O_10_T1_other_T1)
+Apr-20 17:39:33.351 [Actor Thread 17] INFO  nextflow.processor.TaskProcessor - [d7/15ef5a] Cached process > NFCORE_METATROPICS:METATROPICS:FASTPLONG (LASVnegRUN1_p4_T1_other_T1)
+Apr-20 17:39:33.358 [Actor Thread 20] INFO  nextflow.processor.TaskProcessor - [de/43170a] Cached process > NFCORE_METATROPICS:METATROPICS:FASTPLONG (LASVnegRUN1_p6_T1_other_T1)
+Apr-20 17:39:33.359 [Actor Thread 10] INFO  nextflow.processor.TaskProcessor - [f2/2cb0a0] Cached process > NFCORE_METATROPICS:METATROPICS:FASTPLONG (LASVnegRUN1_H2O_9_T1_other_T1)
+Apr-20 17:39:33.358 [Actor Thread 19] INFO  nextflow.processor.TaskProcessor - [d6/8b2adf] Cached process > NFCORE_METATROPICS:METATROPICS:FASTPLONG (LASVnegRUN1_p13_T1_other_T1)
+Apr-20 17:39:33.359 [Actor Thread 26] INFO  nextflow.processor.TaskProcessor - [3c/c9666f] Cached process > NFCORE_METATROPICS:METATROPICS:RAREFACTION (LASVnegRUN1_p5_T1_other_T1)
+Apr-20 17:39:33.359 [Actor Thread 5] INFO  nextflow.processor.TaskProcessor - [f4/d41590] Cached process > NFCORE_METATROPICS:METATROPICS:RAREFACTION (LASVnegRUN1_p9_T1_other_T1)
+Apr-20 17:39:33.364 [Actor Thread 15] INFO  nextflow.processor.TaskProcessor - [4a/f87929] Cached process > NFCORE_METATROPICS:METATROPICS:RAREFACTION (LASVnegRUN1_p8_T1_other_T1)
+Apr-20 17:39:33.367 [Actor Thread 14] INFO  nextflow.processor.TaskProcessor - [86/3b6bb6] Cached process > NFCORE_METATROPICS:METATROPICS:RAREFACTION (LASVnegRUN1_p1_T1_other_T1)
+Apr-20 17:39:33.371 [Actor Thread 25] INFO  nextflow.processor.TaskProcessor - [d3/62b16e] Cached process > NFCORE_METATROPICS:METATROPICS:FASTPLONG (LASVnegRUN1_p10_T1_other_T1)
+Apr-20 17:39:33.372 [Actor Thread 6] INFO  nextflow.processor.TaskProcessor - [99/91633b] Cached process > NFCORE_METATROPICS:METATROPICS:NANOPLOT (LASVnegRUN1_p10_T1_other_T1)
+Apr-20 17:39:33.373 [Actor Thread 3] INFO  nextflow.processor.TaskProcessor - [9c/a8ba26] Cached process > NFCORE_METATROPICS:METATROPICS:FASTPLONG (LASVnegRUN1_p11_T1_other_T1)
+Apr-20 17:39:33.389 [Actor Thread 16] INFO  nextflow.processor.TaskProcessor - [6d/8d1378] Cached process > NFCORE_METATROPICS:METATROPICS:FASTPLONG (LASVnegRUN1_p3_T1_other_T1)
+Apr-20 17:39:33.404 [Actor Thread 22] INFO  nextflow.processor.TaskProcessor - [fd/b9909f] Cached process > NFCORE_METATROPICS:METATROPICS:RAREFACTION (LASVnegRUN1_p2_T1_other_T1)
+Apr-20 17:39:33.409 [Actor Thread 5] INFO  nextflow.processor.TaskProcessor - [ef/6c78d8] Cached process > NFCORE_METATROPICS:METATROPICS:FASTPLONG (LASVnegRUN1_p9_T1_other_T1)
+Apr-20 17:39:33.410 [Actor Thread 17] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=library://daanjansen94/metatropics/minimap:v2.28; path=/data/Daan/Projects/Metatropics/work/singularity/daanjansen94-metatropics-minimap-v2.28.img
+Apr-20 17:39:33.413 [Actor Thread 2] INFO  nextflow.processor.TaskProcessor - [2e/afa7fa] Cached process > NFCORE_METATROPICS:METATROPICS:NANOPLOT (LASVnegRUN1_H2O_9_T1_other_T1)
+Apr-20 17:39:33.413 [Actor Thread 13] INFO  nextflow.processor.TaskProcessor - [a8/dad790] Cached process > NFCORE_METATROPICS:METATROPICS:NANOPLOT (LASVnegRUN1_p13_T1_other_T1)
+Apr-20 17:39:33.428 [Actor Thread 21] INFO  nextflow.processor.TaskProcessor - [4a/6dcff9] Cached process > NFCORE_METATROPICS:METATROPICS:NANOPLOT (LASVnegRUN1_p4_T1_other_T1)
+Apr-20 17:39:33.438 [Actor Thread 1] INFO  nextflow.processor.TaskProcessor - [f2/d32934] Cached process > NFCORE_METATROPICS:METATROPICS:NANOPLOT (LASVnegRUN1_p6_T1_other_T1)
+Apr-20 17:39:33.439 [Actor Thread 19] INFO  nextflow.processor.TaskProcessor - [49/143152] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN (LASVnegRUN1_p10_T1_other_T1)
+Apr-20 17:39:33.438 [Actor Thread 11] INFO  nextflow.processor.TaskProcessor - [62/bf9aad] Cached process > NFCORE_METATROPICS:METATROPICS:RAREFACTION (LASVnegRUN1_p12_T1_other_T1)
+Apr-20 17:39:33.457 [Actor Thread 9] INFO  nextflow.processor.TaskProcessor - [79/0eb14f] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN (LASVnegRUN1_p4_T1_other_T1)
+Apr-20 17:39:33.461 [Actor Thread 17] INFO  nextflow.processor.TaskProcessor - [66/2de396] Cached process > NFCORE_METATROPICS:METATROPICS:FASTPLONG (LASVnegRUN1_p2_T1_other_T1)
+Apr-20 17:39:33.461 [Actor Thread 7] INFO  nextflow.processor.TaskProcessor - [11/5a945e] Cached process > NFCORE_METATROPICS:METATROPICS:FASTPLONG (LASVnegRUN1_p12_T1_other_T1)
+Apr-20 17:39:33.471 [Actor Thread 5] INFO  nextflow.processor.TaskProcessor - [77/9080e5] Cached process > NFCORE_METATROPICS:METATROPICS:RAREFACTION (LASVnegRUN1_p7_T1_other_T1)
+Apr-20 17:39:33.474 [Actor Thread 12] INFO  nextflow.processor.TaskProcessor - [3b/13d6e6] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN (LASVnegRUN1_p9_T1_other_T1)
+Apr-20 17:39:33.474 [Actor Thread 10] INFO  nextflow.processor.TaskProcessor - [21/096986] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN (LASVnegRUN1_p6_T1_other_T1)
+Apr-20 17:39:33.475 [Actor Thread 26] INFO  nextflow.processor.TaskProcessor - [58/97fd40] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN (LASVnegRUN1_H2O_9_T1_other_T1)
+Apr-20 17:39:33.486 [Actor Thread 14] INFO  nextflow.processor.TaskProcessor - [50/a4d601] Cached process > NFCORE_METATROPICS:METATROPICS:FASTPLONG (LASVnegRUN1_p5_T1_other_T1)
+Apr-20 17:39:33.530 [Actor Thread 28] INFO  nextflow.processor.TaskProcessor - [68/7d79fd] Cached process > NFCORE_METATROPICS:METATROPICS:RAREFACTION (LASVnegRUN1_p14_T1_other_T1)
+Apr-20 17:39:33.586 [Actor Thread 4] INFO  nextflow.processor.TaskProcessor - [c3/f6f5d9] Cached process > NFCORE_METATROPICS:METATROPICS:NANOPLOT (LASVnegRUN1_p11_T1_other_T1)
+Apr-20 17:39:33.619 [Actor Thread 34] INFO  nextflow.processor.TaskProcessor - [52/80b75e] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN (LASVnegRUN1_p12_T1_other_T1)
+Apr-20 17:39:33.642 [Actor Thread 8] INFO  nextflow.processor.TaskProcessor - [1d/3a4c3f] Cached process > NFCORE_METATROPICS:METATROPICS:NANOPLOT (LASVnegRUN1_H2O_10_T1_other_T1)
+Apr-20 17:39:33.645 [Actor Thread 27] INFO  nextflow.processor.TaskProcessor - [d6/f63f7f] Cached process > NFCORE_METATROPICS:METATROPICS:FASTPLONG (LASVnegRUN1_H2O_10_T1_other_T1)
+Apr-20 17:39:33.647 [Actor Thread 3] INFO  nextflow.processor.TaskProcessor - [c6/30774f] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN (LASVnegRUN1_p3_T1_other_T1)
+Apr-20 17:39:33.648 [Actor Thread 29] INFO  nextflow.processor.TaskProcessor - [92/63c583] Cached process > NFCORE_METATROPICS:METATROPICS:NANOPLOT (LASVnegRUN1_p3_T1_other_T1)
+Apr-20 17:39:33.649 [Actor Thread 20] INFO  nextflow.processor.TaskProcessor - [4c/01735f] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN (LASVnegRUN1_p13_T1_other_T1)
+Apr-20 17:39:33.651 [Actor Thread 36] INFO  nextflow.processor.TaskProcessor - [d2/6a3a3f] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN (LASVnegRUN1_p11_T1_other_T1)
+Apr-20 17:39:33.657 [Actor Thread 11] INFO  nextflow.processor.TaskProcessor - [6d/ae25e0] Cached process > NFCORE_METATROPICS:METATROPICS:NANOPLOT (LASVnegRUN1_p1_T1_other_T1)
+Apr-20 17:39:33.657 [Actor Thread 35] INFO  nextflow.processor.TaskProcessor - [a2/0068a6] Cached process > NFCORE_METATROPICS:METATROPICS:NANOPLOT (LASVnegRUN1_p2_T1_other_T1)
+Apr-20 17:39:33.660 [Actor Thread 33] INFO  nextflow.processor.TaskProcessor - [62/61dcc2] Cached process > NFCORE_METATROPICS:METATROPICS:FASTPLONG (LASVnegRUN1_p1_T1_other_T1)
+Apr-20 17:39:33.665 [Actor Thread 5] INFO  nextflow.processor.TaskProcessor - [a8/2fbd55] Cached process > NFCORE_METATROPICS:METATROPICS:FASTPLONG (LASVnegRUN1_p14_T1_other_T1)
+Apr-20 17:39:33.686 [Actor Thread 32] INFO  nextflow.processor.TaskProcessor - [f6/5eb4ba] Cached process > NFCORE_METATROPICS:METATROPICS:NANOPLOT (LASVnegRUN1_p14_T1_other_T1)
+Apr-20 17:39:33.684 [Actor Thread 15] INFO  nextflow.processor.TaskProcessor - [39/a26fcc] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN (LASVnegRUN1_p2_T1_other_T1)
+Apr-20 17:39:33.686 [Actor Thread 16] INFO  nextflow.processor.TaskProcessor - [fa/86a248] Cached process > NFCORE_METATROPICS:METATROPICS:FASTPLONG (LASVnegRUN1_p8_T1_other_T1)
+Apr-20 17:39:33.670 [Actor Thread 18] INFO  nextflow.processor.TaskProcessor - [a9/c327e1] Cached process > NFCORE_METATROPICS:METATROPICS:NANOPLOT (LASVnegRUN1_p8_T1_other_T1)
+Apr-20 17:39:33.693 [Actor Thread 25] INFO  nextflow.processor.TaskProcessor - [15/e8d791] Cached process > NFCORE_METATROPICS:METATROPICS:NANOPLOT (LASVnegRUN1_p9_T1_other_T1)
+Apr-20 17:39:33.665 [Actor Thread 37] INFO  nextflow.processor.TaskProcessor - [61/4233eb] Cached process > NFCORE_METATROPICS:METATROPICS:NANOPLOT (LASVnegRUN1_p12_T1_other_T1)
+Apr-20 17:39:33.706 [Actor Thread 39] INFO  nextflow.processor.TaskProcessor - [44/dd888d] Cached process > NFCORE_METATROPICS:METATROPICS:FASTPLONG (LASVnegRUN1_p7_T1_other_T1)
+Apr-20 17:39:33.711 [Actor Thread 22] INFO  nextflow.processor.TaskProcessor - [25/2b4488] Cached process > NFCORE_METATROPICS:METATROPICS:NANOPLOT (LASVnegRUN1_p5_T1_other_T1)
+Apr-20 17:39:33.718 [Actor Thread 6] INFO  nextflow.processor.TaskProcessor - [35/00ad26] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN (LASVnegRUN1_p1_T1_other_T1)
+Apr-20 17:39:33.742 [Actor Thread 7] INFO  nextflow.processor.TaskProcessor - [cd/fb769b] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN (LASVnegRUN1_p14_T1_other_T1)
+Apr-20 17:39:33.742 [Actor Thread 28] INFO  nextflow.processor.TaskProcessor - [00/3cbd76] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN (LASVnegRUN1_p5_T1_other_T1)
+Apr-20 17:39:33.744 [Actor Thread 8] INFO  nextflow.processor.TaskProcessor - [20/b8e22a] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN (LASVnegRUN1_H2O_10_T1_other_T1)
+Apr-20 17:39:33.751 [Actor Thread 4] INFO  nextflow.processor.TaskProcessor - [d8/a91ac3] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN (LASVnegRUN1_p7_T1_other_T1)
+Apr-20 17:39:33.751 [Actor Thread 40] INFO  nextflow.processor.TaskProcessor - [82/e9a00a] Cached process > NFCORE_METATROPICS:METATROPICS:NANOPLOT (LASVnegRUN1_p7_T1_other_T1)
+Apr-20 17:39:33.768 [Actor Thread 22] INFO  nextflow.processor.TaskProcessor - [25/ae9324] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN (LASVnegRUN1_p8_T1_other_T1)
+Apr-20 17:39:33.867 [Actor Thread 19] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:39:33.869 [Actor Thread 22] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:39:33.872 [Actor Thread 4] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:39:33.874 [Actor Thread 7] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:39:33.875 [Actor Thread 8] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:39:33.880 [Actor Thread 28] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:39:33.881 [Actor Thread 15] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:39:33.882 [Actor Thread 6] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:39:33.884 [Actor Thread 3] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:39:33.888 [Actor Thread 20] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:39:33.890 [Actor Thread 25] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=library://daanjansen94/metatropics/samtools:v1.17; path=/data/Daan/Projects/Metatropics/work/singularity/daanjansen94-metatropics-samtools-v1.17.img
+Apr-20 17:39:33.891 [Actor Thread 36] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:39:33.902 [Actor Thread 34] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:39:33.907 [Actor Thread 12] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:39:33.909 [Actor Thread 10] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:39:33.914 [Actor Thread 26] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:39:33.916 [Actor Thread 18] INFO  nextflow.processor.TaskProcessor - [11/620484] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT (LASVnegRUN1_p3_T1_other_T1)
+Apr-20 17:39:33.918 [Actor Thread 28] INFO  nextflow.processor.TaskProcessor - [90/4d7db9] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT (LASVnegRUN1_p5_T1_other_T1)
+Apr-20 17:39:33.919 [Actor Thread 9] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:MINIMAP2_ALIGN > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:39:33.922 [Actor Thread 4] INFO  nextflow.processor.TaskProcessor - [60/35ec0e] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT (LASVnegRUN1_p2_T1_other_T1)
+Apr-20 17:39:33.922 [Actor Thread 18] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:39:33.923 [Actor Thread 23] INFO  nextflow.processor.TaskProcessor - [75/9f7311] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT (LASVnegRUN1_p8_T1_other_T1)
+Apr-20 17:39:33.923 [Actor Thread 36] INFO  nextflow.processor.TaskProcessor - [ca/5d47c8] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT (LASVnegRUN1_p12_T1_other_T1)
+Apr-20 17:39:33.926 [Actor Thread 4] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:39:33.926 [Actor Thread 20] INFO  nextflow.processor.TaskProcessor - [fe/a23f12] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT (LASVnegRUN1_p9_T1_other_T1)
+Apr-20 17:39:33.928 [Actor Thread 28] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:39:33.928 [Actor Thread 22] INFO  nextflow.processor.TaskProcessor - [56/9a358e] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT (LASVnegRUN1_p6_T1_other_T1)
+Apr-20 17:39:33.928 [Actor Thread 7] INFO  nextflow.processor.TaskProcessor - [a4/95cfea] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT (LASVnegRUN1_p14_T1_other_T1)
+Apr-20 17:39:33.929 [Actor Thread 40] INFO  nextflow.processor.TaskProcessor - [3e/1adcf9] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT (LASVnegRUN1_p10_T1_other_T1)
+Apr-20 17:39:33.931 [Actor Thread 23] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:39:33.932 [Actor Thread 22] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:39:33.932 [Actor Thread 6] INFO  nextflow.processor.TaskProcessor - [fe/b21d5b] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT (LASVnegRUN1_p1_T1_other_T1)
+Apr-20 17:39:33.933 [Actor Thread 40] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:39:33.934 [Actor Thread 7] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:39:33.938 [Actor Thread 20] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:39:33.940 [Actor Thread 32] INFO  nextflow.processor.TaskProcessor - [8a/78afb0] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT (LASVnegRUN1_p11_T1_other_T1)
+Apr-20 17:39:33.948 [Actor Thread 36] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:39:33.949 [Actor Thread 22] INFO  nextflow.processor.TaskProcessor - [2d/fb6713] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ (LASVnegRUN1_p6_T1_other_T1)
+Apr-20 17:39:33.950 [Actor Thread 18] INFO  nextflow.processor.TaskProcessor - [d3/e74e42] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ (LASVnegRUN1_p14_T1_other_T1)
+Apr-20 17:39:33.950 [Actor Thread 32] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:39:33.951 [Actor Thread 26] INFO  nextflow.processor.TaskProcessor - [b4/0a729e] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT (LASVnegRUN1_p4_T1_other_T1)
+Apr-20 17:39:33.954 [Actor Thread 6] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:39:33.942 [Actor Thread 19] INFO  nextflow.processor.TaskProcessor - [5b/5f26fc] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT (LASVnegRUN1_H2O_10_T1_other_T1)
+Apr-20 17:39:33.955 [Actor Thread 7] INFO  nextflow.processor.TaskProcessor - [06/9c9d30] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ (LASVnegRUN1_p9_T1_other_T1)
+Apr-20 17:39:33.957 [Actor Thread 12] INFO  nextflow.processor.TaskProcessor - [66/de5c2d] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ (LASVnegRUN1_p3_T1_other_T1)
+Apr-20 17:39:33.959 [Actor Thread 10] INFO  nextflow.processor.TaskProcessor - [e3/82a26c] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ (LASVnegRUN1_p2_T1_other_T1)
+Apr-20 17:39:33.943 [Actor Thread 3] INFO  nextflow.processor.TaskProcessor - [80/9c58d2] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT (LASVnegRUN1_p13_T1_other_T1)
+Apr-20 17:39:33.948 [Actor Thread 35] INFO  nextflow.processor.TaskProcessor - [de/74c44f] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT (LASVnegRUN1_p7_T1_other_T1)
+Apr-20 17:39:33.949 [Actor Thread 31] INFO  nextflow.processor.TaskProcessor - [47/4ed4f6] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ (LASVnegRUN1_p5_T1_other_T1)
+Apr-20 17:39:33.956 [Actor Thread 22] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:39:33.956 [Actor Thread 26] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:39:33.956 [Actor Thread 29] INFO  nextflow.processor.TaskProcessor - [89/66bf15] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ (LASVnegRUN1_p8_T1_other_T1)
+Apr-20 17:39:33.963 [Actor Thread 36] INFO  nextflow.processor.TaskProcessor - [e9/d212e9] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ (LASVnegRUN1_p11_T1_other_T1)
+Apr-20 17:39:33.964 [Actor Thread 3] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:39:33.964 [Actor Thread 11] INFO  nextflow.processor.TaskProcessor - [06/6c55cd] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ (LASVnegRUN1_p10_T1_other_T1)
+Apr-20 17:39:33.965 [Actor Thread 35] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:39:33.968 [Actor Thread 19] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:39:33.973 [Actor Thread 34] INFO  nextflow.processor.TaskProcessor - [4d/53a9ef] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ (LASVnegRUN1_p13_T1_other_T1)
+Apr-20 17:39:33.974 [Actor Thread 40] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=library://daanjansen94/metatropics/metamaps:v0.1; path=/data/Daan/Projects/Metatropics/work/singularity/daanjansen94-metatropics-metamaps-v0.1.img
+Apr-20 17:39:33.974 [Actor Thread 28] INFO  nextflow.processor.TaskProcessor - [c0/6b34b8] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ (LASVnegRUN1_p12_T1_other_T1)
+Apr-20 17:39:33.975 [Actor Thread 20] INFO  nextflow.processor.TaskProcessor - [15/7ea23a] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ (LASVnegRUN1_p1_T1_other_T1)
+Apr-20 17:39:33.975 [Actor Thread 9] INFO  nextflow.processor.TaskProcessor - [c3/d09a4c] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ (LASVnegRUN1_p7_T1_other_T1)
+Apr-20 17:39:33.975 [Actor Thread 15] INFO  nextflow.processor.TaskProcessor - [61/9169e4] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT (LASVnegRUN1_H2O_9_T1_other_T1)
+Apr-20 17:39:33.978 [Actor Thread 15] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_SORT > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:39:33.979 [Actor Thread 10] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:39:33.980 [Actor Thread 12] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:39:33.980 [Actor Thread 25] INFO  nextflow.processor.TaskProcessor - [cd/c60593] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP (LASVnegRUN1_p6_T1_other_T1)
+Apr-20 17:39:33.982 [Actor Thread 7] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:39:33.980 [Actor Thread 35] INFO  nextflow.processor.TaskProcessor - [9f/d8eaff] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ (LASVnegRUN1_H2O_10_T1_other_T1)
+Apr-20 17:39:33.983 [Actor Thread 18] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:39:33.983 [Actor Thread 6] INFO  nextflow.processor.TaskProcessor - [be/1b39f6] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ (LASVnegRUN1_p4_T1_other_T1)
+Apr-20 17:39:33.986 [Actor Thread 9] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:39:33.988 [Actor Thread 20] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:39:33.989 [Actor Thread 28] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:39:33.991 [Actor Thread 35] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:39:33.994 [Actor Thread 34] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:39:33.995 [Actor Thread 36] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:39:33.997 [Actor Thread 11] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:39:33.998 [Actor Thread 12] INFO  nextflow.processor.TaskProcessor - [f1/a9728a] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP (LASVnegRUN1_p9_T1_other_T1)
+Apr-20 17:39:33.999 [Actor Thread 31] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:39:34.000 [Actor Thread 29] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:39:34.001 [Actor Thread 38] INFO  nextflow.processor.TaskProcessor - [cd/7f49ea] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP (LASVnegRUN1_p3_T1_other_T1)
+Apr-20 17:39:34.002 [Actor Thread 4] INFO  nextflow.processor.TaskProcessor - [5b/98380c] Cached process > NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ (LASVnegRUN1_H2O_9_T1_other_T1)
+Apr-20 17:39:34.004 [Actor Thread 4] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:39:34.004 [Actor Thread 19] INFO  nextflow.processor.TaskProcessor - [6c/1f0cf7] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP (LASVnegRUN1_p1_T1_other_T1)
+Apr-20 17:39:34.010 [Actor Thread 26] INFO  nextflow.processor.TaskProcessor - [77/1f7268] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP (LASVnegRUN1_p2_T1_other_T1)
+Apr-20 17:39:34.029 [Actor Thread 3] INFO  nextflow.processor.TaskProcessor - [9e/7862be] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP (LASVnegRUN1_H2O_9_T1_other_T1)
+Apr-20 17:39:34.013 [Actor Thread 39] INFO  nextflow.processor.TaskProcessor - [ba/fc0bca] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP (LASVnegRUN1_p7_T1_other_T1)
+Apr-20 17:39:34.014 [Actor Thread 6] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:HUMAN_MAPPING:SAMTOOLS_hFASTQ > Skipping output binding because one or more optional files are missing: fileoutparam<1:1>
+Apr-20 17:39:34.032 [Actor Thread 31] INFO  nextflow.processor.TaskProcessor - [db/b813f7] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP (LASVnegRUN1_p12_T1_other_T1)
+Apr-20 17:39:34.032 [Actor Thread 20] INFO  nextflow.processor.TaskProcessor - [5e/79984d] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP (LASVnegRUN1_p11_T1_other_T1)
+Apr-20 17:39:34.016 [Actor Thread 35] INFO  nextflow.processor.TaskProcessor - [fb/acd53c] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP (LASVnegRUN1_p14_T1_other_T1)
+Apr-20 17:39:34.018 [Actor Thread 11] INFO  nextflow.processor.TaskProcessor - [8c/bb07b5] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP (LASVnegRUN1_p13_T1_other_T1)
+Apr-20 17:39:34.018 [Actor Thread 5] INFO  nextflow.processor.TaskProcessor - [eb/ce203e] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY (LASVnegRUN1_p6_T1_other_T1)
+Apr-20 17:39:34.024 [Actor Thread 36] INFO  nextflow.processor.TaskProcessor - [2a/c46a85] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP (LASVnegRUN1_p5_T1_other_T1)
+Apr-20 17:39:34.024 [Actor Thread 18] INFO  nextflow.processor.TaskProcessor - [6d/f15661] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP (LASVnegRUN1_p10_T1_other_T1)
+Apr-20 17:39:34.025 [Actor Thread 8] INFO  nextflow.processor.TaskProcessor - [f5/9c56a0] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP (LASVnegRUN1_p8_T1_other_T1)
+Apr-20 17:39:34.026 [Actor Thread 29] INFO  nextflow.processor.TaskProcessor - [cc/aec5c2] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP (LASVnegRUN1_H2O_10_T1_other_T1)
+Apr-20 17:39:34.040 [Actor Thread 28] INFO  nextflow.processor.TaskProcessor - [7f/410e5a] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY (LASVnegRUN1_p9_T1_other_T1)
+Apr-20 17:39:34.041 [Actor Thread 23] INFO  nextflow.processor.TaskProcessor - [98/48449c] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY (LASVnegRUN1_p3_T1_other_T1)
+Apr-20 17:39:34.050 [Actor Thread 12] INFO  nextflow.processor.TaskProcessor - [61/645f41] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_MAP (LASVnegRUN1_p4_T1_other_T1)
+Apr-20 17:39:34.057 [Actor Thread 32] INFO  nextflow.processor.TaskProcessor - [97/15ebb4] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY (LASVnegRUN1_p2_T1_other_T1)
+Apr-20 17:39:34.062 [Actor Thread 22] INFO  nextflow.processor.TaskProcessor - [29/53f8f2] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY (LASVnegRUN1_p1_T1_other_T1)
+Apr-20 17:39:34.065 [Actor Thread 10] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=library://daanjansen94/metatropics/nf:r_plots_v4.2.2; path=/data/Daan/Projects/Metatropics/work/singularity/daanjansen94-metatropics-nf-r_plots_v4.2.2.img
+Apr-20 17:39:34.073 [Actor Thread 23] INFO  nextflow.processor.TaskProcessor - [0a/2eccb8] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY (LASVnegRUN1_p8_T1_other_T1)
+Apr-20 17:39:34.076 [Actor Thread 40] INFO  nextflow.processor.TaskProcessor - [a9/b5387d] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY (LASVnegRUN1_H2O_9_T1_other_T1)
+Apr-20 17:39:34.085 [Actor Thread 39] INFO  nextflow.processor.TaskProcessor - [31/8ae11a] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY (LASVnegRUN1_H2O_10_T1_other_T1)
+Apr-20 17:39:34.087 [Actor Thread 6] INFO  nextflow.processor.TaskProcessor - [d6/f19267] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY (LASVnegRUN1_p10_T1_other_T1)
+Apr-20 17:39:34.091 [Actor Thread 4] INFO  nextflow.processor.TaskProcessor - [f0/b4ccdc] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY (LASVnegRUN1_p11_T1_other_T1)
+Apr-20 17:39:34.095 [Actor Thread 11] INFO  nextflow.processor.TaskProcessor - [4e/12cecf] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY (LASVnegRUN1_p5_T1_other_T1)
+Apr-20 17:39:34.097 [Actor Thread 19] INFO  nextflow.processor.TaskProcessor - [53/1d784e] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY (LASVnegRUN1_p13_T1_other_T1)
+Apr-20 17:39:34.109 [Actor Thread 20] INFO  nextflow.processor.TaskProcessor - [5e/2eefde] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY (LASVnegRUN1_p7_T1_other_T1)
+Apr-20 17:39:34.114 [Actor Thread 25] INFO  nextflow.processor.TaskProcessor - [85/86650f] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY (LASVnegRUN1_p12_T1_other_T1)
+Apr-20 17:39:34.125 [Actor Thread 35] INFO  nextflow.processor.TaskProcessor - [7d/e04cc9] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY (LASVnegRUN1_p14_T1_other_T1)
+Apr-20 17:39:34.131 [Actor Thread 12] INFO  nextflow.processor.TaskProcessor - [e3/ebf1ae] Cached process > NFCORE_METATROPICS:METATROPICS:METAMAPS_CLASSIFY (LASVnegRUN1_p4_T1_other_T1)
+Apr-20 17:39:34.183 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:34.185 [Task submitter] INFO  nextflow.Session - [d0/a3def7] Submitted process > NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p2_T1_other_T1)
+Apr-20 17:39:38.049 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 149; name: NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p2_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/d0/a3def7d7fa8f2d47c519c670cd59e0]
+Apr-20 17:39:38.056 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:38.056 [Task monitor] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'TaskFinalizer' minSize=10; maxSize=48; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Apr-20 17:39:38.058 [Task submitter] INFO  nextflow.Session - [c6/5d03e5] Submitted process > NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p9_T1_other_T1)
+Apr-20 17:39:38.073 [Actor Thread 5] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=library://daanjansen94/metatropics/samtools:minimap2_v1.16_v2.28; path=/data/Daan/Projects/Metatropics/work/singularity/daanjansen94-metatropics-samtools-minimap2_v1.16_v2.28.img
+Apr-20 17:39:39.070 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:39.071 [Task submitter] INFO  nextflow.Session - [82/805097] Submitted process > NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_p2_T1_other_T1)
+Apr-20 17:39:39.822 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 140; name: NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p9_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/c6/5d03e5454f93ac3b22989799b4d901]
+Apr-20 17:39:39.829 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:39.832 [Task submitter] INFO  nextflow.Session - [94/a51583] Submitted process > NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p3_T1_other_T1)
+Apr-20 17:39:40.824 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 162; name: NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_p2_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/82/80509792318f797554af8cd67f7891]
+Apr-20 17:39:40.830 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:40.832 [Task submitter] INFO  nextflow.Session - [89/4e7d34] Submitted process > NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_p9_T1_other_T1)
+Apr-20 17:39:40.844 [Actor Thread 19] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=library://daanjansen94/metatropics/seqtk:v1.3; path=/data/Daan/Projects/Metatropics/work/singularity/daanjansen94-metatropics-seqtk-v1.3.img
+Apr-20 17:39:41.849 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:41.856 [Task submitter] INFO  nextflow.Session - [2a/da2544] Submitted process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p2_T1_other_T1.NC_001498_1)
+Apr-20 17:39:41.861 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:41.864 [Task submitter] INFO  nextflow.Session - [78/0803be] Submitted process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p2_T1_other_T1_classification_results.NC_001498_1.fastq)
+Apr-20 17:39:41.867 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 163; name: NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_p9_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/89/4e7d3404cf986bb51cc806d95dbb79]
+Apr-20 17:39:41.943 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 165; name: NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p2_T1_other_T1.NC_001498_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/2a/da254412fa00abb6a7d50e0573ea58]
+Apr-20 17:39:41.950 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:41.951 [Task submitter] INFO  nextflow.Session - [37/82ea95] Submitted process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p9_T1_other_T1_classification_results.NC_001498_1.fastq)
+Apr-20 17:39:41.970 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:41.971 [Task submitter] INFO  nextflow.Session - [c6/b1ff5c] Submitted process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p9_T1_other_T1_classification_results.NC_007728_1.fastq)
+Apr-20 17:39:41.981 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:41.982 [Task submitter] INFO  nextflow.Session - [b1/41b0c0] Submitted process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p9_T1_other_T1.NC_007728_1)
+Apr-20 17:39:42.093 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 167; name: NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p9_T1_other_T1.NC_007728_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/b1/41b0c0b5a11b652f46d451d670dff9]
+Apr-20 17:39:42.102 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:42.102 [Task submitter] INFO  nextflow.Session - [ea/c4bf92] Submitted process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p9_T1_other_T1.NC_001498_1)
+Apr-20 17:39:42.185 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 166; name: NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p9_T1_other_T1.NC_001498_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/ea/c4bf920e1c6f281a69c03cfb5302de]
+Apr-20 17:39:42.224 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 143; name: NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p3_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/94/a515832d6dd5012c7ccd309f59423a]
+Apr-20 17:39:42.231 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:42.232 [Task submitter] INFO  nextflow.Session - [da/bafdc1] Submitted process > NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_H2O_10_T1_other_T1)
+Apr-20 17:39:42.537 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 168; name: NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p9_T1_other_T1_classification_results.NC_001498_1.fastq); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/37/82ea95df608249aa675b2d83c12184]
+Apr-20 17:39:42.545 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:42.550 [Task submitter] INFO  nextflow.Session - [19/ad9cab] Submitted process > NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_p3_T1_other_T1)
+Apr-20 17:39:42.575 [Actor Thread 29] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=library://daanjansen94/metatropics/medaka:v1.4.3; path=/data/Daan/Projects/Metatropics/work/singularity/daanjansen94-metatropics-medaka-v1.4.3.img
+Apr-20 17:39:42.597 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 169; name: NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p9_T1_other_T1_classification_results.NC_007728_1.fastq); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/c6/b1ff5cdbb41668e68bda8435cda7af]
+Apr-20 17:39:42.850 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 164; name: NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p2_T1_other_T1_classification_results.NC_001498_1.fastq); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/78/0803bedc274254afad4023ed3a6c70]
+Apr-20 17:39:43.322 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 152; name: NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_H2O_10_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/da/bafdc10f38254d32236433a6db9839]
+Apr-20 17:39:43.340 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:43.341 [Task submitter] INFO  nextflow.Session - [2d/847149] Submitted process > NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p6_T1_other_T1)
+Apr-20 17:39:43.346 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:43.347 [Task submitter] INFO  nextflow.Session - [5f/efc0b2] Submitted process > NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_H2O_10_T1_other_T1)
+Apr-20 17:39:43.471 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 170; name: NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_p3_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/19/ad9cab321d2a47e46fa2c56e8cc997]
+Apr-20 17:39:44.366 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 174; name: NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_H2O_10_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/5f/efc0b27dc22d3cc8dfb04d19a5921d]
+Apr-20 17:39:44.371 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:44.373 [Task submitter] INFO  nextflow.Session - [20/a9b2d3] Submitted process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p3_T1_other_T1.novirus)
+Apr-20 17:39:44.377 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:44.378 [Task submitter] INFO  nextflow.Session - [4f/e69bd9] Submitted process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p3_T1_other_T1_classification_results.novirus.fastq)
+Apr-20 17:39:44.384 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:44.384 [Task submitter] INFO  nextflow.Session - [71/7c55e3] Submitted process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_H2O_10_T1_other_T1.NC_001498_1)
+Apr-20 17:39:44.393 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:44.394 [Task submitter] INFO  nextflow.Session - [02/04e995] Submitted process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_H2O_10_T1_other_T1.NC_033772_1)
+Apr-20 17:39:44.460 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 175; name: NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p3_T1_other_T1.novirus); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/20/a9b2d3f57d6b9a3065036e9b967817]
+Apr-20 17:39:44.472 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 177; name: NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_H2O_10_T1_other_T1.NC_001498_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/71/7c55e3810f1d6467a47198eac64d9b]
+Apr-20 17:39:44.479 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 178; name: NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_H2O_10_T1_other_T1.NC_033772_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/02/04e995456672e911d60f0048f01400]
+Apr-20 17:39:44.480 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:44.482 [Task submitter] INFO  nextflow.Session - [95/e0e619] Submitted process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_H2O_10_T1_other_T1_classification_results.NC_033772_1.fastq)
+Apr-20 17:39:44.489 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:44.490 [Task submitter] INFO  nextflow.Session - [22/bd9477] Submitted process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_H2O_10_T1_other_T1_classification_results.NC_001498_1.fastq)
+Apr-20 17:39:44.874 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 176; name: NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p3_T1_other_T1_classification_results.novirus.fastq); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/4f/e69bd98c2e4bc47c33abf9624f7eb2]
+Apr-20 17:39:45.050 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 179; name: NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_H2O_10_T1_other_T1_classification_results.NC_001498_1.fastq); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/22/bd947724840c4daba007b0546d8870]
+Apr-20 17:39:45.101 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 180; name: NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_H2O_10_T1_other_T1_classification_results.NC_033772_1.fastq); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/95/e0e619471e4d60be1a2a4e62fbc286]
+Apr-20 17:39:45.594 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 139; name: NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p6_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/2d/84714964c2c54f394720c9d1cabc7a]
+Apr-20 17:39:45.610 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:45.611 [Task submitter] INFO  nextflow.Session - [d9/e31183] Submitted process > NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p13_T1_other_T1)
+Apr-20 17:39:45.616 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:45.616 [Task submitter] INFO  nextflow.Session - [2c/e76233] Submitted process > NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_p6_T1_other_T1)
+Apr-20 17:39:46.518 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 156; name: NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p13_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/d9/e31183999e928dcef9c01a4d126a6e]
+Apr-20 17:39:46.536 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:46.545 [Task submitter] INFO  nextflow.Session - [6c/3121ec] Submitted process > NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p11_T1_other_T1)
+Apr-20 17:39:46.551 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:46.551 [Task submitter] INFO  nextflow.Session - [35/9d5880] Submitted process > NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_p13_T1_other_T1)
+Apr-20 17:39:46.711 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 184; name: NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_p6_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/2c/e76233f8a68124be85af30a78f4fb0]
+Apr-20 17:39:47.575 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 185; name: NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_p13_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/35/9d5880fd763883dd8eeefa77b43e53]
+Apr-20 17:39:47.582 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:47.583 [Task submitter] INFO  nextflow.Session - [dd/09c6d7] Submitted process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p6_T1_other_T1.NC_029570_1)
+Apr-20 17:39:47.600 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:47.601 [Task submitter] INFO  nextflow.Session - [80/97af99] Submitted process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p6_T1_other_T1_classification_results.NC_029570_1.fastq)
+Apr-20 17:39:47.605 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:47.606 [Task submitter] INFO  nextflow.Session - [66/dd868a] Submitted process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p13_T1_other_T1_classification_results.NC_001498_1.fastq)
+Apr-20 17:39:47.614 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:47.615 [Task submitter] INFO  nextflow.Session - [bf/4feb37] Submitted process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p13_T1_other_T1_classification_results.NC_055364_1.fastq)
+Apr-20 17:39:47.664 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 186; name: NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p6_T1_other_T1.NC_029570_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/dd/09c6d7b1be4ecd54a84ef3ae22dba0]
+Apr-20 17:39:47.675 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:47.675 [Task submitter] INFO  nextflow.Session - [79/25ca2a] Submitted process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p13_T1_other_T1.NC_001498_1)
+Apr-20 17:39:47.771 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 188; name: NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p13_T1_other_T1.NC_001498_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/79/25ca2aae4ee222cdc21448f8d54ba3]
+Apr-20 17:39:47.781 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:47.782 [Task submitter] INFO  nextflow.Session - [61/96d784] Submitted process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p13_T1_other_T1.NC_055364_1)
+Apr-20 17:39:47.871 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 189; name: NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p13_T1_other_T1.NC_055364_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/61/96d7845904aafc77c18a2abd023093]
+Apr-20 17:39:48.140 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 190; name: NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p13_T1_other_T1_classification_results.NC_001498_1.fastq); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/66/dd868a5016e7c5236513233c7a82c4]
+Apr-20 17:39:48.155 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 191; name: NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p13_T1_other_T1_classification_results.NC_055364_1.fastq); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/bf/4feb3788e597fca558685b5fedbbe3]
+Apr-20 17:39:48.197 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 187; name: NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p6_T1_other_T1_classification_results.NC_029570_1.fastq); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/80/97af9991cc9c4de01f77200fe63257]
+Apr-20 17:39:48.425 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 154; name: NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p11_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/6c/3121ec59f4bc956e4cbce40b015d37]
+Apr-20 17:39:48.430 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:48.431 [Task submitter] INFO  nextflow.Session - [a5/93d3ab] Submitted process > NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p1_T1_other_T1)
+Apr-20 17:39:49.441 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:49.441 [Task submitter] INFO  nextflow.Session - [d3/1e65f2] Submitted process > NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_p11_T1_other_T1)
+Apr-20 17:39:50.566 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 195; name: NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_p11_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/d3/1e65f230b097fe4973be0ab224560d]
+Apr-20 17:39:51.574 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:51.575 [Task submitter] INFO  nextflow.Session - [47/537296] Submitted process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p11_T1_other_T1.NC_001498_1)
+Apr-20 17:39:51.579 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:51.579 [Task submitter] INFO  nextflow.Session - [3a/80787a] Submitted process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p11_T1_other_T1.NC_004296_1)
+Apr-20 17:39:51.582 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:51.582 [Task submitter] INFO  nextflow.Session - [b1/196ac7] Submitted process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p11_T1_other_T1.NC_001501_1)
+Apr-20 17:39:51.605 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:51.606 [Task submitter] INFO  nextflow.Session - [96/42d3df] Submitted process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p11_T1_other_T1_classification_results.NC_001498_1.fastq)
+Apr-20 17:39:51.669 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 198; name: NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p11_T1_other_T1.NC_004296_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/3a/80787ac5f445674f971ffb995f9b1f]
+Apr-20 17:39:51.670 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 197; name: NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p11_T1_other_T1.NC_001501_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/b1/196ac7178a4579e7bbc4805c4c34f8]
+Apr-20 17:39:51.677 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:51.677 [Task submitter] INFO  nextflow.Session - [15/3a9c73] Submitted process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p11_T1_other_T1_classification_results.NC_004296_1.fastq)
+Apr-20 17:39:51.681 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:51.683 [Task submitter] INFO  nextflow.Session - [55/a861b9] Submitted process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p11_T1_other_T1_classification_results.NC_001501_1.fastq)
+Apr-20 17:39:51.768 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 196; name: NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p11_T1_other_T1.NC_001498_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/47/537296f9d653e3810dca83900e126d]
+Apr-20 17:39:52.214 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 201; name: NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p11_T1_other_T1_classification_results.NC_004296_1.fastq); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/15/3a9c737e481ba2dd8f45979e92f16c]
+Apr-20 17:39:52.232 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 200; name: NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p11_T1_other_T1_classification_results.NC_001501_1.fastq); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/55/a861b9f2207e26ee0705e1a92ab1ef]
+Apr-20 17:39:52.316 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 150; name: NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p1_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/a5/93d3ab61633d9117fea85a5e9516ff]
+Apr-20 17:39:52.322 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:52.322 [Task submitter] INFO  nextflow.Session - [5f/d65b2b] Submitted process > NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p10_T1_other_T1)
+Apr-20 17:39:52.430 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 199; name: NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p11_T1_other_T1_classification_results.NC_001498_1.fastq); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/96/42d3dfad3e23f2de2f6169fcdeb202]
+Apr-20 17:39:52.436 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:52.436 [Task submitter] INFO  nextflow.Session - [98/db24a6] Submitted process > NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_p1_T1_other_T1)
+Apr-20 17:39:53.481 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 204; name: NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_p1_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/98/db24a6adb3e3d5549ae2c05a7918ef]
+Apr-20 17:39:53.747 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 155; name: NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p10_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/5f/d65b2b26ef8ff3acda97f1fd033dfe]
+Apr-20 17:39:53.754 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:53.754 [Task submitter] INFO  nextflow.Session - [c1/b2de72] Submitted process > NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_H2O_9_T1_other_T1)
+Apr-20 17:39:53.764 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:53.764 [Task submitter] INFO  nextflow.Session - [1c/8a8ec3] Submitted process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p1_T1_other_T1.NC_001498_1)
+Apr-20 17:39:53.776 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:53.776 [Task submitter] INFO  nextflow.Session - [a2/6149a4] Submitted process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p1_T1_other_T1_classification_results.NC_001498_1.fastq)
+Apr-20 17:39:53.788 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:53.788 [Task submitter] INFO  nextflow.Session - [70/8e316c] Submitted process > NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_p10_T1_other_T1)
+Apr-20 17:39:53.842 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 207; name: NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p1_T1_other_T1.NC_001498_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/1c/8a8ec3b6d454e3119e08a96c1f8a17]
+Apr-20 17:39:54.872 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 208; name: NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_p10_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/70/8e316c7ceeee3bf5a81914937def0a]
+Apr-20 17:39:55.879 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:55.880 [Task submitter] INFO  nextflow.Session - [d3/89a37e] Submitted process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p10_T1_other_T1.NC_023764_1)
+Apr-20 17:39:55.888 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:55.889 [Task submitter] INFO  nextflow.Session - [c4/9fbaa0] Submitted process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p10_T1_other_T1_classification_results.NC_001498_1.fastq)
+Apr-20 17:39:55.896 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:55.897 [Task submitter] INFO  nextflow.Session - [f7/0d9a1a] Submitted process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p10_T1_other_T1.NC_001498_1)
+Apr-20 17:39:55.973 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 210; name: NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p10_T1_other_T1.NC_023764_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/d3/89a37e3c17bb14f98c4eac16dfba42]
+Apr-20 17:39:55.979 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:55.980 [Task submitter] INFO  nextflow.Session - [8a/143122] Submitted process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p10_T1_other_T1_classification_results.NC_023764_1.fastq)
+Apr-20 17:39:55.993 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 209; name: NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p10_T1_other_T1.NC_001498_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/f7/0d9a1a631b234ed62bfaf2bfae0c6b]
+Apr-20 17:39:56.006 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 206; name: NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p1_T1_other_T1_classification_results.NC_001498_1.fastq); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/a2/6149a4c8dc31b4fd33c21377dfdf22]
+Apr-20 17:39:56.478 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 212; name: NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p10_T1_other_T1_classification_results.NC_023764_1.fastq); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/8a/143122a051403f60cb09f1298743d3]
+Apr-20 17:39:56.579 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 211; name: NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p10_T1_other_T1_classification_results.NC_001498_1.fastq); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/c4/9fbaa08a06ea206d32eb8cd2edc5b0]
+Apr-20 17:39:57.051 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 153; name: NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_H2O_9_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/c1/b2de72aacef6f6c41d9eee7d6ab588]
+Apr-20 17:39:57.061 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:57.065 [Task submitter] INFO  nextflow.Session - [cf/58f118] Submitted process > NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p8_T1_other_T1)
+Apr-20 17:39:57.075 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:57.075 [Task submitter] INFO  nextflow.Session - [a8/0a2fd8] Submitted process > NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_H2O_9_T1_other_T1)
+Apr-20 17:39:58.088 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 151; name: NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p8_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/cf/58f118db9d6e88a1459c4655b7c6cf]
+Apr-20 17:39:58.099 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:58.100 [Task submitter] INFO  nextflow.Session - [65/8667d6] Submitted process > NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p5_T1_other_T1)
+Apr-20 17:39:58.112 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:58.112 [Task submitter] INFO  nextflow.Session - [fc/cb3650] Submitted process > NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_p8_T1_other_T1)
+Apr-20 17:39:58.182 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 216; name: NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_H2O_9_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/a8/0a2fd8d23eae611abfc2b5edd1972a]
+Apr-20 17:39:59.167 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 217; name: NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_p8_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/fc/cb36503adbff0b247dd8dec0779405]
+Apr-20 17:39:59.174 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:59.175 [Task submitter] INFO  nextflow.Session - [b4/4bf641] Submitted process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_H2O_9_T1_other_T1_classification_results.NC_001501_1.fastq)
+Apr-20 17:39:59.180 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:59.181 [Task submitter] INFO  nextflow.Session - [b9/5f2540] Submitted process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_H2O_9_T1_other_T1.NC_001501_1)
+Apr-20 17:39:59.186 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:59.187 [Task submitter] INFO  nextflow.Session - [5c/2980de] Submitted process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_H2O_9_T1_other_T1.NC_001498_1)
+Apr-20 17:39:59.192 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:59.192 [Task submitter] INFO  nextflow.Session - [b3/2a1c21] Submitted process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_H2O_9_T1_other_T1_classification_results.NC_001498_1.fastq)
+Apr-20 17:39:59.273 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 219; name: NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_H2O_9_T1_other_T1.NC_001501_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/b9/5f254064a39960562603983d311403]
+Apr-20 17:39:59.278 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:59.279 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 218; name: NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_H2O_9_T1_other_T1.NC_001498_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/5c/2980debaa664c17662a894d54ebfab]
+Apr-20 17:39:59.280 [Task submitter] INFO  nextflow.Session - [c0/263e1a] Submitted process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p8_T1_other_T1.NC_010253_1)
+Apr-20 17:39:59.290 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:59.290 [Task submitter] INFO  nextflow.Session - [cf/5f183f] Submitted process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p8_T1_other_T1_classification_results.NC_010253_1.fastq)
+Apr-20 17:39:59.365 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 227; name: NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p8_T1_other_T1.NC_010253_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/c0/263e1a73688e96a0fbbbda56081130]
+Apr-20 17:39:59.380 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:59.381 [Task submitter] INFO  nextflow.Session - [30/f88a08] Submitted process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p8_T1_other_T1_classification_results.NC_001498_1.fastq)
+Apr-20 17:39:59.773 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 224; name: NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p8_T1_other_T1_classification_results.NC_010253_1.fastq); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/cf/5f183f696b3b1fe533a911021483fb]
+Apr-20 17:39:59.791 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:59.792 [Task submitter] INFO  nextflow.Session - [5a/08bf5c] Submitted process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p8_T1_other_T1.NC_001498_1)
+Apr-20 17:39:59.884 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 225; name: NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p8_T1_other_T1.NC_001498_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/5a/08bf5cc3af6474503de523ebab8479]
+Apr-20 17:39:59.898 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:59.898 [Task submitter] INFO  nextflow.Session - [2d/14b414] Submitted process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p8_T1_other_T1.NC_001501_1)
+Apr-20 17:39:59.928 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 221; name: NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_H2O_9_T1_other_T1_classification_results.NC_001501_1.fastq); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/b4/4bf6411af9391b2910f30644f6a0b1]
+Apr-20 17:39:59.933 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:39:59.943 [Task submitter] INFO  nextflow.Session - [7b/171477] Submitted process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p8_T1_other_T1_classification_results.NC_001501_1.fastq)
+Apr-20 17:39:59.948 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 222; name: NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p8_T1_other_T1_classification_results.NC_001498_1.fastq); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/30/f88a0823ea818e07526d35d1d76ea4]
+Apr-20 17:39:59.996 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 226; name: NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p8_T1_other_T1.NC_001501_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/2d/14b414191691fe1e7bf2fed57b90ff]
+Apr-20 17:40:00.357 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 223; name: NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p8_T1_other_T1_classification_results.NC_001501_1.fastq); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/7b/171477b05fa587a433fce090381826]
+Apr-20 17:40:00.827 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 220; name: NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_H2O_9_T1_other_T1_classification_results.NC_001498_1.fastq); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/b3/2a1c214270ab3bf182a3fd1c7a480e]
+Apr-20 17:40:00.922 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 157; name: NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p5_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/65/8667d6d2b07c063d08a447f9b0a915]
+Apr-20 17:40:00.927 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:00.929 [Task submitter] INFO  nextflow.Session - [49/cd2199] Submitted process > NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p7_T1_other_T1)
+Apr-20 17:40:01.936 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:01.937 [Task submitter] INFO  nextflow.Session - [35/4e2bc9] Submitted process > NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_p5_T1_other_T1)
+Apr-20 17:40:02.939 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 233; name: NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_p5_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/35/4e2bc9564c000e8cd60de9c3ef73c9]
+Apr-20 17:40:03.466 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 158; name: NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p7_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/49/cd21995985711744573bd85c29a28f]
+Apr-20 17:40:03.470 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:03.471 [Task submitter] INFO  nextflow.Session - [47/a33fd9] Submitted process > NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p12_T1_other_T1)
+Apr-20 17:40:03.474 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:03.474 [Task submitter] INFO  nextflow.Session - [bd/f46ca3] Submitted process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p5_T1_other_T1.NC_001501_1)
+Apr-20 17:40:03.477 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:03.478 [Task submitter] INFO  nextflow.Session - [9a/a36c63] Submitted process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p5_T1_other_T1_classification_results.NC_001501_1.fastq)
+Apr-20 17:40:03.482 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:03.482 [Task submitter] INFO  nextflow.Session - [e0/4e2ddc] Submitted process > NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_p7_T1_other_T1)
+Apr-20 17:40:03.555 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 234; name: NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p5_T1_other_T1.NC_001501_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/bd/f46ca3fb1d89ee5988ce6583589a54]
+Apr-20 17:40:04.056 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 235; name: NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p5_T1_other_T1_classification_results.NC_001501_1.fastq); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/9a/a36c63e19cdb22e3f74dfdebed5b9c]
+Apr-20 17:40:04.439 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 236; name: NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_p7_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/e0/4e2ddcf5de4775ccaf320d022be4ab]
+Apr-20 17:40:05.445 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:05.446 [Task submitter] INFO  nextflow.Session - [17/a6e156] Submitted process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p7_T1_other_T1_classification_results.novirus.fastq)
+Apr-20 17:40:05.450 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:05.451 [Task submitter] INFO  nextflow.Session - [55/43d8ac] Submitted process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p7_T1_other_T1.novirus)
+Apr-20 17:40:05.503 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 159; name: NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p12_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/47/a33fd95af6aea599474791bd5fd15d]
+Apr-20 17:40:05.509 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:05.509 [Task submitter] INFO  nextflow.Session - [27/ce0505] Submitted process > NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p14_T1_other_T1)
+Apr-20 17:40:05.546 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 238; name: NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p7_T1_other_T1.novirus); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/55/43d8ac96a25adfadb0a735f213b9ec]
+Apr-20 17:40:05.558 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:05.559 [Task submitter] INFO  nextflow.Session - [3c/47f623] Submitted process > NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_p12_T1_other_T1)
+Apr-20 17:40:05.927 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 239; name: NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p7_T1_other_T1_classification_results.novirus.fastq); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/17/a6e156a396d834da2bc51de8a45672]
+Apr-20 17:40:06.403 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 160; name: NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p14_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/27/ce0505e0648deffa29247e3a74336a]
+Apr-20 17:40:06.408 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:06.408 [Task submitter] INFO  nextflow.Session - [5f/bd1257] Submitted process > NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p4_T1_other_T1)
+Apr-20 17:40:06.881 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 240; name: NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_p12_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/3c/47f623e927d78a2311a0f1ee27c3ff]
+Apr-20 17:40:06.885 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:06.885 [Task submitter] INFO  nextflow.Session - [8d/aa66f8] Submitted process > NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_p14_T1_other_T1)
+Apr-20 17:40:07.872 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 242; name: NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_p14_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/8d/aa66f88a48ace3ce1b195f463b62ee]
+Apr-20 17:40:07.877 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:07.878 [Task submitter] INFO  nextflow.Session - [f0/d939e9] Submitted process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p12_T1_other_T1.NC_010356_1)
+Apr-20 17:40:07.888 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:07.889 [Task submitter] INFO  nextflow.Session - [85/076412] Submitted process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p12_T1_other_T1.NC_004296_1)
+Apr-20 17:40:07.908 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:07.908 [Task submitter] INFO  nextflow.Session - [b9/c6e765] Submitted process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p12_T1_other_T1_classification_results.NC_001498_1.fastq)
+Apr-20 17:40:07.912 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:07.913 [Task submitter] INFO  nextflow.Session - [e4/22202a] Submitted process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p12_T1_other_T1.NC_005077_1)
+Apr-20 17:40:07.968 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 247; name: NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p12_T1_other_T1.NC_010356_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/f0/d939e9c98c3ff4ec83810ebf4c8a4a]
+Apr-20 17:40:07.978 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:07.978 [Task submitter] INFO  nextflow.Session - [27/c41540] Submitted process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p12_T1_other_T1.NC_076026_1)
+Apr-20 17:40:07.981 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 245; name: NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p12_T1_other_T1.NC_004296_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/85/0764125522959dfcb57a65740287d4]
+Apr-20 17:40:07.986 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:07.986 [Task submitter] INFO  nextflow.Session - [92/68ab5e] Submitted process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p12_T1_other_T1.NC_001498_1)
+Apr-20 17:40:08.002 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 246; name: NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p12_T1_other_T1.NC_005077_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/e4/22202ada2ae7529dbcfa854ad2107f]
+Apr-20 17:40:08.005 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:08.006 [Task submitter] INFO  nextflow.Session - [9b/d093bd] Submitted process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p12_T1_other_T1.NC_001501_1)
+Apr-20 17:40:08.068 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 248; name: NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p12_T1_other_T1.NC_076026_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/27/c41540733269b3ed7e7c436b991664]
+Apr-20 17:40:08.074 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:08.077 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 243; name: NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p12_T1_other_T1.NC_001498_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/92/68ab5eed7cb4119dd570980ca16426]
+Apr-20 17:40:08.079 [Task submitter] INFO  nextflow.Session - [22/85f0fc] Submitted process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p12_T1_other_T1_classification_results.NC_076026_1.fastq)
+Apr-20 17:40:08.083 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:08.083 [Task submitter] INFO  nextflow.Session - [a5/543477] Submitted process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p12_T1_other_T1_classification_results.NC_004296_1.fastq)
+Apr-20 17:40:08.102 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 244; name: NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p12_T1_other_T1.NC_001501_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/9b/d093bd8ff07ae19179d763579557f5]
+Apr-20 17:40:08.107 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:08.107 [Task submitter] INFO  nextflow.Session - [cb/e1680e] Submitted process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p12_T1_other_T1_classification_results.NC_001501_1.fastq)
+Apr-20 17:40:08.616 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 249; name: NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p12_T1_other_T1_classification_results.NC_001498_1.fastq); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/b9/c6e7652873c13ffbdd26ffab217981]
+Apr-20 17:40:08.627 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:08.628 [Task submitter] INFO  nextflow.Session - [d4/08ba32] Submitted process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p12_T1_other_T1_classification_results.NC_005077_1.fastq)
+Apr-20 17:40:08.693 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 251; name: NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p12_T1_other_T1_classification_results.NC_004296_1.fastq); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/a5/543477fc9a02b3b5ec94226b5aa384]
+Apr-20 17:40:08.700 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:08.700 [Task submitter] INFO  nextflow.Session - [7f/2d8f77] Submitted process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p12_T1_other_T1_classification_results.NC_010356_1.fastq)
+Apr-20 17:40:08.721 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 254; name: NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p12_T1_other_T1_classification_results.NC_076026_1.fastq); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/22/85f0fc7a6849257c7c95f0c67eeff9]
+Apr-20 17:40:08.725 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:08.726 [Task submitter] INFO  nextflow.Session - [73/756aff] Submitted process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p14_T1_other_T1.NC_001498_1)
+Apr-20 17:40:08.740 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 250; name: NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p12_T1_other_T1_classification_results.NC_001501_1.fastq); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/cb/e1680e8dbd3edcd6f7b1552b571132]
+Apr-20 17:40:08.745 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:08.747 [Task submitter] INFO  nextflow.Session - [fd/e5ae40] Submitted process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p14_T1_other_T1_classification_results.NC_001498_1.fastq)
+Apr-20 17:40:08.822 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 255; name: NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p14_T1_other_T1.NC_001498_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/73/756aff059d1aee7a772d5b8227af29]
+Apr-20 17:40:09.185 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 161; name: NFCORE_METATROPICS:METATROPICS:R_METAPLOT (LASVnegRUN1_p4_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/5f/bd12570c1033dc0c0aada24d6ce27a]
+Apr-20 17:40:09.189 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:09.197 [Task submitter] INFO  nextflow.Session - [5c/572609] Submitted process > NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p9_T1_other_T1.NC_001498_1)
+Apr-20 17:40:09.205 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:09.205 [Task submitter] INFO  nextflow.Session - [99/a0558e] Submitted process > NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p9_T1_other_T1.NC_007728_1)
+Apr-20 17:40:09.206 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 256; name: NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p14_T1_other_T1_classification_results.NC_001498_1.fastq); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/fd/e5ae4003899c6f00cc4f124a83594b]
+Apr-20 17:40:09.218 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:09.218 [Task submitter] INFO  nextflow.Session - [cd/e924f7] Submitted process > NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_p4_T1_other_T1)
+Apr-20 17:40:09.253 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 252; name: NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p12_T1_other_T1_classification_results.NC_005077_1.fastq); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/d4/08ba321f6bba13f29f1880208d0be6]
+Apr-20 17:40:09.284 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 253; name: NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p12_T1_other_T1_classification_results.NC_010356_1.fastq); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/7f/2d8f7729861b85b8122000ca8870cc]
+Apr-20 17:40:10.375 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 261; name: NFCORE_METATROPICS:METATROPICS:REF_FASTA (LASVnegRUN1_p4_T1_other_T1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/cd/e924f713096f56eef9a379dec8f9b9]
+Apr-20 17:40:11.380 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:11.380 [Task submitter] INFO  nextflow.Session - [f0/ab2740] Submitted process > NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p4_T1_other_T1.NC_038308_1)
+Apr-20 17:40:11.386 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:11.386 [Task submitter] INFO  nextflow.Session - [97/460a94] Submitted process > NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p4_T1_other_T1_classification_results.NC_038308_1.fastq)
+Apr-20 17:40:11.486 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 265; name: NFCORE_METATROPICS:METATROPICS:REFFIX_FASTA (LASVnegRUN1_p4_T1_other_T1.NC_038308_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/f0/ab2740052f8b3c6bf944d74d701c7d]
+Apr-20 17:40:12.108 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 266; name: NFCORE_METATROPICS:METATROPICS:SEQTK_SUBSEQ (LASVnegRUN1_p4_T1_other_T1_classification_results.NC_038308_1.fastq); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/97/460a9463846b7a2e499aeee2c6ef82]
+Apr-20 17:40:23.545 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 172; name: NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p9_T1_other_T1.NC_007728_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/99/a0558e2dddca6019edcf3960068638]
+Apr-20 17:40:23.552 [TaskFinalizer-4] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:MEDAKA > Skipping output binding because one or more optional files are missing: fileoutparam<3>
+Apr-20 17:40:23.556 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:23.556 [Task submitter] INFO  nextflow.Session - [f4/06956a] Submitted process > NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p2_T1_other_T1.NC_001498_1)
+Apr-20 17:40:23.564 [Actor Thread 23] DEBUG nextflow.container.SingularityCache - Singularity found local store for image=library://daanjansen94/metatropics/ivar:v1.4.1; path=/data/Daan/Projects/Metatropics/work/singularity/daanjansen94-metatropics-ivar-v1.4.1.img
+Apr-20 17:40:24.562 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:24.564 [Task submitter] INFO  nextflow.Session - [b1/723c82] Submitted process > NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_p9_T1_other_T1.NC_007728_1)
+Apr-20 17:40:25.226 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 269; name: NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_p9_T1_other_T1.NC_007728_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/b1/723c82880ab46a7e3614dab96e0f94]
+Apr-20 17:40:39.312 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 171; name: NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p9_T1_other_T1.NC_001498_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/5c/5726091708ed297c7a1448bc951b71]
+Apr-20 17:40:39.325 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:39.326 [Task submitter] INFO  nextflow.Session - [d3/fcf691] Submitted process > NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p3_T1_other_T1.novirus)
+Apr-20 17:40:40.336 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:40.337 [Task submitter] INFO  nextflow.Session - [15/458fd2] Submitted process > NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_p9_T1_other_T1.NC_001498_1)
+Apr-20 17:40:40.639 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 181; name: NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p3_T1_other_T1.novirus); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/d3/fcf69191a30fda6be08d9070ecfa61]
+Apr-20 17:40:40.650 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:40:40.651 [Task submitter] INFO  nextflow.Session - [c6/873f24] Submitted process > NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_H2O_10_T1_other_T1.NC_001498_1)
+Apr-20 17:40:40.651 [TaskFinalizer-5] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:MEDAKA > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:40:40.652 [TaskFinalizer-5] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:MEDAKA > Skipping output binding because one or more optional files are missing: fileoutparam<1:2>
+Apr-20 17:40:40.653 [TaskFinalizer-5] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:MEDAKA > Skipping output binding because one or more optional files are missing: fileoutparam<3>
+Apr-20 17:40:40.890 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 270; name: NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_p9_T1_other_T1.NC_001498_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/15/458fd213f0607189b03c9465d5d653]
+Apr-20 17:41:05.043 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 173; name: NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p2_T1_other_T1.NC_001498_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/f4/06956a1dc8aeb4fd3f5e2349fde7f0]
+Apr-20 17:41:05.068 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:41:05.069 [Task submitter] INFO  nextflow.Session - [80/71570c] Submitted process > NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_H2O_10_T1_other_T1.NC_033772_1)
+Apr-20 17:41:06.081 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:41:06.082 [Task submitter] INFO  nextflow.Session - [fe/7818dc] Submitted process > NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_p2_T1_other_T1.NC_001498_1)
+Apr-20 17:41:06.720 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 272; name: NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_p2_T1_other_T1.NC_001498_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/fe/7818dc44bc6c093ca97b436cbc7ce4]
+Apr-20 17:41:07.829 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 182; name: NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_H2O_10_T1_other_T1.NC_001498_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/c6/873f241bc881ad0bd0efac94830d48]
+Apr-20 17:41:07.836 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:41:07.837 [Task submitter] INFO  nextflow.Session - [1e/5c4aac] Submitted process > NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p13_T1_other_T1.NC_001498_1)
+Apr-20 17:41:08.858 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:41:08.860 [Task submitter] INFO  nextflow.Session - [fb/ff5449] Submitted process > NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_H2O_10_T1_other_T1.NC_001498_1)
+Apr-20 17:41:09.468 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 274; name: NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_H2O_10_T1_other_T1.NC_001498_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/fb/ff544919eb1d983f70b4f8845b4666]
+Apr-20 17:41:19.267 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 183; name: NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_H2O_10_T1_other_T1.NC_033772_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/80/71570c11dcfe770c45029bd645ee91]
+Apr-20 17:41:19.272 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:41:19.280 [TaskFinalizer-2] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:MEDAKA > Skipping output binding because one or more optional files are missing: fileoutparam<3>
+Apr-20 17:41:19.283 [Task submitter] INFO  nextflow.Session - [57/c94944] Submitted process > NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p13_T1_other_T1.NC_055364_1)
+Apr-20 17:41:20.294 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:41:20.295 [Task submitter] INFO  nextflow.Session - [ed/f444c9] Submitted process > NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_H2O_10_T1_other_T1.NC_033772_1)
+Apr-20 17:41:20.947 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 276; name: NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_H2O_10_T1_other_T1.NC_033772_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/ed/f444c9b5290b032d57c63a1217fd8f]
+Apr-20 17:41:34.155 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 192; name: NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p13_T1_other_T1.NC_001498_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/1e/5c4aacd1f2f57331432552f4079e14]
+Apr-20 17:41:34.177 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:41:34.177 [Task submitter] INFO  nextflow.Session - [d6/db5f4f] Submitted process > NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p6_T1_other_T1.NC_029570_1)
+Apr-20 17:41:34.183 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:41:34.184 [Task submitter] INFO  nextflow.Session - [e1/6cc5ef] Submitted process > NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_p13_T1_other_T1.NC_001498_1)
+Apr-20 17:41:34.297 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 193; name: NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p13_T1_other_T1.NC_055364_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/57/c94944fe9e1e782eb51e3896ff7ecc]
+Apr-20 17:41:34.300 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:41:34.301 [Task submitter] INFO  nextflow.Session - [de/7bdb46] Submitted process > NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p11_T1_other_T1.NC_004296_1)
+Apr-20 17:41:34.305 [TaskFinalizer-7] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:MEDAKA > Skipping output binding because one or more optional files are missing: fileoutparam<3>
+Apr-20 17:41:34.782 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 278; name: NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_p13_T1_other_T1.NC_001498_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/e1/6cc5ef72b62eb7aaafc190cc7a9c1c]
+Apr-20 17:41:34.787 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:41:34.788 [Task submitter] INFO  nextflow.Session - [6f/ef6900] Submitted process > NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_p13_T1_other_T1.NC_055364_1)
+Apr-20 17:41:35.364 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 281; name: NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_p13_T1_other_T1.NC_055364_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/6f/ef6900f8dfe3767b488511b8ee073f]
+Apr-20 17:41:47.765 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 194; name: NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p6_T1_other_T1.NC_029570_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/d6/db5f4fa3278252259efab4b8bff6d0]
+Apr-20 17:41:47.773 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:41:47.773 [Task submitter] INFO  nextflow.Session - [9a/71cb10] Submitted process > NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p11_T1_other_T1.NC_001501_1)
+Apr-20 17:41:47.775 [TaskFinalizer-9] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:MEDAKA > Skipping output binding because one or more optional files are missing: fileoutparam<3>
+Apr-20 17:41:48.792 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:41:48.793 [Task submitter] INFO  nextflow.Session - [85/36efd3] Submitted process > NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_p6_T1_other_T1.NC_029570_1)
+Apr-20 17:41:49.107 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 202; name: NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p11_T1_other_T1.NC_004296_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/de/7bdb46269864630fa456d438cc14bb]
+Apr-20 17:41:49.114 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:41:49.115 [Task submitter] INFO  nextflow.Session - [bc/719aae] Submitted process > NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p11_T1_other_T1.NC_001498_1)
+Apr-20 17:41:49.441 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 282; name: NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_p6_T1_other_T1.NC_029570_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/85/36efd319ad5a0f3ad59862a8b0ea9f]
+Apr-20 17:41:49.446 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:41:49.447 [Task submitter] INFO  nextflow.Session - [ef/b0494c] Submitted process > NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_p11_T1_other_T1.NC_004296_1)
+Apr-20 17:41:50.104 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 284; name: NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_p11_T1_other_T1.NC_004296_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/ef/b0494c7269c8b52f91d93cb262eea1]
+Apr-20 17:42:03.541 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 203; name: NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p11_T1_other_T1.NC_001501_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/9a/71cb108eb5c01656073c276aaa6118]
+Apr-20 17:42:03.548 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:42:03.548 [Task submitter] INFO  nextflow.Session - [d5/cd18bc] Submitted process > NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p1_T1_other_T1.NC_001498_1)
+Apr-20 17:42:04.557 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:42:04.558 [Task submitter] INFO  nextflow.Session - [b7/af7327] Submitted process > NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_p11_T1_other_T1.NC_001501_1)
+Apr-20 17:42:05.212 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 287; name: NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_p11_T1_other_T1.NC_001501_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/b7/af7327774b43f3959e3398a65e9d15]
+Apr-20 17:42:23.014 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 213; name: NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p1_T1_other_T1.NC_001498_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/d5/cd18bcd01a0c98d05f46c94d751b9e]
+Apr-20 17:42:23.023 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:42:23.024 [Task submitter] INFO  nextflow.Session - [e3/9d4e45] Submitted process > NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p10_T1_other_T1.NC_023764_1)
+Apr-20 17:42:24.030 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:42:24.032 [Task submitter] INFO  nextflow.Session - [0d/16d235] Submitted process > NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_p1_T1_other_T1.NC_001498_1)
+Apr-20 17:42:24.948 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 288; name: NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_p1_T1_other_T1.NC_001498_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/0d/16d235e64c8107e6512d7666135607]
+Apr-20 17:42:29.084 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 205; name: NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p11_T1_other_T1.NC_001498_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/bc/719aaef8562b0f1e26aa907f9c8cf3]
+Apr-20 17:42:29.089 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:42:29.095 [Task submitter] INFO  nextflow.Session - [08/9b6bd7] Submitted process > NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p10_T1_other_T1.NC_001498_1)
+Apr-20 17:42:29.127 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:42:29.127 [Task submitter] INFO  nextflow.Session - [27/1788ab] Submitted process > NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_p11_T1_other_T1.NC_001498_1)
+Apr-20 17:42:29.731 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 290; name: NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_p11_T1_other_T1.NC_001498_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/27/1788abc7ecc572d97e80287261e545]
+Apr-20 17:42:36.121 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 214; name: NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p10_T1_other_T1.NC_023764_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/e3/9d4e4596298c422dc1f46931eed50f]
+Apr-20 17:42:36.127 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:42:36.133 [TaskFinalizer-9] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:MEDAKA > Skipping output binding because one or more optional files are missing: fileoutparam<3>
+Apr-20 17:42:36.134 [Task submitter] INFO  nextflow.Session - [89/c010be] Submitted process > NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p8_T1_other_T1.NC_010253_1)
+Apr-20 17:42:37.141 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:42:37.142 [Task submitter] INFO  nextflow.Session - [3c/bedf18] Submitted process > NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_p10_T1_other_T1.NC_023764_1)
+Apr-20 17:42:37.705 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 293; name: NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_p10_T1_other_T1.NC_023764_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/3c/bedf180311266a0dd49612e954bd85]
+Apr-20 17:42:48.974 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 228; name: NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p8_T1_other_T1.NC_010253_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/89/c010be3cf952b692e18b791a7e3ef4]
+Apr-20 17:42:48.980 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:42:48.985 [Task submitter] INFO  nextflow.Session - [88/6da49b] Submitted process > NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_H2O_9_T1_other_T1.NC_001501_1)
+Apr-20 17:42:48.987 [TaskFinalizer-10] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:MEDAKA > Skipping output binding because one or more optional files are missing: fileoutparam<3>
+Apr-20 17:42:50.003 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:42:50.004 [Task submitter] INFO  nextflow.Session - [46/e3b846] Submitted process > NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_p8_T1_other_T1.NC_010253_1)
+Apr-20 17:42:50.563 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 294; name: NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_p8_T1_other_T1.NC_010253_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/46/e3b846db1b045e14afd92bc0607be7]
+Apr-20 17:43:03.060 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 215; name: NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p10_T1_other_T1.NC_001498_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/08/9b6bd770c8be1d781d58a446ad8413]
+Apr-20 17:43:03.066 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:43:03.068 [Task submitter] INFO  nextflow.Session - [26/ae35ea] Submitted process > NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p8_T1_other_T1.NC_001498_1)
+Apr-20 17:43:04.074 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:43:04.075 [Task submitter] INFO  nextflow.Session - [cb/218c7f] Submitted process > NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_p10_T1_other_T1.NC_001498_1)
+Apr-20 17:43:04.707 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 296; name: NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_p10_T1_other_T1.NC_001498_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/cb/218c7f9e3f97348baf96d7470c9b4c]
+Apr-20 17:43:07.969 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 229; name: NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_H2O_9_T1_other_T1.NC_001501_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/88/6da49b165ca0eb52702c475daea05b]
+Apr-20 17:43:07.974 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:43:07.974 [Task submitter] INFO  nextflow.Session - [0b/daa485] Submitted process > NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p8_T1_other_T1.NC_001501_1)
+Apr-20 17:43:08.986 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:43:08.988 [Task submitter] INFO  nextflow.Session - [19/30f8c1] Submitted process > NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_H2O_9_T1_other_T1.NC_001501_1)
+Apr-20 17:43:09.579 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 298; name: NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_H2O_9_T1_other_T1.NC_001501_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/19/30f8c1faf9d3631677d239c98fee81]
+Apr-20 17:43:22.064 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 231; name: NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p8_T1_other_T1.NC_001501_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/0b/daa485ed86d8ef1b6e2f046b25131c]
+Apr-20 17:43:22.138 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:43:22.138 [Task submitter] INFO  nextflow.Session - [6e/718138] Submitted process > NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_H2O_9_T1_other_T1.NC_001498_1)
+Apr-20 17:43:22.144 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:43:22.146 [Task submitter] INFO  nextflow.Session - [fd/297284] Submitted process > NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_p8_T1_other_T1.NC_001501_1)
+Apr-20 17:43:22.690 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 301; name: NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_p8_T1_other_T1.NC_001501_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/fd/297284f2f4d2566d704e4a26a256e8]
+Apr-20 17:43:36.856 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 230; name: NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p8_T1_other_T1.NC_001498_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/26/ae35ea75b21f5958649c148b50b7db]
+Apr-20 17:43:36.861 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:43:36.861 [Task submitter] INFO  nextflow.Session - [6c/99bf1b] Submitted process > NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p5_T1_other_T1.NC_001501_1)
+Apr-20 17:43:37.871 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:43:37.872 [Task submitter] INFO  nextflow.Session - [92/132e88] Submitted process > NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_p8_T1_other_T1.NC_001498_1)
+Apr-20 17:43:38.485 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 302; name: NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_p8_T1_other_T1.NC_001498_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/92/132e88f8057a9fe6c44e39494fff99]
+Apr-20 17:43:55.402 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 237; name: NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p5_T1_other_T1.NC_001501_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/6c/99bf1b6cce284f0a1b77d1071a8a1b]
+Apr-20 17:43:55.409 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:43:55.409 [Task submitter] INFO  nextflow.Session - [83/083e0c] Submitted process > NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p7_T1_other_T1.novirus)
+Apr-20 17:43:56.416 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:43:56.417 [Task submitter] INFO  nextflow.Session - [92/b622f2] Submitted process > NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_p5_T1_other_T1.NC_001501_1)
+Apr-20 17:43:56.853 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 241; name: NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p7_T1_other_T1.novirus); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/83/083e0c275e0f2011c17ea1dec32be6]
+Apr-20 17:43:56.859 [TaskFinalizer-1] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:MEDAKA > Skipping output binding because one or more optional files are missing: fileoutparam<0:1>
+Apr-20 17:43:56.860 [TaskFinalizer-1] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:MEDAKA > Skipping output binding because one or more optional files are missing: fileoutparam<1:2>
+Apr-20 17:43:56.860 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:43:56.860 [TaskFinalizer-1] DEBUG nextflow.processor.TaskProcessor - Process NFCORE_METATROPICS:METATROPICS:MEDAKA > Skipping output binding because one or more optional files are missing: fileoutparam<3>
+Apr-20 17:43:56.861 [Task submitter] INFO  nextflow.Session - [e6/b32a89] Submitted process > NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p12_T1_other_T1.NC_001498_1)
+Apr-20 17:43:56.999 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 304; name: NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_p5_T1_other_T1.NC_001501_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/92/b622f20d5b6e197bde188ce9dc23fc]
+Apr-20 17:44:08.272 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 232; name: NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_H2O_9_T1_other_T1.NC_001498_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/6e/7181383fdfd6ef11f7d3dc61769fda]
+Apr-20 17:44:08.279 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:44:08.282 [Task submitter] INFO  nextflow.Session - [d1/b1b17a] Submitted process > NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p12_T1_other_T1.NC_004296_1)
+Apr-20 17:44:09.289 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Apr-20 17:44:09.290 [Task submitter] INFO  nextflow.Session - [d5/473da1] Submitted process > NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_H2O_9_T1_other_T1.NC_001498_1)
+Apr-20 17:44:10.162 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 306; name: NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE (LASVnegRUN1_H2O_9_T1_other_T1.NC_001498_1); status: COMPLETED; exit: 0; error: -; workDir: /data/Daan/Projects/Metatropics/work/d5/473da1d81360311576228dafeba83e]
+Apr-20 17:44:10.179 [SIGINT handler] DEBUG nextflow.Session - Session aborted -- Cause: SIGINT
+Apr-20 17:44:10.198 [Task monitor] DEBUG n.processor.TaskPollingMonitor - <<< barrier arrives (monitor: local) - terminating tasks monitor poll loop
+Apr-20 17:44:10.224 [SIGINT handler] DEBUG nextflow.Session - The following nodes are still active:
+[process] NFCORE_METATROPICS:METATROPICS:ReadCount
+  status=ACTIVE
+  port 0: (value) bound ; channel: outdir
+  port 1: (value) OPEN  ; channel: medaka_files
+  port 2: (value) bound ; channel: host_genome_status
+  port 3: (cntrl) -     ; channel: $
+
+[process] NFCORE_METATROPICS:METATROPICS:RCOVERAGE
+  status=ACTIVE
+  port 0: (value) OPEN  ; channel: coveragefiles
+  port 1: (cntrl) -     ; channel: $
+
+[process] NFCORE_METATROPICS:METATROPICS:SAMTOOLS_COVERAGE
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] NFCORE_METATROPICS:METATROPICS:IVAR_CONSENSUS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (value) bound ; channel: save_mpileup
+  port 2: (cntrl) -     ; channel: $
+
+[process] NFCORE_METATROPICS:METATROPICS:HOMOPOLISH_POLISHING
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] NFCORE_METATROPICS:METATROPICS:ADDING_DEPTH
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] NFCORE_METATROPICS:METATROPICS:FINAL_REPORT
+  status=ACTIVE
+  port 0: (value) OPEN  ; channel: report
+  port 1: (cntrl) -     ; channel: $
+
+[process] NFCORE_METATROPICS:METATROPICS:CUSTOM_DUMPSOFTWAREVERSIONS
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: versions
+  port 1: (value) OPEN  ; channel: rcoverage_done
+  port 2: (cntrl) -     ; channel: $
+
+Apr-20 17:44:10.235 [SIGINT handler] INFO  nextflow.Nextflow - -[0;35m[nf-core/metatropics][0;31m Pipeline completed with errors[0m-
+Apr-20 17:44:10.245 [SIGINT handler] WARN  n.processor.TaskPollingMonitor - Killing running tasks (2)
+Apr-20 17:44:10.261 [SIGINT handler] DEBUG n.executor.local.LocalTaskHandler - Unable to kill NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p12_T1_other_T1.NC_001498_1) -- command: kill -TERM 4171662; exit: 1 
+ bash: line 1: kill: (4171662) - No such process
+
+Apr-20 17:44:10.267 [SIGINT handler] DEBUG n.executor.local.LocalTaskHandler - Unable to kill NFCORE_METATROPICS:METATROPICS:MEDAKA (LASVnegRUN1_p12_T1_other_T1.NC_004296_1) -- command: kill -TERM 4173336; exit: 1 
+ bash: line 1: kill: (4173336) - No such process
+
+Apr-20 17:44:10.277 [SIGINT handler] DEBUG n.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=134; failedCount=0; ignoredCount=0; cachedCount=145; pendingCount=26; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=2; succeedDuration=51m 20s; failedDuration=0ms; cachedDuration=2h 36m 13s;loadCpus=0; loadMemory=0; peakRunning=6; peakCpus=17; peakMemory=84 GB; ]
+Apr-20 17:44:10.406 [SIGINT handler] DEBUG nextflow.trace.ReportObserver - Workflow completed -- rendering execution report
+Apr-20 17:44:11.210 [SIGINT handler] DEBUG nextflow.trace.TimelineObserver - Workflow completed -- rendering execution timeline
+Apr-20 17:44:11.294 [SIGINT handler] DEBUG nextflow.trace.TraceFileObserver - Workflow completed -- saving trace file
+Apr-20 17:44:11.306 [main] DEBUG nextflow.Session - Session await > all processes finished
+Apr-20 17:44:11.306 [main] DEBUG nextflow.Session - Session await > all barriers passed
+Apr-20 17:44:11.311 [Actor Thread 6] DEBUG nextflow.processor.TaskProcessor - Handling unexpected condition for
+  task: name=NFCORE_METATROPICS:METATROPICS:ReadCount; work-dir=null
+  error [java.lang.IllegalStateException]: Cannot obtain the semaphore to fork operator's body.
+Apr-20 17:44:11.310 [main] DEBUG n.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=134; failedCount=0; ignoredCount=0; cachedCount=145; pendingCount=26; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=2; succeedDuration=51m 20s; failedDuration=0ms; cachedDuration=2h 36m 13s;loadCpus=0; loadMemory=0; peakRunning=6; peakCpus=17; peakMemory=84 GB; ]
+Apr-20 17:44:11.350 [main] DEBUG nextflow.trace.ReportObserver - Workflow completed -- rendering execution report
+Apr-20 17:44:11.365 [Actor Thread 42] DEBUG nextflow.sort.BigSort - Sort completed -- entries: 56; slices: 1; internal sort time: 0.042 s; external sort time: 0.008 s; total time: 0.05 s
+Apr-20 17:44:11.366 [Actor Thread 42] DEBUG nextflow.file.FileCollector - >> temp file exists? false
+Apr-20 17:44:11.367 [Actor Thread 42] DEBUG nextflow.file.FileCollector - Missed collect-file cache -- cause: java.nio.file.NoSuchFileException: /data/Daan/Projects/Metatropics/work/collect-file/be2d889d1f5559a310c1a3b039b1c826
+Apr-20 17:44:11.381 [Actor Thread 42] DEBUG nextflow.file.FileCollector - Saved collect-files list to: /data/Daan/Projects/Metatropics/work/collect-file/be2d889d1f5559a310c1a3b039b1c826
+Apr-20 17:44:11.392 [Actor Thread 42] DEBUG nextflow.file.FileCollector - Deleting file collector temp dir: /tmp/nxf-12731386611321001427
+Apr-20 17:44:11.788 [main] WARN  nextflow.trace.ReportObserver - Failed to render execution report -- see the log file for details
+nextflow.exception.AbortOperationException: Report file already exists: /data/Daan/Projects/T_DCT/Output_l/Summary/pipeline_info/execution_report_2026-04-20_17-39-24.html -- enable the 'report.overwrite' option in your config file to overwrite existing files
+	at nextflow.trace.TraceHelper.newFileWriter(TraceHelper.groovy:67)
+	at nextflow.trace.ReportObserver.renderHtml(ReportObserver.groovy:243)
+	at nextflow.trace.ReportObserver.onFlowComplete(ReportObserver.groovy:129)
+	at nextflow.Session$_notifyFlowComplete_lambda39.doCall(Session.groovy:1121)
+	at nextflow.Session.notifyEvent(Session.groovy:1151)
+	at nextflow.Session.notifyFlowComplete(Session.groovy:1121)
+	at nextflow.Session.shutdown0(Session.groovy:779)
+	at nextflow.Session.destroy(Session.groovy:724)
+	at nextflow.script.ScriptRunner.shutdown(ScriptRunner.groovy:263)
+	at nextflow.script.ScriptRunner.execute(ScriptRunner.groovy:147)
+	at nextflow.cli.CmdRun.run(CmdRun.groovy:428)
+	at nextflow.cli.Launcher.run(Launcher.groovy:515)
+	at nextflow.cli.Launcher.main(Launcher.groovy:675)
+Caused by: java.nio.file.FileAlreadyExistsException: /data/Daan/Projects/T_DCT/Output_l/Summary/pipeline_info/execution_report_2026-04-20_17-39-24.html
+	at java.base/sun.nio.fs.UnixException.translateToIOException(UnixException.java:94)
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:106)
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:111)
+	at java.base/sun.nio.fs.UnixFileSystemProvider.newByteChannel(UnixFileSystemProvider.java:218)
+	at java.base/java.nio.file.spi.FileSystemProvider.newOutputStream(FileSystemProvider.java:484)
+	at java.base/java.nio.file.Files.newOutputStream(Files.java:228)
+	at java.base/java.nio.file.Files.newBufferedWriter(Files.java:3008)
+	at nextflow.trace.TraceHelper.newFileWriter(TraceHelper.groovy:64)
+	... 12 common frames omitted
+Apr-20 17:44:11.790 [main] DEBUG nextflow.trace.TimelineObserver - Workflow completed -- rendering execution timeline
+Apr-20 17:44:11.831 [main] WARN  nextflow.trace.TimelineObserver - Failed to render execution timeline -- see the log file for details
+nextflow.exception.AbortOperationException: Timeline file already exists: /data/Daan/Projects/T_DCT/Output_l/Summary/pipeline_info/execution_timeline_2026-04-20_17-39-24.html -- enable the 'timeline.overwrite' option in your config file to overwrite existing files
+	at nextflow.trace.TraceHelper.newFileWriter(TraceHelper.groovy:67)
+	at nextflow.trace.TimelineObserver.renderHtml(TimelineObserver.groovy:164)
+	at nextflow.trace.TimelineObserver.onFlowComplete(TimelineObserver.groovy:91)
+	at nextflow.Session$_notifyFlowComplete_lambda39.doCall(Session.groovy:1121)
+	at nextflow.Session.notifyEvent(Session.groovy:1151)
+	at nextflow.Session.notifyFlowComplete(Session.groovy:1121)
+	at nextflow.Session.shutdown0(Session.groovy:779)
+	at nextflow.Session.destroy(Session.groovy:724)
+	at nextflow.script.ScriptRunner.shutdown(ScriptRunner.groovy:263)
+	at nextflow.script.ScriptRunner.execute(ScriptRunner.groovy:147)
+	at nextflow.cli.CmdRun.run(CmdRun.groovy:428)
+	at nextflow.cli.Launcher.run(Launcher.groovy:515)
+	at nextflow.cli.Launcher.main(Launcher.groovy:675)
+Caused by: java.nio.file.FileAlreadyExistsException: /data/Daan/Projects/T_DCT/Output_l/Summary/pipeline_info/execution_timeline_2026-04-20_17-39-24.html
+	at java.base/sun.nio.fs.UnixException.translateToIOException(UnixException.java:94)
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:106)
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:111)
+	at java.base/sun.nio.fs.UnixFileSystemProvider.newByteChannel(UnixFileSystemProvider.java:218)
+	at java.base/java.nio.file.spi.FileSystemProvider.newOutputStream(FileSystemProvider.java:484)
+	at java.base/java.nio.file.Files.newOutputStream(Files.java:228)
+	at java.base/java.nio.file.Files.newBufferedWriter(Files.java:3008)
+	at nextflow.trace.TraceHelper.newFileWriter(TraceHelper.groovy:64)
+	... 12 common frames omitted
+Apr-20 17:44:11.832 [main] DEBUG nextflow.trace.TraceFileObserver - Workflow completed -- saving trace file
+Apr-20 17:44:11.844 [main] DEBUG nextflow.cache.CacheDB - Closing CacheDB done
+Apr-20 17:44:11.864 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye

@@ -73,7 +73,7 @@ At the **repository root**, choose the params file to match how you start: **[`p
 | `Human_host_fasta` | Set human host FASTA path (from step 4). |
 | `input_dir` | POD5 only: directory containing POD5 files (with **`params_POD5.yaml`**) |
 
-To autogenerate a [`fastq.csv`](nf-metatropics/assets/submission/fastq.csv) from a reads folder, run **`pip install .`** once at the repo root, then **`metatropics-samplesheet -i .`** from your FASTQ directory.
+To autogenerate a [`fastq.csv`](nf-metatropics/assets/submission/fastq.csv) from a reads folder, run **`sudo pip install .`** once at the repo root, then **`metatropics-samplesheet -i .`** from your FASTQ directory.
 
 Additional options: **[`nf-metatropics/assets/submission/all_options.md`](nf-metatropics/assets/submission/all_options.md)**.
 

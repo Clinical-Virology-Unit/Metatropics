@@ -1,7 +1,9 @@
 """
 Build a Metatropics FASTQ samplesheet (columns: sample, barcode).
 
-Console entry point: ``metatropics-samplesheet`` (after ``pip install -e .``).
+Run via the installed console script ``metatropics-samplesheet`` (or ``metatropics_samplesheet``),
+or via ``python3 -m metatropics_samplesheet`` (e.g. when running directly from this repo with
+``PYTHONPATH=nf-metatropics/assets/submission``).
 """
 
 from __future__ import annotations

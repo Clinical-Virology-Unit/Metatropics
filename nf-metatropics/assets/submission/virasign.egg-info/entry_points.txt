@@ -1,0 +1,5 @@
+[console_scripts]
+metatropics-samplesheet = metatropics_samplesheet.samplesheet:main
+metatropics_samplesheet = metatropics_samplesheet.samplesheet:main
+virasign = virasign.virasign:main
+

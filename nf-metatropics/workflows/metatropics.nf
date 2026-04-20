@@ -49,6 +49,9 @@ include { DORADO_DEMULTIPLEXING } from '../modules/local/dorado/demultiplexing'
 include { RAREFACTION		          } from '../modules/local/rarefaction/rarefaction'
 include { FASTPLONG                   } from '../modules/local/fastplong/main'
 include { NANOPLOT                    } from '../modules/nf-core/nanoplot/main'
+include { VIRASIGN_CLASSIFICATION      } from '../modules/local/virasign/classification'
+include { VIRASIGN_DB                  } from '../modules/local/virasign/prepare_db'
+include { VIRASIGN_SUMMARY             } from '../modules/local/virasign/build_html'
 include { METAMAPS_MAP                } from '../modules/local/metamaps/map'
 include { METAMAPS_CLASSIFY           } from '../modules/local/metamaps/classify'
 include { R_METAPLOT                  } from '../modules/local/r/metaplot'
@@ -142,7 +145,7 @@ workflow METATROPICS {
      )
 
     def readsAfterHuman = FASTPLONG.out.reads
-    def readsForMetamaps
+    def readsForViralClassification
 
     if (params.Human_host_fasta) {
         HUMAN_MAPPING(
@@ -155,13 +158,39 @@ workflow METATROPICS {
         HOST_MAPPING(
             readsAfterHuman
         )
-        readsForMetamaps = HOST_MAPPING.out.hostout
+        readsForViralClassification = HOST_MAPPING.out.hostout
     } else {
-        readsForMetamaps = readsAfterHuman
+        readsForViralClassification = readsAfterHuman
+    }
+
+    // ── Virasign (phase 1): prepare DB once, then run per-sample with --no-html ──
+    if (params.run_virasign) {
+        // Shared on-host results tree, isolated per virasign_database to avoid mixing results
+        // across parameter changes when running with `-resume`.
+        def rawDbArg = params.virasign_database?.toString()?.trim()
+        def effectiveDbArg = rawDbArg ?: 'RVDB'
+        def virasignDbLabel = effectiveDbArg.replaceAll(/[^A-Za-z0-9._-]+/, '_')
+        def virasignResultsRoot = file("${params.outdir}/Classification/virasign/${virasignDbLabel}")
+        virasignResultsRoot.mkdirs()
+
+        // Prepare DB once (prevents parallel workers from double-downloading).
+        VIRASIGN_DB()
+
+        // Per-sample Virasign (-o publish in work/), then merge into outdir; HTML pass reads that same tree.
+        virasign_db_ready = VIRASIGN_DB.out.ready
+        VIRASIGN_CLASSIFICATION(virasign_db_ready, readsForViralClassification)
+
+        // Barrier = count(per-sample JSON (final if present, otherwise unfiltered)).
+        // VIRASIGN_SUMMARY reads `${params.outdir}/Classification/virasign` inside the container.
+        VIRASIGN_SUMMARY(
+            VIRASIGN_CLASSIFICATION.out.final_json
+                .mix(VIRASIGN_CLASSIFICATION.out.unfiltered_json)
+                .count()
+        )
     }
 
     METAMAPS_MAP(
-        readsForMetamaps
+        readsForViralClassification
     )
 
     meta_with_othermeta = METAMAPS_MAP.out.metaclass.join(METAMAPS_MAP.out.otherclassmeta)
@@ -204,7 +233,7 @@ workflow METATROPICS {
     }
     )
 
-    reffasta_ch=(R_METAPLOT.out.reporttsv.join(METAMAPS_CLASSIFY.out.classem)).join(readsForMetamaps)
+    reffasta_ch=(R_METAPLOT.out.reporttsv.join(METAMAPS_CLASSIFY.out.classem)).join(readsForViralClassification)
 
     REF_FASTA(
         reffasta_ch
@@ -363,6 +392,9 @@ workflow METATROPICS {
 
     ch_versions = ch_versions.mix(FASTPLONG.out.versions.first())
     ch_versions = ch_versions.mix(NANOPLOT.out.versions.first())
+    if (params.run_virasign) {
+        ch_versions = ch_versions.mix(VIRASIGN_DB.out.versions)
+    }
     ch_versions = ch_versions.mix(METAMAPS_MAP.out.versions.first())
     ch_versions = ch_versions.mix(METAMAPS_CLASSIFY.out.versions.first())
     ch_versions = ch_versions.mix(R_METAPLOT.out.versions.first())
