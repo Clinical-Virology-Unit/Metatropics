@@ -18,29 +18,6 @@ nextflow.enable.dsl = 2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    AUTO-MODE (POD5 vs FASTQ)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-// If input_dir is provided, assume POD5 mode unless user explicitly set basecall.
-if (params.input_dir && params.basecall == null) {
-    params.basecall = true
-}
-// If input_dir is not provided, assume FASTQ mode unless user explicitly set basecall.
-if (!params.input_dir && params.basecall == null) {
-    params.basecall = false
-}
-// Default GPU usage in POD5 mode unless explicitly set.
-if (params.basecall == true && params.usegpu == null) {
-    params.usegpu = true
-}
-// Default GPU usage off in FASTQ mode unless explicitly set.
-if (params.basecall == false && params.usegpu == null) {
-    params.usegpu = false
-}
-
 def providedHumanHostFasta = params.Human_host_fasta
 def providedOtherHostFasta = params.Other_host_fasta
 def legacyHumanParamSupplied = params.fasta ? true : false
