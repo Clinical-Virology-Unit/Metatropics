@@ -10,8 +10,6 @@ outdir: /data/Daan/Projects/dorado_test/Output
 #Other_host_fasta: /path/to/optional_host.fasta
 
 dbmeta: /data/Daan/Projects/Metatropics/Databases1/ViralRefseq
-basecall: true
-usegpu: true
 kit_name: TWIST-96A-UDI
 model: hac
 minLength: 200

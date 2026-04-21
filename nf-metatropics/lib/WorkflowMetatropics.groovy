@@ -10,7 +10,7 @@ class WorkflowMetatropics {
     public static void initialise(params, log) {
         genomeExistsError(params, log)
 
-        if (!params.Human_host_fasta && !params.Other_host_fasta) {
+        if (!params.Human_host_fasta && !params.Other_host_fasta && !params.Host) {
             log.warn "No host background references were provided. Reads will be sent directly to downstream classification."
         }
     }

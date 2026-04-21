@@ -248,7 +248,9 @@
                 },
                 "basecall": {
                     "type": "boolean",
-                    "description": "In case fast5 is the input, that option shoud be true. Default is false."
+                    "description": "Basecalling mode (auto-detected).",
+                    "help_text": "Optional override. When --input_dir is provided, the pipeline automatically enables basecalling; otherwise it disables basecalling. You normally do not need to set this manually.",
+                    "hidden": true
                 },
                 "model": {
                     "type": "string",
@@ -267,7 +269,9 @@
                 },
                 "usegpu": {
                     "type": "boolean",
-                    "description": "In case fast5 is the input, the use of GPU Nvidia should be true."
+                    "description": "Use NVIDIA GPU for basecalling (auto-detected).",
+                    "help_text": "Optional override. When basecalling is enabled (POD5 mode), the pipeline defaults to GPU. Set --usegpu false to force CPU basecalling.",
+                    "hidden": true
                 },
                 "dbmeta": {
                     "type": "string",

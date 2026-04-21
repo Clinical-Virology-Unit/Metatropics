@@ -9,11 +9,12 @@ include { SAMTOOLS_hFASTQ            } from '../../../modules/nf-core/samtools/f
 workflow HUMAN_MAPPING {
     take:
     readsONT
+    host_fasta
 
     main:
     MINIMAP2_ALIGN(
         readsONT,
-        params.Human_host_fasta,
+        host_fasta,
         true,
         false,
         false

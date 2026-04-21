@@ -7,8 +7,13 @@
 // Validate input parameters
 WorkflowMetatropics.initialise(params, log)
 
+// Resolve Host keywords into concrete FASTA paths (do not mutate params)
+def resolvedHosts = HostReferences.resolve(params, log, workflow.projectDir.parent)
+def resolvedHumanHostFasta = params.Human_host_fasta ?: resolvedHosts.human ?: params.fasta
+def resolvedOtherHostFasta = params.Other_host_fasta ?: resolvedHosts.other ?: params.host_fasta
+
 // Check input path parameters to see if they exist
-def checkPathParamList = [ params.input, params.Human_host_fasta, params.Other_host_fasta ]
+def checkPathParamList = [ params.input, resolvedHumanHostFasta, resolvedOtherHostFasta ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
@@ -147,16 +152,18 @@ workflow METATROPICS {
     def readsAfterHuman = FASTPLONG.out.reads
     def readsForViralClassification
 
-    if (params.Human_host_fasta) {
+    if (resolvedHumanHostFasta) {
         HUMAN_MAPPING(
-            FASTPLONG.out.reads
+            FASTPLONG.out.reads,
+            resolvedHumanHostFasta
         )
         readsAfterHuman = HUMAN_MAPPING.out.humanout
     }
 
-    if (params.Other_host_fasta) {
+    if (resolvedOtherHostFasta) {
         HOST_MAPPING(
-            readsAfterHuman
+            readsAfterHuman,
+            resolvedOtherHostFasta
         )
         readsForViralClassification = HOST_MAPPING.out.hostout
     } else {
@@ -317,11 +324,11 @@ workflow METATROPICS {
 
     // Define the host_genome_status
     def host_genome_status = 'not_used'
-    if (params.Human_host_fasta && params.Other_host_fasta) {
+    if (resolvedHumanHostFasta && resolvedOtherHostFasta) {
         host_genome_status = 'both'
-    } else if (params.Human_host_fasta) {
+    } else if (resolvedHumanHostFasta) {
         host_genome_status = 'human_only'
-    } else if (params.Other_host_fasta) {
+    } else if (resolvedOtherHostFasta) {
         host_genome_status = 'other_only'
     }
 
@@ -403,7 +410,7 @@ workflow METATROPICS {
     ch_versions = ch_versions.mix(SAMTOOLS_COVERAGE.out.versions.first())
     ch_versions = ch_versions.mix(IVAR_CONSENSUS.out.versions.first())
     ch_versions = ch_versions.mix(HOMOPOLISH_POLISHING.out.versions.first())
-    if (params.Human_host_fasta) {
+    if (resolvedHumanHostFasta) {
         ch_versions = ch_versions.mix(HUMAN_MAPPING.out.versionsmini)
         ch_versions = ch_versions.mix(HUMAN_MAPPING.out.versionssamsort)
         ch_versions = ch_versions.mix(HUMAN_MAPPING.out.versionssamfastq)

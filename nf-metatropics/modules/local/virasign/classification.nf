@@ -125,17 +125,21 @@ process VIRASIGN_CLASSIFICATION {
     # Don't propagate the per-run virasign log into the shared results tree.
     rm -f publish/.virasign.log || true
 
-    # Merge this sample's publish/ tree into the shared results dir (flock avoids parallel cp races).
+    # Copy this sample's publish/ tree into the shared results dir.
+    # Use flock for parallel-safety, but lock the shared directory itself (no extra .lock file created).
     mkdir -p "${shared}"
-    lockdir="${params.outdir}/Summary/pipeline_info"
-    mkdir -p "\$lockdir"
     if command -v flock >/dev/null 2>&1; then
-      (
-        flock 200 || exit 1
-        cp -aL "\${PWD}/publish/." "${shared}/"
-      ) 200>>"\$lockdir/.metatropics_virasign_publish.lock"
+      flock -x "${shared}" bash -lc "
+        for d in \"\\\$PWD\"/publish/*; do
+          [ -e \"\\\$d\" ] || continue
+          cp -aL \"\\\$d\" \"${shared}/\"
+        done
+      "
     else
-      cp -aL "\${PWD}/publish/." "${shared}/"
+      for d in "\${PWD}/publish/"*; do
+        [ -e "\$d" ] || continue
+        cp -aL "\$d" "${shared}/"
+      done
     fi
 
     cat <<-END_VERSIONS > versions.yml
