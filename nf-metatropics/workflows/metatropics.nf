@@ -4,9 +4,6 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-// Validate input parameters
-WorkflowMetatropics.initialise(params, log)
-
 // Resolve Host keywords into concrete FASTA paths (do not mutate params)
 def resolvedHosts = HostReferences.resolve(params, log, workflow.projectDir.parent)
 def resolvedHumanHostFasta = params.Human_host_fasta ?: resolvedHosts.human ?: params.fasta
@@ -84,13 +81,20 @@ include { CLEANUP_INTERMEDIATE		  } from '../modules/local/cleanup/cleanup_inter
 workflow METATROPICS {
 
     ch_versions = Channel.empty()
+    def ch_fixed_reads
+
+    // Auto-detect mode without mutating `params` (Nextflow may ignore re-assignments).
+    def doBasecall = (params.basecall != null) ? (params.basecall as boolean) : (params.input_dir != null)
+
+    // Validate input parameters (must run after -params-file is loaded)
+    WorkflowMetatropics.initialise(params, log)
 
     INPUT_CHECK_METATROPICS{
         ch_input
         //ch_input2
     }
 
-    if(params.basecall==true){
+    if (doBasecall) {
         if (params.input_dir==null) { exit 1, 'POD5 input dir not specified!'}
         if (params.input==null) { exit 1, 'Sample sheet not specified!'}
         
@@ -113,32 +117,31 @@ workflow METATROPICS {
         FIX(
             ch_sample_barcode
         )
+        ch_fixed_reads = FIX.out.reads
 
         ch_versions = ch_versions.mix(DORADO_ONT.out.versions)
         ch_versions = ch_versions.mix(DORADO_DEMULTIPLEXING.out.versions)
     }
-    else if(params.basecall==false){
+    else {
         ch_sample = INPUT_CHECK_METATROPICS.out.reads.map{tuple(it[1].replaceFirst(/\/.+\//,""),it[0],it[1])}
 
         FIX(
             ch_sample
         )
+        ch_fixed_reads = FIX.out.reads
     }
 
-   // Define parameters for rarefaction
-   params.perform_rarefaction = false
-   params.target_bases = 1000000000 // Default value, can be overridden in the submission file
-
    // Conditional execution of RAREFACTION
+   def ch_reads_for_fastp
    if (params.perform_rarefaction) {
     RAREFACTION(
-        FIX.out.reads,
+        ch_fixed_reads,
         params.perform_rarefaction,
         params.target_bases
     )
         ch_reads_for_fastp = RAREFACTION.out.rarefied_reads
     } else {
-        ch_reads_for_fastp = FIX.out.reads
+        ch_reads_for_fastp = ch_fixed_reads
     }
 
     FASTPLONG(
@@ -146,7 +149,7 @@ workflow METATROPICS {
     )
 
     NANOPLOT(
-         FIX.out.reads
+         ch_fixed_reads
      )
 
     def readsAfterHuman = FASTPLONG.out.reads
