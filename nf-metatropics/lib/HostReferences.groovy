@@ -247,29 +247,37 @@ class HostReferences {
         )
     ].asImmutable()
 
-    static void apply(params, log, baseDir) {
+    static Map resolve(params, log, baseDir) {
         def requested = normaliseHostParam(params.Host)
         if (!requested) {
-            return
+            return [ human: null, other: null ]
+        }
+
+        // Don't download large references when printing help/version
+        if (params.help || params.version) {
+            return [ human: null, other: null ]
         }
 
         // If user explicitly provided paths, preserve them; Host only fills gaps.
-        def needsHuman = !params.Human_host_fasta && requested.contains('human')
+        // Also respect legacy aliases (fasta / host_fasta), which main.nf already promotes reliably.
+        def needsHuman = !params.Human_host_fasta && !params.fasta && requested.contains('human')
         def otherHosts = requested.findAll { it != 'human' }
-        def needsOther = !params.Other_host_fasta && otherHosts.size() > 0
+        def needsOther = !params.Other_host_fasta && !params.host_fasta && otherHosts.size() > 0
 
         if (!needsHuman && !needsOther) {
-            return
+            return [ human: null, other: null ]
         }
 
         Path dbRoot = Path.of(baseDir.toString(), 'Databases')
         Files.createDirectories(dbRoot)
 
+        Path humanPath = null
+        Path otherPath = null
+
         if (needsHuman) {
             def spec = REGISTRY['human']
-            Path fasta = ensureHostFasta(dbRoot, spec, log)
-            params.Human_host_fasta = fasta.toString()
-            log.info "Resolved Host='human' to Human_host_fasta: ${params.Human_host_fasta}"
+            humanPath = ensureHostFasta(dbRoot, spec, log)
+            log.info "Resolved Host='human' to Human_host_fasta: ${humanPath}"
         }
 
         if (needsOther) {
@@ -296,8 +304,11 @@ class HostReferences {
                 log.info "Merged non-human hosts (${resolvedKeys.join(', ')}) into Other_host_fasta: ${otherFasta}"
             }
 
-            params.Other_host_fasta = otherFasta.toString()
+            otherPath = otherFasta
+            log.info "Resolved Host (${resolvedKeys.join(', ')}) to Other_host_fasta: ${otherPath}"
         }
+
+        return [ human: humanPath?.toString(), other: otherPath?.toString() ]
     }
 
     private static List<String> normaliseHostParam(hostParam) {

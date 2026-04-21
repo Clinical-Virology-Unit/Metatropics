@@ -1,1 +1,0 @@
-Apr-19 23:05:16.649 [main] DEBUG nextflow.cli.Launcher - $> nextflow run workflows/metatropics.nf -help

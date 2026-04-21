@@ -7,11 +7,12 @@ include { SAMTOOLS_hoFASTQ } from '../../../modules/nf-core/samtools/fastq/main2
 workflow HOST_MAPPING {
     take:
     reads
+    host_fasta
 
     main:
     MINIMAP2_ALIGN(
         reads,
-        params.Other_host_fasta,
+        host_fasta,
         true,
         false,
         false
