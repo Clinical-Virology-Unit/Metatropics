@@ -65,6 +65,12 @@
                     "help_text": "Optional. Supply when another background genome (e.g. mosquito, primate) should be filtered after the human background.",
                     "fa_icon": "far fa-file-code"
                 },
+                "Host": {
+                    "type": "string",
+                    "description": "Host keyword(s) to enable automatic host FASTA download/caching under <repo>/Databases.",
+                    "help_text": "Optional. Alternative to supplying explicit --Human_host_fasta / --Other_host_fasta paths. Examples: --Host human (sets Human_host_fasta), --Host pan (sets Other_host_fasta), or --Host 'human,pan' (sets both). Multiple non-human hosts are supported and will be merged into a single FASTA for Other_host_fasta (e.g. --Host 'human,aedes,culex'). Supported keywords: human, pan, gorilla, orangutan, macaque, aedes, anopheles, culex, bat, rat, dog, cat, camel, goat, pig, cow, mouse, chicken.",
+                    "fa_icon": "fas fa-dna"
+                },
                 "fasta": {
                     "type": "string",
                     "format": "file-path",

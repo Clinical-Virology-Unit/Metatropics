@@ -1,13 +1,15 @@
 # Metatropics — POD5 + Dorado basecalling (GPU)
 # Example samplesheet: nf-metatropics/assets/submission/POD5.csv
 
-input: /data/Daan/Projects/Ane_test/Input/POD5.csv
-input_dir: /data/Daan/Projects/Ane_test/Input/POD5
-outdir: /data/Daan/Projects/Ane_test/Outdir_pod
-Human_host_fasta: /data/Daan/Projects/Metatropics/Databases/Human/chm13v2.0.fa
+input: /data/Daan/Projects/dorado_test/Input/samplesheet.csv
+input_dir: /data/Daan/Projects/dorado_test/Input/pod5
+outdir: /data/Daan/Projects/dorado_test/Output
 
-#Other_host_fasta: /scratch/antwerpen/209/vsc20958/Metatropics_runs/Metatropics/Databases/Aedes/Aedes_aegypti.fasta
-dbmeta: /data/Daan/Projects/Metatropics/Databases/ViralRefseq
+#Host: human,aedes
+#Human_host_fasta: /data/Daan/Projects/Metatropics/Databases/Human/chm13v2.0.fa
+#Other_host_fasta: /path/to/optional_host.fasta
+
+dbmeta: /data/Daan/Projects/Metatropics/Databases1/ViralRefseq
 basecall: true
 usegpu: true
 kit_name: TWIST-96A-UDI
@@ -22,8 +24,8 @@ depth: 20
 agreement: 0.7
 rcoverage_figure: true
 
-perform_rarefaction: false
-target_bases: 100000000
+perform_rarefaction: true
+target_bases: 50000000
 
 enable_docker_cleanup: false
 
@@ -31,10 +33,10 @@ enable_docker_cleanup: false
 # run_virasign: true → one Virasign job on ALL samples’ human-depleted FASTQs (cross-sample HTML/CSV).
 # Set run_virasign: true to run Virasign alongside MetaMaps.
 # All virasign_* params default to Virasign's own upstream defaults when omitted.
-#run_virasign: true
+run_virasign: true
 #virasign_database: RVDB             # or 'RefSeq' or 'RVDB,RefSeq' or a single accession (e.g. 'NC_001501.1')
 #virasign_db_dir: /path/to/parent/of/RVDB       # omit → <Metatropics repo>/Databases (expects e.g. Databases/RVDB)
-#virasign_ultrasensitive: false       # -u / --ultrasensitive
+virasign_ultrasensitive: true       # -u / --ultrasensitive
 #virasign_min_mapped_reads: 100
 #virasign_coverage_depth: 1.0
 #virasign_coverage_breadth: 0.1
