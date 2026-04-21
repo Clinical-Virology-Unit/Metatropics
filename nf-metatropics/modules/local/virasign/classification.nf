@@ -108,6 +108,19 @@ process VIRASIGN_CLASSIFICATION {
     # Barrier input from DB prep (ensures DB is prepared once).
     test -f "${db_ready}"
 
+    # Self-heal: if -resume cached the DB prep barrier but the database files were deleted,
+    # virasign will try to re-resolve the keyword and may fail mid-download. Re-run --prepare-db
+    # here if we couldn't resolve a concrete FASTA path for known built-in DBs.
+    if [ "${effectiveDbArg.toLowerCase()}" = "rvdb" ] && [ "${resolvedDbArg}" = "${effectiveDbArg}" ]; then
+      virasign --prepare-db --db-dir "${db_dir}" -d 'RVDB' \
+        ${params.virasign_rvdb_version != null ? "--rvdb-version ${params.virasign_rvdb_version}" : ""} \
+        ${params.virasign_accessions?.toString()?.trim() ? "-a '${params.virasign_accessions}'" : ""} || true
+    fi
+    if [ "${effectiveDbArg.toLowerCase()}" = "refseq" ] && [ "${resolvedDbArg}" = "${effectiveDbArg}" ]; then
+      virasign --prepare-db --db-dir "${db_dir}" -d 'RefSeq' \
+        ${params.virasign_accessions?.toString()?.trim() ? "-a '${params.virasign_accessions}'" : ""} || true
+    fi
+
     mkdir -p virasign_in
     for f in *.fastq.gz *.fq.gz; do
       [ -e "\$f" ] || continue
