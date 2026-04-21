@@ -70,11 +70,10 @@ At the **repository root**, choose the params file to match how you start: **[`p
 | `input` | Samplesheet CSV: copy **[`fastq.csv`](nf-metatropics/assets/submission/fastq.csv)** (FASTQ) or **[`POD5.csv`](nf-metatropics/assets/submission/POD5.csv)** (POD5) from [`nf-metatropics/assets/submission/`](nf-metatropics/assets/submission/), edit it, then set `input` to that file’s absolute path. 
 | `outdir` | Where results are written. |
 | `dbmeta` | Set database path (from step 4). |
-| `Human_host_fasta` | Set human host FASTA path (from step 4). *(Optional; enables human depletion.)* |
-| `Host` | Alternative to `*_host_fasta`: set a keyword like `human` (or `human,pan`) to auto-download/cache host FASTAs under `<repo>/Databases`. |
+| `Host` | Optional host depletion (e.g., `human,pan`). |
 | `input_dir` | POD5 only: directory containing POD5 files (with **`params_POD5.yaml`**) |
 
-To autogenerate a [`fastq.csv`](nf-metatropics/assets/submission/fastq.csv) from a reads folder, run **`sudo pip install .`** once at the repo root, then **`metatropics-samplesheet -i .`** from your FASTQ directory.
+To autogenerate a [`fastq.csv`](nf-metatropics/assets/submission/fastq.csv) from a reads folder, run **`pip install .`** once at the repo root, then **`metatropics-samplesheet -i .`** from your FASTQ directory.
 
 Additional options: **[`nf-metatropics/assets/submission/all_options.md`](nf-metatropics/assets/submission/all_options.md)**.
 
