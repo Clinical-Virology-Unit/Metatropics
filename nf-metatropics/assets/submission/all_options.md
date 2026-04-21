@@ -4,9 +4,11 @@
 
 | Option | Description |
 |--------|-------------|
-| `--input` | Path to the samplesheet CSV. *(FASTQ: run `pip install .` at the repository root, then **`metatropics-samplesheet -i .`** in the folder that contains your reads)* |
+| `--input` | Path to the samplesheet CSV. |
 | `--input_dir` | Input directory with POD5. Default: None. |
 | `--outdir` | Output directory for results. Use absolute paths on cloud storage. |
+
+To autogenerate a [`fastq.csv`](fastq.csv) from a reads folder, run `sudo pip install .` once at the repo root, then `metatropics-samplesheet -i .` from your FASTQ directory.
 
 ## Reference genome options
 
