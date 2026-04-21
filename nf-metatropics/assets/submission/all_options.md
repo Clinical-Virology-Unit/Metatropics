@@ -14,6 +14,7 @@
 |--------|------|-------------|
 | `--Human_host_fasta` | string | Optional FASTA for the human background removal step. |
 | `--Other_host_fasta` | string | Optional FASTA for an additional host background (e.g. mosquito, primate). |
+| `--Host` | string | Optional host keyword(s) to auto-download/cache FASTA under `<repo>/Databases`. Multiple non-human hosts are supported and will be merged into one FASTA for `Other_host_fasta` (e.g. `human,aedes,culex`). Supported keywords include `human`, `pan`, `gorilla`, `orangutan`, `macaque`, `aedes`, `anopheles`, `culex`, `bat`, `rat`, `dog`, `cat`, `camel`, `goat`, `pig`, `cow`, `mouse`, `chicken`. |
 | `--dbmeta` | string | Path for the MetaMaps database for read classification. Default: None. |
 
 ## Generic options

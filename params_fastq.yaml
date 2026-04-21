@@ -3,8 +3,12 @@
 
 input: /data/Daan/Projects/T_DCT/Input/samplesheet.csv
 outdir: /data/Daan/Projects/T_DCT/Output_l
-#Human_host_fasta: /data/Daan/Projects/Metatropics/Databases1/Human/chm13v2.0.fa
+# Option A (explicit path): provide FASTA paths directly
+#Human_host_fasta: /data/Daan/Projects/Metatropics/Databases/Human/chm13v2.0.fa
 #Other_host_fasta: /path/to/optional_host.fasta
+#
+# Option B (keyword): let Metatropics auto-download/cache under <repo>/Databases
+#Host: human
 dbmeta: /data/Daan/Projects/Metatropics/Databases1/ViralRefseq
 # Required for FASTQ workflow: no POD5 / Dorado
 basecall: false

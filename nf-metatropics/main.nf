@@ -18,6 +18,9 @@ nextflow.enable.dsl = 2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+// Resolve friendly host keywords (e.g. --Host human) into local cached FASTA paths
+HostReferences.apply(params, log, baseDir)
+
 def providedHumanHostFasta = params.Human_host_fasta
 def providedOtherHostFasta = params.Other_host_fasta
 def legacyHumanParamSupplied = params.fasta ? true : false
