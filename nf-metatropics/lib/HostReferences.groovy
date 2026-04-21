@@ -332,6 +332,9 @@ class HostReferences {
 
         // Download into a temp file first, then move into place.
         Path tmp = hostDir.resolve("${spec.fastaBasename}.download.tmp")
+        // Defensive: ensure parent dir exists right before writing.
+        // Some filesystems / parallel runs can still hit ENOENT otherwise.
+        Files.createDirectories(tmp.getParent())
         Files.deleteIfExists(tmp)
 
         def lastErr = null
@@ -389,6 +392,11 @@ class HostReferences {
     }
 
     private static void downloadUrl(String urlStr, Path out) {
+        // Defensive: ensure output parent directory exists.
+        def parent = out.getParent()
+        if (parent) {
+            Files.createDirectories(parent)
+        }
         URL url = new URL(urlStr)
         url.openConnection().with { conn ->
             conn.setConnectTimeout(30_000)
