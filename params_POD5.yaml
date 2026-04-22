@@ -20,10 +20,9 @@ minVirus: 0.001
 quality: 7
 depth: 20
 agreement: 0.7
-rcoverage_figure: true
 
-perform_rarefaction: true
-target_bases: 50000000
+perform_rarefaction: false
+target_bases: 500000000
 
 enable_docker_cleanup: false
 

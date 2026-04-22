@@ -33,7 +33,6 @@ To autogenerate a samplehseet.csv from a reads folder, run `pip install .` once 
 | `--depth` | Minimum per-position depth for consensus. Default: 5. |
 | `--front` | Bases to trim at 5′. Default: 0. |
 | `--tail` | Bases to trim at 3′. Default: 0. |
-| `--rcoverage` | Coverage figures. Default: false. |
 | `--horizontal_coverage` | Minimum horizontal coverage threshold. Default: 1. |
 
 ## Rarefaction options

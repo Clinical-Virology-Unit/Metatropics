@@ -62,7 +62,6 @@ include { SEQTK_SUBSEQ                } from '../modules/nf-core/seqtk/subseq/ma
 include { REFFIX_FASTA                } from '../modules/local/reffix_fasta'
 include { MEDAKA                      } from '../modules/nf-core/medaka/main'
 include { ReadCount                   } from '../modules/local/reads/reads'
-include { RCOVERAGE                   } from '../modules/local/rcoverage/rcoverage'
 include { SAMTOOLS_COVERAGE           } from '../modules/nf-core/samtools/coverage/main'
 include { IVAR_CONSENSUS              } from '../modules/nf-core/ivar/consensus/main'
 include { HOMOPOLISH_POLISHING        } from '../modules/local/homopolish/polishing'
@@ -173,6 +172,16 @@ workflow METATROPICS {
         readsForViralClassification = readsAfterHuman
     }
 
+    // Depletion mode for ReadCount / readcount.py: not_used | human_only | other_only | both
+    def host_genome_status = 'not_used'
+    if (resolvedHumanHostFasta && resolvedOtherHostFasta) {
+        host_genome_status = 'both'
+    } else if (resolvedHumanHostFasta) {
+        host_genome_status = 'human_only'
+    } else if (resolvedOtherHostFasta) {
+        host_genome_status = 'other_only'
+    }
+
     // ── Virasign (phase 1): prepare DB once, then run per-sample with --no-html ──
     if (params.run_virasign) {
         // Shared on-host results tree, isolated per virasign_database to avoid mixing results
@@ -198,6 +207,17 @@ workflow METATROPICS {
                 .count()
         )
     }
+
+    // ReadCount: after Virasign cross-sample summary when enabled; otherwise after all host-depleted read tuples
+    // are issued (independent of Medaka). Published under Summary/readcount/ (see modules.config).
+    def ch_readcount_barrier
+    if (params.run_virasign) {
+        ch_readcount_barrier = VIRASIGN_SUMMARY.out.csv
+    } else {
+        ch_readcount_barrier = readsForViralClassification.count()
+    }
+    def ch_readcount_in = ch_readcount_barrier.map { b -> tuple(params.outdir, b, host_genome_status) }
+    ReadCount( ch_readcount_in )
 
     METAMAPS_MAP(
         readsForViralClassification
@@ -325,33 +345,6 @@ workflow METATROPICS {
         SEQTK_SUBSEQ.out.sequences.join(REFFIX_FASTA.out.fixedseqref)
     )
 
-    // Define the host_genome_status
-    def host_genome_status = 'not_used'
-    if (resolvedHumanHostFasta && resolvedOtherHostFasta) {
-        host_genome_status = 'both'
-    } else if (resolvedHumanHostFasta) {
-        host_genome_status = 'human_only'
-    } else if (resolvedOtherHostFasta) {
-        host_genome_status = 'other_only'
-    }
-
-    // Call the ReadCount process
-    ReadCount(
-    params.outdir,
-    MEDAKA.out.coveragefiles.collect(),
-    host_genome_status
-    )
-
-   // Conditional RCOVERAGE process
-   if (params.rcoverage_figure) {
-    RCOVERAGE(
-        MEDAKA.out.coveragefiles.collect()
-    )
-    ch_rcoverage_done = RCOVERAGE.out.collect() // Create a channel that signals RCOVERAGE is done
-    } else {
-    ch_rcoverage_done = Channel.empty() // Create an empty channel if RCOVERAGE is not run
-    }
-
     SAMTOOLS_COVERAGE(
         MEDAKA.out.bamfiles
     )
@@ -419,10 +412,8 @@ workflow METATROPICS {
         ch_versions = ch_versions.mix(HUMAN_MAPPING.out.versionssamfastq)
     }
 
-    // Wait for RCOVERAGE to complete before running CUSTOM_DUMPSOFTWAREVERSIONS
     CUSTOM_DUMPSOFTWAREVERSIONS(
-    ch_versions.unique().collectFile(name: 'collated_versions.yml'),
-    ch_rcoverage_done // Add this channel as an input
+    ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
 
     // Run CLEANUP only if Docker cleanup is enabled

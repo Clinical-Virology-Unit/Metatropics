@@ -2,27 +2,24 @@ process ReadCount {
     label 'process_medium'
     tag "ReadCount"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'library://jansendaan94_v2/metatropics/rocker_tidyverse:latest':
-        'daanjansen94/rocker-tidyverse:latest' }"
+        'docker://python:3.11-bookworm' :
+        'python:3.11-bookworm' }"
 
     def outPath = file(params.outdir).toAbsolutePath().toString()
     if( workflow.containerEngine == 'docker' ) {
-        containerOptions "-v ${outPath}:${outPath} -u \$(id -u):\$(id -g)"
+        containerOptions "-v ${outPath}:${outPath} -u 0:0"
     }
     if( workflow.containerEngine == 'singularity' ) {
         containerOptions "--bind ${outPath}:${outPath}"
     }
 
     input:
-    val outdir
-    path medaka_files
-    val host_genome_status
+    tuple val(outdir), val(_readcountBarrier), val(host_genome_status)
 
     output:
-    path "read_count/*.fastq.gz", emit: read_count_fastq_root, optional: true
-    path "read_count/**/*.fastq.gz", emit: read_count_fastq_nested, optional: true
     path "read_count/read_counts.csv", emit: read_counts_csv
     path "read_count/read_distribution.pdf", emit: read_distribution_pdf
+    path "read_count/read_distribution.html", emit: read_distribution_html
 
     script:
     """
@@ -65,25 +62,14 @@ process ReadCount {
         echo "Additional host depletion not enabled; skipping host-depleted copy"
     fi
 
-    # Process viral reads from Classification/metamaps
-    echo "Sample,ViralReads" > read_count/viral_read_counts.csv
-    if [ -d "${outdir}/Classification/metamaps" ]; then
-        found_files=false
-        for file in ${outdir}/Classification/metamaps/*_classification_results.meta; do
-            if [ -f "\$file" ]; then
-                found_files=true
-                sample_name=\$(basename "\$file" _classification_results.meta)
-                viral_reads=\$(grep "ReadsMapped" "\$file" | awk '{print \$2}')
-                echo "\${sample_name},\${viral_reads}" >> read_count/viral_read_counts.csv
-            fi
-        done
-        if [ "\$found_files" = false ]; then
-            echo "No matching files found in metamaps folder"
-        fi
-    else
-        echo "Directory ${outdir}/Classification/metamaps does not exist, skipping viral read count extraction"
-    fi
+    # Generate read_counts.csv + interactive HTML + PDF using the bundled dashboard script.
+    python -m pip install --no-cache-dir pandas plotly matplotlib >/dev/null
+    python ${projectDir}/bin/readcount.py \
+      --outdir "${outdir}" \
+      --host-status "${host_genome_status}" \
+      --workdir "."
 
-    ReadCount.R ${params.outdir}/Summary/read_count/ ${host_genome_status}
+    # Staged FASTQs were only for counting; Summary publishes CSV/HTML/PDF only (see modules.config).
+    find read_count -type f -name '*.fastq.gz' -delete || true
     """
 }
