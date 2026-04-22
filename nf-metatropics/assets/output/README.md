@@ -14,7 +14,7 @@ Paths below are relative to your pipeline **`--outdir`**. The pipeline also crea
 | **`Viral_reads/`** | Per-virus extracted FASTQs. |
 | **`Variant_calling/`** | Viral references, Medaka alignments/variants, merged depth tables. |
 | **`Consensus/`** | iVar draft and Homopolish polished genomes. |
-| **`Summary/`** | Final tables, read-count figure, coverage PDFs, software versions and Nextflow trace/reports. |
+| **`Summary/`** | Final HTML/CSV reports listing viruses identified, read-count summaries and pipeline provenance (software versions + Nextflow trace/reports). |
 
 ---
 
@@ -92,8 +92,8 @@ Run-wide summaries and provenance.
 | Path | Contents |
 |------|----------|
 | `Summary/final` | Combined **final TSV** across the whole run. |
-| `Summary/rcoverage` | Coverage **PDFs** for identified viruses (if enabled). |
-| `Summary/read_count` | Read-count **CSV/PDF** and staged inputs for the read-distribution figure (copies from **`Reads/`** and scans **`Classification/metamaps`**). |
+| `Summary/readcount` | Read distribution across stages. |
+| `Summary/virasign` | **Final Metatropics HTML report** for quick inspection across samples. |
 | `Summary/pipeline_info` | Nextflow trace/reports and software versions. |
 
-**Typical reporting priorities:** **`Consensus/homopolish`**, **`Summary/final`**, **`Summary/rcoverage`**, and **`Summary/read_count`**.
+For a **quick overview of viruses found**, open **`Summary/virasign/results_summary_*.html`**. 

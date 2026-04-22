@@ -7,7 +7,6 @@ process CUSTOM_DUMPSOFTWAREVERSIONS {
 
     input:
     path versions
-    path rcoverage_done
     
     output:
     path "software_versions.yml"    , emit: yml
