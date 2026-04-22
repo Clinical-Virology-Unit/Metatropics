@@ -44,11 +44,14 @@ This stage optionally performs rarefaction, then removes low-quality reads, shor
 
 ## `Classification/`
 
-Host-depleted reads are mapped to the metagenomic database and summarized so you can see **which organisms (taxa) are present** in each sample.
+Host-depleted reads are mapped to the metagenomic database and summarized so you can see which organisms (taxa) are present in each sample.
 
 | Path | Contents |
 |------|----------|
 | `Classification/metamaps` | MetaMaps mapping and classification (`mapDirectly`, `Classify`). |
+| `Classification/virasign` | Virasign per-sample viral classification results. Each sample has its own output folder; confident hits are listed in `*_final_selected_references.json`. Per-virus outputs typically include mapped reads (`mreads.fastq.gz`), the best reference (`*.fasta`), alignments (`*.bam`), and coverage PDFs (`*coverage.PDF`). The combined cross-sample HTML/CSV summary is published under `Summary/virasign/`. |
+
+For more Virasign details, see [`DaanJansen94/virasign`](https://github.com/DaanJansen94/virasign).
 
 ---
 
