@@ -103,7 +103,7 @@ Results are written under your chosen `--outdir` and summarized below:
 | **`Consensus/`** | iVar draft and Homopolish polished genomes. |
 | **`Summary/`** | **Final Metatropics report** listing all viruses identified (`Summary/virasign/*.html`), plus read-count summaries and pipeline provenance (software versions, Nextflow reports). |
 
-For each subfolder, the files and reports written to `--outdir`, and what they are for, see [`nf-metatropics/assets/output/README.md`](nf-metatropics/assets/output/README.md).
+For a detailed description of each output subfolder, see [`nf-metatropics/assets/output/README.md`](nf-metatropics/assets/output/README.md).
 
 ---
 
