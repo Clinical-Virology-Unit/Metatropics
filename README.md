@@ -101,7 +101,7 @@ Results are written under your chosen `--outdir` and summarized below:
 | **`Viral_reads/`** | Per-virus extracted FASTQs. |
 | **`Variant_calling/`** | Viral references, Medaka alignments/variants, merged depth tables. |
 | **`Consensus/`** | iVar draft and Homopolish polished genomes. |
-| **`Summary/`** | **Final Metatropics report** listing all viruses identified (`Summary/virasign/results_summary_*.html`), plus read-count summaries and pipeline provenance (software versions, Nextflow reports). |
+| **`Summary/`** | **Final Metatropics report** listing all viruses identified (`Summary/virasign/*.html`), plus read-count summaries and pipeline provenance (software versions, Nextflow reports). |
 
 For each subfolder, the files and reports written to `--outdir`, and what they are for, see [`nf-metatropics/assets/output/README.md`](nf-metatropics/assets/output/README.md).
 
