@@ -1,6 +1,6 @@
 # Metatropics result folders (detailed)
 
-Paths below are relative to your pipeline **`--outdir`**. The pipeline also creates a Nextflow **`work/`** directory; what follows is only what is **published** into `outdir`.
+Paths below are relative to your pipeline **`--outdir`**. The pipeline also creates a Nextflow **`work/`** directory; what follows is only what is published into `outdir`.
 
 ---
 
@@ -65,7 +65,7 @@ For more Virasign details, see [`DaanJansen94/virasign`](https://github.com/Daan
 
 ## `Viral_reads/`
 
-Reads assigned to a given **virus** are extracted into FASTQs **per sample and per virus**.
+Reads assigned to a given virus are extracted into FASTQs per sample and per virus.
 
 | Path | Contents |
 |------|----------|
@@ -75,24 +75,24 @@ Reads assigned to a given **virus** are extracted into FASTQs **per sample and p
 
 ## `Variant_calling/`
 
-For each candidate virus, **[Medaka](https://github.com/nanoporetech/medaka)** first writes a **BAM** of reads aligned to the **viral reference**. It then uses that BAM in **haploid variant calling**, applying **neural-network inference on pileups** of those aligned reads (networks **trained for Oxford Nanopore** basecalled data), and emits a **VCF** describing differences from that reference.
+For each candidate virus, **[Medaka](https://github.com/nanoporetech/medaka)** first writes a BAM of reads aligned to the viral reference. It then uses that BAM in haploid variant calling, applying neural-network inference on pileups of those aligned reads (networks trained for Oxford Nanopore basecalled data), and emits a VCF describing differences from that reference.
 
 | Path | Contents |
 |------|----------|
-| `Variant_calling/reffix` | Reference FASTA with **cleaned headers** for each virus. |
-| `Variant_calling/medaka` | **BAMs**, **VCF** variant calls, and Medaka coverage text. |
+| `Variant_calling/reffix` | Reference FASTA with cleaned headers for each virus. |
+| `Variant_calling/medaka` | BAMs, VCF variant calls, and Medaka coverage text. |
 | `Variant_calling/addingDepth` | Per-virus **`*.sdepth.tsv`** depth tables (coverage + consensus + classification). |
 
 ---
 
 ## `Consensus/`
 
-Consensus building takes the **Medaka-produced BAM** and feeds it to **iVar**, which calls a draft consensus sequence; **Homopolish** then polishes that draft. 
+Consensus building takes the Medaka-produced BAM and feeds it to iVar, which calls a draft consensus sequence; Homopolish then polishes that draft. 
 
 | Path | Contents |
 |------|----------|
 | `Consensus/ivar` | Consensus sequences from iVar (input to Homopolish). |
-| `Consensus/homopolish` | **Polished** consensus FASTA (typical final genome per virus per sample). |
+| `Consensus/homopolish` | Polished consensus FASTA (typical final genome per virus per sample). |
 
 ---
 
@@ -107,4 +107,4 @@ Run-wide summaries and provenance.
 | `Summary/virasign` | Final Metatropics HTML report for quick inspection across samples. |
 | `Summary/pipeline_info` | Nextflow trace/reports and software versions. |
 
-For a **quick overview of viruses found**, open **`Summary/virasign/results_summary_*.html`**. 
+For a quick overview of viruses found, open **`Summary/virasign/results_summary_*.html`**. 
