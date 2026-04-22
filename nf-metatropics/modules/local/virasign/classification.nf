@@ -132,7 +132,9 @@ process VIRASIGN_CLASSIFICATION {
       if [ -e "virasign_in/\$out" ]; then
         out="\${base}.fastq.gz"
       fi
-      ln -sfn "\$f" "virasign_in/\$out"
+      # Use absolute symlinks (workdir inputs may be symlinks themselves).
+      target=\$(readlink -f "\$f" 2>/dev/null || realpath "\$f" 2>/dev/null || echo "\$f")
+      ln -sfn "\$target" "virasign_in/\$out"
     }
 
     for f in ${virasign_input_fastqs}; do
