@@ -46,20 +46,18 @@ This stage optionally performs rarefaction, then removes low-quality reads, shor
 
 Host-depleted reads are mapped to the metagenomic database (e.g., Refseq, RVDB) and summarized so you can see which organisms (taxa) are present in each sample.
 
-| Path                      | Contents                                  |
-|---------------------------|-------------------------------------------|
+| Path   | Contents |
+|--------|----------|
 | `Classification/virasign/` | Virasign per-sample viral classification results. |
 
-**Per-sample outputs** (`Classification/virasign/<database>/<sample>/`)
-
-| Output                         | Meaning                                             |
-|--------------------------------|-----------------------------------------------------|
-| `*_unfiltered_all_references.json` | All candidate viral hits.                            |
-| `*_final_selected_references.json` | Final confident viral hits.                          |
-| `*.fasta`                      | Best reference sequence(s) selected by Virasign.    |
-| `mreads.fastq.gz`              | Reads mapped to the reference(s) for each virus.    |
-| `*.bam`                        | Read alignments against the best reference(s).      |
-| `*coverage*.pdf`               | Coverage plots per virus/reference.                 |
+| Output | Meaning  |
+|--------|----------|
+| `*_unfiltered_all_references.json` | All candidate viral hits. |
+| `*_final_selected_references.json` | Final confident viral hit. |
+| `*.fasta` | Best reference sequence(s) selected by Virasign. |
+| `mreads.fastq.gz` | Reads mapped to the reference(s) for each virus. |
+| `*.bam` | Read alignments against the best reference(s). |
+| `*coverage*.pdf` | Coverage plots per virus/reference. |
 
 For more Virasign details, see [`DaanJansen94/virasign`](https://github.com/DaanJansen94/virasign).
 
