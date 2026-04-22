@@ -91,9 +91,9 @@ Run-wide summaries and provenance.
 
 | Path | Contents |
 |------|----------|
-| `Summary/final` | Combined **final TSV** across the whole run. |
+| `Summary/final` | Combined final TSV across the whole run. |
 | `Summary/readcount` | Read distribution (`read_distribution.html`). |
-| `Summary/virasign` | **Final Metatropics HTML report** for quick inspection across samples. |
+| `Summary/virasign` | Final Metatropics HTML report for quick inspection across samples. |
 | `Summary/pipeline_info` | Nextflow trace/reports and software versions. |
 
 For a **quick overview of viruses found**, open **`Summary/virasign/results_summary_*.html`**. 
