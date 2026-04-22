@@ -53,7 +53,7 @@ Host-depleted reads are mapped to the metagenomic database (e.g., Refseq, RVDB) 
 | Output | Meaning  |
 |--------|----------|
 | `*_unfiltered_all_references.json` | All candidate viral hits. |
-| `*_final_selected_references.json` | Final confident viral hit. |
+| `*_final_selected_references.json` | Final confident viral hits. |
 | `*.fasta` | Best reference sequence(s) selected by Virasign. |
 | `mreads.fastq.gz` | Reads mapped to the reference(s) for each virus. |
 | `*.bam` | Read alignments against the best reference(s). |
