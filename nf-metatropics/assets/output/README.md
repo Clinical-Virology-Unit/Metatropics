@@ -34,10 +34,10 @@ This stage removes **low-quality** reads, **short** reads, and reads that match 
 | Path | Contents |
 |------|----------|
 | `Reads/fix` | Per-sample FASTQ after naming / format fixes (compressed). |
-| `Reads/rarefaction` | Per-sample FASTQ after optional rarefaction subsampling. |
+| `Reads/rarefaction` | Per-sample FASTQ after optional rarefaction subsampling (optional). |
 | `Reads/fastplong` | Trimmed reads and **fastplong** QC reports (HTML/JSON/log). |
 | `Reads/nanoplot` | Read-length and quality summaries (NanoPlot) on the **fixed** per-sample FASTQs (same inputs as `Reads/fix`), **before** fastplong trimming. |
-| `Reads/nohuman` | Human-depleted reads or reads not mapping to the human reference (`*_other.fastq.gz`). |
+| `Reads/nohuman` | Optional: Human-depleted reads or reads not mapping to the human reference (`*_other.fastq.gz`). |
 | `Reads/nohost` | Optional: FASTQ after extra host depletion (`*_other.fastq.gz`). |
 
 ---
