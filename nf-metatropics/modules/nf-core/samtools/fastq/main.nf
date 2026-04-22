@@ -1,5 +1,5 @@
 process SAMTOOLS_hFASTQ {
-    tag "$meta.id"
+    tag "Human depletion (split mapped vs depleted FASTQ)"
     label 'process_low'
 
     conda "bioconda::samtools=1.17"
@@ -24,17 +24,67 @@ process SAMTOOLS_hFASTQ {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def output = ( interleave && ! meta.single_end ) ? "> ${prefix}_interleaved.fastq.gz" :
-        meta.single_end ? "-1 ${prefix}_1.fastq.gz -s ${prefix}_singleton.fastq.gz" :
-        "-1 ${prefix}_1.fastq.gz -2 ${prefix}_2.fastq.gz -s ${prefix}_singleton.fastq.gz"
+    def threads = (task.cpus as int) > 1 ? ((task.cpus as int) - 1) : 1
+    if (args?.toString() =~ /(^|\s)-f\s|(^|\s)-F\s/) {
+        error "SAMTOOLS_hFASTQ internally uses -f/-F; do not pass -f/-F via ext.args"
+    }
     """
-    samtools \\
-        fastq \\
-        $args \\
-        --threads ${task.cpus-1} \\
-        -0 ${prefix}_other.fastq.gz \\
-        $input \\
-        $output
+    set -euo pipefail
+
+    # Depletion: emit mapped reads + depleted reads.
+
+    if ${meta.single_end}; then
+        # Mapped reads (primary alignments only).
+        samtools fastq ${args} --threads ${threads} -F 0x904 \\
+            -0 ${prefix}_mapped_1.fastq.gz \\
+            -s /dev/null \\
+            ${input}
+
+        # Depleted reads (unmapped; drop secondary/supplementary).
+        samtools fastq ${args} --threads ${threads} -f 4 -F 0x900 \\
+            -0 ${prefix}_unmapped_1.fastq.gz \\
+            -s /dev/null \\
+            ${input}
+
+        mv ${prefix}_mapped_1.fastq.gz ${prefix}_1.fastq.gz
+        mv ${prefix}_unmapped_1.fastq.gz ${prefix}_other.fastq.gz
+        # Drop empty gz placeholders.
+        for f in ${prefix}_1.fastq.gz ${prefix}_other.fastq.gz; do
+            if [ -f "\$f" ]; then
+                perl -e 'exit((stat(shift))[7] <= 28 ? 0 : 1)' "\$f" && rm -f "\$f" || true
+            fi
+        done
+    else
+        if ${interleave}; then
+            echo "ERROR: interleaved output is not supported for depletion mode" >&2
+            exit 1
+        fi
+
+        samtools fastq ${args} --threads ${threads} -F 0x904 \\
+            -1 ${prefix}_mapped_1.fastq.gz \\
+            -2 ${prefix}_mapped_2.fastq.gz \\
+            -s /dev/null \\
+            -0 /dev/null \\
+            ${input}
+
+        samtools fastq ${args} --threads ${threads} -f 4 -F 0x900 \\
+            -1 ${prefix}_unmapped_1.fastq.gz \\
+            -2 ${prefix}_unmapped_2.fastq.gz \\
+            -s /dev/null \\
+            -0 /dev/null \\
+            ${input}
+
+        mv ${prefix}_mapped_1.fastq.gz ${prefix}_1.fastq.gz
+        mv ${prefix}_mapped_2.fastq.gz ${prefix}_2.fastq.gz
+        # Paired-end: publish depleted R1 only.
+        mv ${prefix}_unmapped_1.fastq.gz ${prefix}_other.fastq.gz
+        rm -f ${prefix}_unmapped_2.fastq.gz || true
+        for f in ${prefix}_1.fastq.gz ${prefix}_2.fastq.gz ${prefix}_other.fastq.gz; do
+            if [ -f "\$f" ]; then
+                perl -e 'exit((stat(shift))[7] <= 28 ? 0 : 1)' "\$f" && rm -f "\$f" || true
+            fi
+        done
+    fi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

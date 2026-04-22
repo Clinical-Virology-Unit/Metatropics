@@ -1,5 +1,5 @@
 process MEDAKA {
-    tag "${meta.id}.${meta.virus}"
+    tag "Variant calling"
     label 'process_medium'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -21,7 +21,6 @@ process MEDAKA {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}.${meta.virus}"
-    def horizontal_cov_threshold = params.horizontal_coverage != null ? params.horizontal_coverage : 1
     """
     if [ -s $assembly ] && [ \$(grep -c ">" $assembly) -gt 0 ]; then
         medaka_haploid_variant \\
@@ -37,20 +36,7 @@ process MEDAKA {
             mv calls_to_ref.bam.bai ${prefix}.sorted.bam.bai
             rm -f medaka.vcf
 
-            # Calculate genome size from BAM file
-            genome_size=\$(samtools view -H ${prefix}.sorted.bam | grep -P '^@SQ' | cut -f 3 -d ':' | awk '{sum += \$1} END {print sum}')
-
-            # Calculate genome coverage (counting bases covered 5 or more times)
-            covered_bases=\$(samtools depth -a ${prefix}.sorted.bam | awk '\$3 >= 5' | wc -l)
-            coverage_percent=\$(awk "BEGIN {printf \\"%.2f\\", (\$covered_bases / \$genome_size) * 100}")
-
-            # Check if coverage is less than ${horizontal_cov_threshold}%
-            if (( \$(echo "\$coverage_percent < ${horizontal_cov_threshold}" | bc -l) )); then
-                echo "Coverage (\${coverage_percent}%) is below ${horizontal_cov_threshold}%. Skipping depth calculation."
-            else
-                echo "Coverage: \${coverage_percent}%"
-                samtools depth -a ${prefix}.sorted.bam > ${prefix}.sorted.bam.coverage.txt
-            fi
+            samtools depth -a ${prefix}.sorted.bam > ${prefix}.sorted.bam.coverage.txt
         else
             echo "Medaka processing failed for ${prefix}. Creating empty output files." >&2
             touch ${prefix}.vcf

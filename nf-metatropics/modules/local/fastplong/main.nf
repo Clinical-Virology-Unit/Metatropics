@@ -1,5 +1,5 @@
 process FASTPLONG {
-    tag "$meta.id"
+    tag "Read quality control"
     label 'process_medium'
 
     conda "bioconda::fastplong=0.4.1"

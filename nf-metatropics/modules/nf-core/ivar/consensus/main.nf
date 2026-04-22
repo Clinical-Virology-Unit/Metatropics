@@ -1,5 +1,5 @@
 process IVAR_CONSENSUS {
-    tag "${meta.id}.${meta.virus}"
+    tag "Consensus genome assembly"
     label 'process_medium'
 
     conda "bioconda::ivar=1.4"

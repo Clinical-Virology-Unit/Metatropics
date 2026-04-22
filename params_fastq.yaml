@@ -8,26 +8,18 @@ Host: human,pan
 #Human_host_fasta: /data/Daan/Projects/Metatropics/host/chm13v2.0.fa
 #Other_host_fasta: /path/to/optional_host.fasta
 
-dbmeta: /data/Daan/Projects/Metatropics/Databases1/ViralRefseq
 minLength: 200
 pair: true
 front: 25
 tail: 25
-minVirus: 0.01
 quality: 15
 depth: 20
 agreement: 0.7
 
-perform_rarefaction: false
+perform_rarefaction: true
 target_bases: 500000000
 
-enable_docker_cleanup: false
-
-# ── Virasign (parallel viral classifier) ──
-# run_virasign: true → one Virasign job on ALL samples’ human-depleted FASTQs (cross-sample HTML/CSV).
-# Set run_virasign: true to run Virasign alongside MetaMaps.
-# All virasign_* params default to Virasign's own upstream defaults when omitted.
-run_virasign: true
+# ── Virasign 
 #irasign_database: RefSeq            # or 'RefSeq' or 'RVDB,RefSeq' or a single accession (e.g. OP526856.1)
 #virasign_db_dir: /data/Daan/Projects/DB/      # omit → <Metatropics repo>/Databases (expects e.g. Databases/RVDB)
 #virasign_ultrasensitive: true       # -u / --ultrasensitive

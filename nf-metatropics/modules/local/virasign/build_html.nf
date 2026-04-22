@@ -1,16 +1,15 @@
 process VIRASIGN_SUMMARY {
-    tag "VIRASIGN_SUMMARY"
+    tag "Metatropics summary report"
     label 'process_medium'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'library://jansendaan94_v2/metatropics/virasign:latest':
         'daanjansen94/virasign:latest' }"
 
-    // No `path` input for the results tree: `tuple(val, path)` was still mis-serializing the path as `false`
-    // (`-o false`, staging dir `false`). Bind the host outdir and use params in the script instead (same idea as ReadCount).
+    // Bind outdir and read results via params.
     def outAbs = file(params.outdir).toAbsolutePath().toString()
 
-    // If z-score controls are explicitly provided as host paths, make them visible in the container.
+    // Ensure any control/blind files are visible in-container.
     def extraBindDirs = []
     def addBindDir = { String p ->
         if (!p) return

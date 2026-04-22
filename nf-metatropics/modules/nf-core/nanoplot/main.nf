@@ -1,5 +1,5 @@
 process NANOPLOT {
-    tag "$meta.id"
+    tag "Read QC (NanoPlot)"
     label 'process_single'
 
     conda "bioconda::nanoplot=1.41.0"

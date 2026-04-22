@@ -262,21 +262,11 @@
                     "default": 200,
                     "description": "Minimum length for a read to be analyzed."
                 },
-                "minVirus": {
-                    "type": "number",
-                    "default": 0.001,
-                    "description": "Minimum virus data frequency in the raw data to be part of the output."
-                },
                 "usegpu": {
                     "type": "boolean",
                     "description": "Use NVIDIA GPU for basecalling (auto-detected).",
                     "help_text": "Optional override. When basecalling is enabled (POD5 mode), the pipeline defaults to GPU. Set --usegpu false to force CPU basecalling.",
                     "hidden": true
-                },
-                "dbmeta": {
-                    "type": "string",
-                    "default": "None",
-                    "description": "Path for the MetaMaps database for read classification."
                 },
                 "nrdb": {
                     "type": "string",
@@ -302,11 +292,6 @@
                     "default": 5,
                     "description": "Minimum depth of a position to build the consensus"
                 },
-                "horizontal_coverage": {
-                    "type": "number",
-                    "default": 1,
-                    "description": "Minimum horizontal genome coverage (%) required for depth calculation and de novo assembly decision"
-                },
                 "front": {
                     "type": "integer",
                     "default": 0,
@@ -317,8 +302,7 @@
                     "default": 0,
                     "description": "Number of bases to delete at 3 prime of the read"
                 }
-            },
-            "required": ["dbmeta"]
+            }
         }
     },
     "allOf": [

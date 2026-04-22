@@ -53,13 +53,59 @@ def strip_extensions(name: str) -> str:
 
 def extract_sample_name(filename: str) -> str:
     name = strip_extensions(filename)
+    # New depletion suffixes (published by SAMTOOLS_hFASTQ / SAMTOOLS_hoFASTQ).
+    name = re.sub(r"_(human|host)_depleted$", "", name)
+    name = re.sub(r"_(human|host)$", "", name)
+    # Legacy suffix kept for backwards compatibility.
     name = re.sub(r"_other$", "", name)
     name = re.sub(r"_viral$", "", name)
     name = re.sub(r"_classification_results$", "", name)
     name = re.sub(r"_fixed$", "", name)
-    name = re.sub(r"_T1$", "", name)
+    name = re.sub(r"_T\d+$", "", name)
     name = re.sub(r"\.fastp$", "", name)
     return name
+
+
+def read_samplesheet_order(outdir: Path) -> List[str]:
+    """
+    Return sample names in the same order as the (validated) submission samplesheet.
+
+    We prefer the validated samplesheet because it is the canonical pipeline input and
+    matches what `SAMPLESHEET_CHECK_METATROPICS` produced.
+    """
+    candidates = [
+        outdir / "Summary" / "pipeline_info" / "samplesheet.valid.csv",
+        outdir / "samplesheet.valid.csv",
+    ]
+    sheet = next((p for p in candidates if p.exists()), None)
+    if sheet is None:
+        return []
+
+    order: List[str] = []
+    try:
+        with sheet.open(newline="") as fh:
+            r = csv.DictReader(fh)
+            if not r.fieldnames or "sample" not in r.fieldnames:
+                return []
+            for row in r:
+                raw = (row.get("sample") or "").strip()
+                if not raw:
+                    continue
+                # Normalize to the same "logical sample" key used elsewhere in this script.
+                # This keeps ordering stable even if input names include legacy suffixes.
+                order.append(extract_sample_name(raw))
+    except Exception:
+        return []
+
+    # Preserve first occurrence order while de-duplicating.
+    seen = set()
+    out: List[str] = []
+    for s in order:
+        if s in seen:
+            continue
+        seen.add(s)
+        out.append(s)
+    return out
 
 
 def count_fastq_gz_reads(path: Path) -> int:
@@ -198,11 +244,17 @@ def compute_rows(
         reads_root = outdir / "Reads"
         raw = count_dir(re.compile(r"_fixed\.fastq\.gz$"), reads_root / "fix")
         trimmed = count_dir(re.compile(r"\.fastp\.fastq\.gz$"), reads_root / "fastplong")
-        # The depletion folders store "*other.fastq.gz"
-        human_dep = count_dir(re.compile(r"other\.fastq\.gz$"), reads_root / "nohuman")
-        host_dep = count_dir(re.compile(r"other\.fastq\.gz$"), reads_root / "nohost")
+        # Depletion folders now publish *_human_depleted.fastq.gz / *_host_depleted.fastq.gz.
+        # Keep the legacy *_other.fastq.gz pattern so older outdirs still count correctly.
+        human_dep = count_dir(re.compile(r"_(human_depleted|other)\.fastq\.gz$"), reads_root / "nohuman")
+        host_dep = count_dir(re.compile(r"_(host_depleted|other)\.fastq\.gz$"), reads_root / "nohost")
 
-    samples = sorted({*raw.keys(), *trimmed.keys(), *human_dep.keys(), *host_dep.keys(), *viral.keys()})
+    present = {*raw.keys(), *trimmed.keys(), *human_dep.keys(), *host_dep.keys(), *viral.keys()}
+    order = read_samplesheet_order(outdir)
+    samples = [s for s in order if s in present]
+    # Append any samples not in the samplesheet (e.g. manual tests / extra files) deterministically.
+    extras = sorted(present.difference(samples))
+    samples.extend(extras)
 
     include_human = host_status in {"human_only", "both"} and len(human_dep) > 0
     include_other = host_status in {"other_only", "both"} and len(host_dep) > 0

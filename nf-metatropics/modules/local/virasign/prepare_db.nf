@@ -1,13 +1,12 @@
 process VIRASIGN_DB {
-    tag "VIRASIGN_DB"
+    tag "Create viral database"
     label 'process_medium'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'library://jansendaan94_v2/metatropics/virasign:latest':
         'daanjansen94/virasign:latest' }"
 
-    // Ensure the DB directory is visible to the container.
-    // Without an explicit bind mount under Docker/Podman, downloads/indices may end up inside the container FS.
+    // Bind DB dir into the container.
     def pipelineRoot = new File("${projectDir}").parentFile.absolutePath
     def db_dir = params.virasign_db_dir ?: "${pipelineRoot}/Databases"
     def dbAbs = file(db_dir).toAbsolutePath().toString()
@@ -26,13 +25,12 @@ process VIRASIGN_DB {
     task.ext.when == null || task.ext.when
 
     script:
-    // Ensure host path exists before the container writes into it.
+    // Ensure host path exists.
     file(db_dir).mkdirs()
     def opt = []
     def add = { c, f -> if (c) opt << f }
 
-    // If the user doesn't specify a database, make it explicit and stable.
-    // This also keeps output folder naming consistent (we label by database elsewhere).
+    // Default DB if unset.
     def rawDbArg = params.virasign_database?.toString()?.trim()
     def effectiveDbArg = rawDbArg ?: 'RVDB'
     add(effectiveDbArg, "-d '${effectiveDbArg}'")
