@@ -29,7 +29,7 @@ Paths below are relative to your pipeline **`--outdir`**. The pipeline also crea
 
 ## `Reads/`
 
-This stage removes **low-quality** reads, **short** reads, and reads that match **host** background (e.g. human). The host-depleted read set is feeded to the rest of the pipeline.
+This stage removes low-quality reads, short reads, and reads that match *host background (e.g. human, pan). The host-depleted read set is feeded to the rest of the pipeline.
 
 | Path | Contents |
 |------|----------|
