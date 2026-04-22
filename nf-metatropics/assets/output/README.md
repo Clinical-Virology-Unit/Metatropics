@@ -14,7 +14,7 @@ Paths below are relative to your pipeline **`--outdir`**. The pipeline also crea
 | **`Viral_reads/`** | Per-virus extracted FASTQs. |
 | **`Variant_calling/`** | Viral references, Medaka alignments/variants, merged depth tables. |
 | **`Consensus/`** | iVar draft and Homopolish polished genomes. |
-| **`Summary/`** | **Final Metatropics report** listing all viruses identified (`Summary/virasign/*.html`), plus read-count summaries and pipeline provenance. |
+| **`Summary/`** | Final Metatropics report listing all viruses identified (`Summary/virasign/*.html`), read-count summaries and pipeline provenance (software versions + Nextflow reports). |
 
 ---
 
