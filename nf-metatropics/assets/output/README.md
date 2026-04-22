@@ -92,7 +92,7 @@ Run-wide summaries and provenance.
 | Path | Contents |
 |------|----------|
 | `Summary/final` | Combined **final TSV** across the whole run. |
-| `Summary/readcount` | Read distribution across stages. |
+| `Summary/readcount` | Read distribution (`read_distribution.html`). |
 | `Summary/virasign` | **Final Metatropics HTML report** for quick inspection across samples. |
 | `Summary/pipeline_info` | Nextflow trace/reports and software versions. |
 
