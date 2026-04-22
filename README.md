@@ -63,7 +63,7 @@ rm combined_databases.tar.gz
 
 ## 5. Configure paths (samplesheet, output, databases)
 
-At the **repository root**, choose the params file to match how you start: **[`params_fastq.yaml`](params_fastq.yaml)** when you already have basecalled **reads (FASTQ)**, or **[`params_POD5.yaml`](params_POD5.yaml)** when you start from raw **POD5** signal (“squiggle”) data and need basecalling inside the pipeline. Edit that file using **absolute paths**.
+At the repository root, choose the params file to match how you start: **[`params_fastq.yaml`](params_fastq.yaml)** when you already have basecalled reads (FASTQ), or **[`params_POD5.yaml`](params_POD5.yaml)** when you start from raw **POD5** signal (“squiggle”) data and need basecalling inside the pipeline. Edit that file using absolute paths.
 
 | Setting | Purpose |
 |-----|-------------------|
@@ -81,7 +81,7 @@ Additional options: **[`nf-metatropics/assets/submission/all_options.md`](nf-met
 
 ## 6. Running Metatropics
 
-With your `params_fastq.yaml` or `params_POD5.yaml` in place, run from the **repository root** (swap `-profile docker` for e.g. `-profile singularity`, if needed):
+With your `params_fastq.yaml` or `params_POD5.yaml` in place, run from the repository root (swap `-profile docker` for e.g. `-profile singularity`, if needed):
 
 ```
 nextflow run nf-metatropics/ -profile docker -params-file params_fastq.yaml -resume
@@ -101,7 +101,7 @@ Results are written under your chosen `--outdir` and summarized below:
 | **`Viral_reads/`** | Per-virus extracted FASTQs. |
 | **`Variant_calling/`** | Viral references, Medaka alignments/variants, merged depth tables. |
 | **`Consensus/`** | iVar draft and Homopolish polished genomes. |
-| **`Summary/`** | **Final Metatropics report** listing all viruses identified (`Summary/virasign/*.html`), plus read-count summaries and pipeline provenance. |
+| **`Summary/`** | Final Metatropics report listing all viruses identified (`Summary/virasign/*.html`), plus read-count summaries and pipeline provenance. |
 
 For a detailed description of each output subfolder, see [`nf-metatropics/assets/output/README.md`](nf-metatropics/assets/output/README.md).
 
@@ -109,7 +109,7 @@ For a detailed description of each output subfolder, see [`nf-metatropics/assets
 
 ## 8. High performance computing
 
-You can run Metatropics on a **high-performance cluster** instead of a local workstation. For the Flemish Tier‑1 system **CalcUA** (VSC Antwerp), ready-made **Slurm** submission scripts and **Nextflow** profiles live under [`nf-metatropics/assets/calcua/`](nf-metatropics/assets/calcua/). **Setup, editing the batch scripts, and `sbatch` commands** are documented in the [CalcUA README](nf-metatropics/assets/calcua/README.md).
+You can run Metatropics on a high-performance cluster instead of a local workstation. For the Flemish Tier‑1 system CalcUA (VSC Antwerp), ready-made Slurm submission scripts and Nextflow profiles live under [`nf-metatropics/assets/calcua/`](nf-metatropics/assets/calcua/). Setup, editing the batch scripts, and `sbatch` commands are documented in the [CalcUA README](nf-metatropics/assets/calcua/README.md).
 
 ---
 
@@ -121,4 +121,4 @@ If you use Metatropics in your research, please cite:
 De Souza Novaes, A., Jansen, D., de Block, T., Vercauteren, K., & Rezende, A. M. (2026). Metatropics: Human viral pathogen identification and consensus genome calling from nanopore metagenomic sequencing data (Version 0.0.7). GitHub. https://github.com/DaanJansen94/Metatropics
 ```
 
-Also cite the **nf-core** framework, and other tools you rely on; see [`nf-metatropics/assets/citing/CITATIONS.md`](nf-metatropics/assets/citing/CITATIONS.md).
+Also cite the nf-core framework, and other tools you rely on; see [`nf-metatropics/assets/citing/CITATIONS.md`](nf-metatropics/assets/citing/CITATIONS.md).
