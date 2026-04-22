@@ -10,9 +10,8 @@ Paths below are relative to your pipeline **`--outdir`**. The pipeline also crea
 |--------|------|
 | **`Basecalling/`** | Dorado basecalling and demultiplexing (optional). |
 | **`Reads/`** | Read QC, trimming, human / optional host depletion. |
-| **`Classification/`** | MetaMaps taxonomic outputs. |
-| **`Viral_reads/`** | Per-virus extracted FASTQs. |
-| **`Variant_calling/`** | Viral references, Medaka alignments/variants, merged depth tables. |
+| **`Classification/`** | Virasign viral classification outputs and reports |
+| **`Variant_calling/`** | Medaka read alignments and variant calls (VCFs). |
 | **`Consensus/`** | iVar draft and Homopolish polished genomes. |
 | **`Summary/`** | Final Metatropics report listing all viruses identified (`Summary/virasign/*.html`), plus read-count summaries and pipeline provenance (`Summary/pipeline_info`: software versions + Nextflow reports). |
 
@@ -33,12 +32,12 @@ This stage optionally performs rarefaction, then removes low-quality reads, shor
 
 | Path | Contents |
 |------|----------|
-| `Reads/fix` | Per-sample raw raeads after naming / format fixes (`*fastp.fastq.gz`). |
+| `Reads/raw` | Per-sample raw reads after naming / format fixes (`*_fixed.fastq.gz`). |
 | `Reads/rarefaction` | Optional: Per-sample FASTQ after optional rarefaction subsampling. |
 | `Reads/nanoplot` | Read-length and quality summaries (NanoPlot) on the raw reads. |
 | `Reads/fastplong` | Trimmed reads and fastplong QC reports. |
-| `Reads/nohuman` | Optional: Human-depleted reads (`*_other.fastq.gz`). |
-| `Reads/nohost` | Optional: FASTQ after extra host depletion (`*_other.fastq.gz`). |
+| `Reads/nohuman` | Human-depleted reads (`*_human_depleted.fastq.gz`); mapped reads (`*_human.fastq.gz`). |
+| `Reads/nohost` | Host-depleted reads (`*_host_depleted.fastq.gz`); mapped reads (`*_host.fastq.gz`). |
 
 ---
 
@@ -57,19 +56,10 @@ Host-depleted reads are mapped to the metagenomic database (e.g., Refseq, RVDB) 
 | `*.fasta` | Best reference sequence(s) selected by Virasign. |
 | `mreads.fastq.gz` | Reads mapped to the reference(s) for each virus. |
 | `*.bam` | Read alignments against the best reference(s). |
+| `*.bai` | BAM index for the alignments. |
 | `*coverage*.pdf` | Coverage plots per virus/reference. |
 
 For more Virasign details, see [`DaanJansen94/virasign`](https://github.com/DaanJansen94/virasign).
-
----
-
-## `Viral_reads/`
-
-Reads assigned to a given virus are extracted into FASTQs per sample and per virus.
-
-| Path | Contents |
-|------|----------|
-| `Viral_reads/seqtk` | FASTQ per sample per virus. |
 
 ---
 
@@ -102,7 +92,6 @@ Run-wide summaries and provenance.
 
 | Path | Contents |
 |------|----------|
-| `Summary/final` | Combined final TSV across the whole run. |
 | `Summary/readcount` | Read distribution (`read_distribution.html`). |
 | `Summary/virasign` | Final Metatropics HTML report for quick inspection across samples. |
 | `Summary/pipeline_info` | Nextflow trace/reports and software versions. |

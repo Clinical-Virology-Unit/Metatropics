@@ -1,6 +1,6 @@
 process ReadCount {
     label 'process_medium'
-    tag "ReadCount"
+    tag "Read distribution summary"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'docker://python:3.11-bookworm' :
         'python:3.11-bookworm' }"
@@ -26,11 +26,11 @@ process ReadCount {
     mkdir -p read_count read_count/nohuman read_count/nohost
     HOST_STATUS="${host_genome_status}"
 
-    # Copy raw reads from Reads/fix when available
-    if [ -d "${outdir}/Reads/fix" ]; then
-        find ${outdir}/Reads/fix -name "*.fastq.gz" -type f -exec cp {} read_count/ \\;
+    # Copy raw reads from Reads/raw when available
+    if [ -d "${outdir}/Reads/raw" ]; then
+        find ${outdir}/Reads/raw -name "*.fastq.gz" -type f -exec cp {} read_count/ \\;
     else
-        echo "Directory ${outdir}/Reads/fix does not exist, skipping raw read copy"
+        echo "Directory ${outdir}/Reads/raw does not exist, skipping raw read copy"
     fi
 
     # Copy trimmed reads from Reads/fastplong when available
@@ -40,10 +40,10 @@ process ReadCount {
         echo "Directory ${outdir}/Reads/fastplong does not exist, skipping trimmed read copy"
     fi
 
-    # Copy human-depleted reads from Reads/nohuman when available
+    # Copy human-depleted reads (new or legacy naming).
     if [[ "\$HOST_STATUS" == "human_only" || "\$HOST_STATUS" == "both" ]]; then
         if [ -d "${outdir}/Reads/nohuman" ]; then
-            find ${outdir}/Reads/nohuman -name '*other.fastq.gz' -type f -exec cp {} read_count/nohuman/ \\;
+            find ${outdir}/Reads/nohuman \\( -name '*_human_depleted.fastq.gz' -o -name '*_other.fastq.gz' \\) -type f -exec cp {} read_count/nohuman/ \\;
         else
             echo "Directory ${outdir}/Reads/nohuman does not exist, skipping human-depleted copy"
         fi
@@ -51,10 +51,10 @@ process ReadCount {
         echo "Human host depletion not enabled; skipping human-depleted copy"
     fi
 
-    # Copy host-depleted reads from Reads/nohost if it exists
+    # Copy host-depleted reads (new or legacy naming).
     if [[ "\$HOST_STATUS" == "other_only" || "\$HOST_STATUS" == "both" ]]; then
         if [ -d "${outdir}/Reads/nohost" ]; then
-            find ${outdir}/Reads/nohost -name '*other.fastq.gz' -type f -exec cp {} read_count/nohost/ \\;
+            find ${outdir}/Reads/nohost \\( -name '*_host_depleted.fastq.gz' -o -name '*_other.fastq.gz' \\) -type f -exec cp {} read_count/nohost/ \\;
         else
             echo "Directory ${outdir}/Reads/nohost does not exist, skipping host-depleted copy"
         fi
@@ -62,14 +62,14 @@ process ReadCount {
         echo "Additional host depletion not enabled; skipping host-depleted copy"
     fi
 
-    # Generate read_counts.csv + interactive HTML + PDF using the bundled dashboard script.
+    # Generate read count outputs.
     python -m pip install --no-cache-dir pandas plotly matplotlib >/dev/null
     python ${projectDir}/bin/readcount.py \
       --outdir "${outdir}" \
       --host-status "${host_genome_status}" \
       --workdir "."
 
-    # Staged FASTQs were only for counting; Summary publishes CSV/HTML/PDF only (see modules.config).
+    # Clean up staged FASTQs (counting only).
     find read_count -type f -name '*.fastq.gz' -delete || true
     """
 }

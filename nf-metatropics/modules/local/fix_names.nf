@@ -5,7 +5,7 @@ process FIX_NAMES {
         'library://daanjansen94/metatropics/bbmap:38.86':
         'daanjansen94/bbmap:38.86' }"
 
-    tag{sample}
+    tag "Evaluate/fix format of raw reads"
 
     input:
     tuple val(meta), val(sample), path(reads)

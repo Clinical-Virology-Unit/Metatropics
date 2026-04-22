@@ -1,4 +1,5 @@
 process DORADO_DEMULTIPLEXING {
+    tag "Demultiplexing"
     label 'process_gpu'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -32,22 +33,22 @@ process DORADO_DEMULTIPLEXING {
     """
     dorado demux --kit-name ${params.kit_name} --emit-fastq --barcode-both-ends --output-dir demultiplexed $reads
 
-    # Get list of barcode files
+    # Collect barcode outputs.
     ls demultiplexed/*_barcode*.fastq > list.txt
 
-    # Extract barcode names and move files
+    # Rename by barcode.
     while read file; do
         barcode=\$(echo \$file | grep -o 'barcode[0-9]*')
         mv "\$file" "\${barcode}.fastq"
     done < list.txt
 
-    # Move unclassified file
+    # Rename unclassified.
     mv demultiplexed/*_unclassified.fastq unclassified.fastq
 
-    # Get version
+    # Version.
     VERSION=\$(dorado --version 2>&1 | tail -n 1)
 
-    # Create versions file
+    # Versions file.
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         dorado: \$VERSION

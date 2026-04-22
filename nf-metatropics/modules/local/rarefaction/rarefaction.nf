@@ -1,5 +1,5 @@
 process RAREFACTION {
-    tag "$meta.id"
+    tag "Rarefaction (subsample reads to target bases)"
     label 'process_low'
     container "daanjansen94/bbmap:38.86"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

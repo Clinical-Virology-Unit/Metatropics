@@ -9,14 +9,12 @@ outdir: /data/Daan/Projects/dorado_test/Output
 #Human_host_fasta: /data/Daan/Projects/Metatropics/Databases/Human/chm13v2.0.fa
 #Other_host_fasta: /path/to/optional_host.fasta
 
-dbmeta: /data/Daan/Projects/Metatropics/Databases1/ViralRefseq
 kit_name: TWIST-96A-UDI
 model: hac
 minLength: 200
 pair: true
 front: 25
 tail: 25
-minVirus: 0.01
 quality: 15
 depth: 20
 agreement: 0.7
@@ -24,16 +22,10 @@ agreement: 0.7
 perform_rarefaction: false
 target_bases: 500000000
 
-enable_docker_cleanup: false
-
-# ── Virasign (parallel viral classifier) ──
-# run_virasign: true → one Virasign job on ALL samples’ human-depleted FASTQs (cross-sample HTML/CSV).
-# Set run_virasign: true to run Virasign alongside MetaMaps.
-# All virasign_* params default to Virasign's own upstream defaults when omitted.
-run_virasign: true
+# ── Virasign 
 #virasign_database: RVDB             # or 'RefSeq' or 'RVDB,RefSeq' or a single accession (e.g. 'NC_001501.1')
 #virasign_db_dir: /path/to/parent/of/RVDB       # omit → <Metatropics repo>/Databases (expects e.g. Databases/RVDB)
-virasign_ultrasensitive: true       # -u / --ultrasensitive
+#virasign_ultrasensitive: true       # -u / --ultrasensitive
 #virasign_min_mapped_reads: 100
 #virasign_coverage_depth: 1.0
 #virasign_coverage_breadth: 0.1

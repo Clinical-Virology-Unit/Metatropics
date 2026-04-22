@@ -1,4 +1,5 @@
 process CUSTOM_DUMPSOFTWAREVERSIONS {
+    tag "Collect software versions"
     label 'process_single'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

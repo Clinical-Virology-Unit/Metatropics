@@ -1,4 +1,5 @@
 process DORADO_ONT {
+    tag "Basecalling"
     label 'process_gpu'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

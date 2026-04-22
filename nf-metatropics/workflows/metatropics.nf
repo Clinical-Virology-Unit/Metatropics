@@ -1,8 +1,6 @@
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    VALIDATE INPUTS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+/* Validate inputs */
+
+import groovy.json.JsonSlurper
 
 // Resolve Host keywords into concrete FASTA paths (do not mutate params)
 def resolvedHosts = HostReferences.resolve(params, log, workflow.projectDir.parent)
@@ -16,36 +14,14 @@ for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true
 // Check mandatory parameters
 if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
 
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    CONFIG FILES
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT LOCAL MODULES/SUBWORKFLOWS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-//
-// SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
-//
+/* Imports: local subworkflows */
 include { INPUT_CHECK_METATROPICS } from './subworkflows/local/input_check_metatropics'
 include { FIX } from './subworkflows/local/subfix_names'
 include { HUMAN_MAPPING } from './subworkflows/local/human_mapping'
 include { HOST_MAPPING } from './subworkflows/local/host_mapping'
 
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT NF-CORE MODULES/SUBWORKFLOWS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-//
-// MODULE: Installed directly from nf-core/modules
-//
-include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
+/* Imports: modules */
+include { CUSTOM_DUMPSOFTWAREVERSIONS as SOFTWARE_VERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 include { DORADO_ONT } from '../modules/local/dorado/ont'
 include { DORADO_DEMULTIPLEXING } from '../modules/local/dorado/demultiplexing'
 include { RAREFACTION		          } from '../modules/local/rarefaction/rarefaction'
@@ -54,27 +30,12 @@ include { NANOPLOT                    } from '../modules/nf-core/nanoplot/main'
 include { VIRASIGN_CLASSIFICATION      } from '../modules/local/virasign/classification'
 include { VIRASIGN_DB                  } from '../modules/local/virasign/prepare_db'
 include { VIRASIGN_SUMMARY             } from '../modules/local/virasign/build_html'
-include { METAMAPS_MAP                } from '../modules/local/metamaps/map'
-include { METAMAPS_CLASSIFY           } from '../modules/local/metamaps/classify'
-include { R_METAPLOT                  } from '../modules/local/r/metaplot'
-include { REF_FASTA                   } from '../modules/local/ref_fasta'
-include { SEQTK_SUBSEQ                } from '../modules/nf-core/seqtk/subseq/main'
-include { REFFIX_FASTA                } from '../modules/local/reffix_fasta'
 include { MEDAKA                      } from '../modules/nf-core/medaka/main'
 include { ReadCount                   } from '../modules/local/reads/reads'
-include { SAMTOOLS_COVERAGE           } from '../modules/nf-core/samtools/coverage/main'
 include { IVAR_CONSENSUS              } from '../modules/nf-core/ivar/consensus/main'
 include { HOMOPOLISH_POLISHING        } from '../modules/local/homopolish/polishing'
-include { ADDING_DEPTH                } from '../modules/local/adding_depth'
-include { FINAL_REPORT                } from '../modules/local/final_report'
-include { CLEANUP		              } from '../modules/local/cleanup/cleanup'
-include { CLEANUP_INTERMEDIATE		  } from '../modules/local/cleanup/cleanup_intermediate'
 
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    RUN MAIN WORKFLOW
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+/* Main workflow */
 
 
 workflow METATROPICS {
@@ -143,13 +104,13 @@ workflow METATROPICS {
         ch_reads_for_fastp = ch_fixed_reads
     }
 
-    FASTPLONG(
-        ch_reads_for_fastp
-    )
-
     NANOPLOT(
          ch_fixed_reads
      )
+
+    FASTPLONG(
+        ch_reads_for_fastp
+    )
 
     def readsAfterHuman = FASTPLONG.out.reads
     def readsForViralClassification
@@ -206,10 +167,33 @@ workflow METATROPICS {
                 .mix(VIRASIGN_CLASSIFICATION.out.unfiltered_json)
                 .count()
         )
+
+        // Build per-(sample,accession) tuples directly from Virasign-produced JSONs.
+        // IMPORTANT: Do not glob the outdir with `checkIfExists: true` here, because the files
+        // only exist after VIRASIGN_CLASSIFICATION completes.
+        ch_virasign_confident = VIRASIGN_CLASSIFICATION.out.final_json.flatMap { jsonFile ->
+            def sampleDir = jsonFile.parent
+            def sampleLabel = sampleDir.getBaseName()
+            def sampleId = sampleLabel
+                .replaceFirst(/\\.fastp$/, '')
+                .replaceFirst(/(_T\\d+_other_T\\d+|_other_T\\d+|_T\\d+_other|_T\\d+|_other)$/, '')
+
+            def hits = (List) new JsonSlurper().parse(jsonFile)
+            hits.collect { hit ->
+                def acc = hit.accession?.toString()
+                def accDir = file("${sampleDir}/${acc}")
+                def meta2 = [ id: sampleId, single_end: true, virus: acc ]
+                [
+                    meta2,
+                    file("${accDir}/${acc}.bam"),
+                    file("${accDir}/${acc}.bam.bai"),
+                    file("${accDir}/${acc}.fasta"),
+                    file("${accDir}/mread.fastq.gz")
+                ]
+            }
+        }
     }
 
-    // ReadCount: after Virasign cross-sample summary when enabled; otherwise after all host-depleted read tuples
-    // are issued (independent of Medaka). Published under Summary/readcount/ (see modules.config).
     def ch_readcount_barrier
     if (params.run_virasign) {
         ch_readcount_barrier = VIRASIGN_SUMMARY.out.csv
@@ -219,177 +203,29 @@ workflow METATROPICS {
     def ch_readcount_in = ch_readcount_barrier.map { b -> tuple(params.outdir, b, host_genome_status) }
     ReadCount( ch_readcount_in )
 
-    METAMAPS_MAP(
-        readsForViralClassification
-    )
 
-    meta_with_othermeta = METAMAPS_MAP.out.metaclass.join(METAMAPS_MAP.out.otherclassmeta)
-    meta_with_othermeta_with_metalength = meta_with_othermeta.join(METAMAPS_MAP.out.metalength)
-    meta_with_othermeta_with_metalength_with_parameter = meta_with_othermeta_with_metalength.join(METAMAPS_MAP.out.metaparameters)
-
-    METAMAPS_CLASSIFY(
-        meta_with_othermeta_with_metalength_with_parameter
-    )
-
-    // Collect all outputs from METAMAPS_CLASSIFY
-    ch_all_metamaps_classify = METAMAPS_CLASSIFY.out.classem.collect()
-    .mix(METAMAPS_CLASSIFY.out.classem_original.collect())
-    .mix(METAMAPS_CLASSIFY.out.classlength.collect())
-    .mix(METAMAPS_CLASSIFY.out.classWIMP.collect())
-    .mix(METAMAPS_CLASSIFY.out.classcov.collect())
-    .collect()
-
-    // Create a cleanup channel with a dummy file path
-    ch_cleanup_done = Channel.value(file("${workDir}/.cleanup_done"))
-
-    // Run intermediate CLEANUP only if Docker cleanup is enabled
-    if (params.enable_docker_cleanup) {
-    CLEANUP_INTERMEDIATE(ch_all_metamaps_classify)
-    ch_cleanup_done = CLEANUP_INTERMEDIATE.out.cleanup_done
-    } else {
-    // Create a dummy file in the work directory
-    file("${workDir}/.cleanup_done").text = "Cleanup not enabled"
+    if (!params.run_virasign) {
+        exit 1, "This pipeline configuration requires 'run_virasign: true' to generate per-virus inputs for Medaka/iVar."
     }
 
-    // Continue with the rest of your workflow, using ch_cleanup_done to ensure cleanup has finished
-    rmetaplot_ch = ((METAMAPS_MAP.out.metaclass.join(METAMAPS_CLASSIFY.out.classlength))
-            .join(METAMAPS_CLASSIFY.out.classcov))
-            .join(NANOPLOT.out.totalreads)
-            .combine(ch_cleanup_done)
-
-    R_METAPLOT(
-    rmetaplot_ch.map { meta, classification_results, length_and_identities, contig_coverage, total_reads, cleanup_done ->
-        tuple(meta, classification_results, length_and_identities, contig_coverage, total_reads, cleanup_done)
+    def ch_medaka_in = ch_virasign_confident.map { meta, bam, bai, ref, reads ->
+        [ meta, reads, ref ]
     }
-    )
+    MEDAKA( ch_medaka_in )
 
-    reffasta_ch=(R_METAPLOT.out.reporttsv.join(METAMAPS_CLASSIFY.out.classem)).join(readsForViralClassification)
-
-    REF_FASTA(
-        reffasta_ch
-    )
-
-	fixingheader_ch = REF_FASTA.out.headereads.map { entry ->
-    def meta = entry[0]
-    def files = entry[1]
-    
-    if (files instanceof Path) {
-        [[id: meta.id, single_end: meta.single_end], [files]]  // Single file case
-    } else {
-        [[id: meta.id, single_end: meta.single_end], files]    // Multiple files case
-	}
-	}
-
-	fixiseqref_ch = REF_FASTA.out.seqref.map { entry ->
-    def meta = entry[0]
-    def files = entry[1]
-    
-    if (files instanceof Path) {
-        [[id: meta.id, single_end: meta.single_end], [files]]  // Single file case
-    } else {
-        [[id: meta.id, single_end: meta.single_end], files]    // Multiple files case
-	}
-	}
-
-	fixingallreads_ch = REF_FASTA.out.allreads.map { entry ->
-    def meta = entry[0]
-    def files = entry[1]
-    
-    if (files instanceof Path) {
-        [[id: meta.id, single_end: meta.single_end], [files]]  // Single file case
-    } else {
-        [[id: meta.id, single_end: meta.single_end], files]    // Multiple files case
-	}
-	}
-
-	// FlatMap function for headers
-	headers_ch = fixingheader_ch.flatMap { entry ->
-        def id = entry[0].id
-        def singleEnd = entry[0].single_end
-        entry[1].collect { virus ->
-            [[id: id, single_end: singleEnd, virus: virus.getBaseName().replaceFirst(/.+\./,"")], "${virus}"]
-        }
+    // iVar consensus runs directly from Virasign BAM + BAI + reference FASTA.
+    def ch_ivar_in = ch_virasign_confident.map { meta, bam, bai, ref, reads ->
+        [ meta, bam, bai, ref ]
     }
-
-	// FlatMap function for ref
-	fasta_ch = fixiseqref_ch.flatMap { entry ->
-        def id = entry[0].id
-        def singleEnd = entry[0].single_end
-        def tm = entry[1].size()
-              entry[1].collect { virus ->
-                [[id: id, single_end: singleEnd, virus: ((virus.getBaseName()).replaceFirst(/\.REF+/,"")).replaceFirst(/.+\./,"")],  "${virus}"]
-            }
-    }
-
-	// FlatMap function for fastq
-	fastq_ch = fixingallreads_ch.flatMap { entry ->
-        def id = entry[0].id
-        def singleEnd = entry[0].single_end
-        entry[1].collect { virus ->
-            [[id: id, single_end: singleEnd, virus: virus.getBaseName().replaceFirst(/.+\./,"")], "${virus}"]
-        }
-    }
-    
-	//Ending of the fix channels per pathogen.
-
-
-    REFFIX_FASTA(
-        fasta_ch
-    )
-
-    SEQTK_SUBSEQ(
-        fastq_ch.join(headers_ch)
-    )
-
-    MEDAKA(
-        SEQTK_SUBSEQ.out.sequences.join(REFFIX_FASTA.out.fixedseqref)
-    )
-
-    SAMTOOLS_COVERAGE(
-        MEDAKA.out.bamfiles
-    )
 
     savempileup = false
-    IVAR_CONSENSUS(
-        MEDAKA.out.bamfiles.join(REFFIX_FASTA.out.fixedseqref),
-        savempileup
-    )
+    IVAR_CONSENSUS( ch_ivar_in, savempileup )
 
     HOMOPOLISH_POLISHING(
-        IVAR_CONSENSUS.out.fasta.join(REFFIX_FASTA.out.fixedseqref)
-    )
-
-    group_virus_and_ref_ch = (HOMOPOLISH_POLISHING.out.polishconsensus).map { entry ->
-        def id = entry[0].id
-        def singleEnd = entry[0].single_end
-        def virus = entry[0].virus
-        //def fasta = entry[1],entry[2]
-        [[virus: virus], entry[1]]
-    }.groupTuple()//.view()
-
-    covconstat_ch = (SAMTOOLS_COVERAGE.out.coverage
-        .join(HOMOPOLISH_POLISHING.out.polishconsensus)
-        .join(SAMTOOLS_COVERAGE.out.bamstats)
-    ).map { entry ->
-        // entry = [meta, coverage_txt, consensus, bamstats]
-        [[id: entry[0].id, single_end: entry[0].single_end], entry[1], entry[2], entry[3]]
-    }
-
-    addingdepthin_ch = (covconstat_ch.combine(R_METAPLOT.out.reporttsv, by: 0)).map { entry ->
-        // entry = [meta_simple, coverage_txt, consensus, bamstats, report_tsv]
-        def id = entry[0].id
-        def singleEnd = entry[0].single_end
-        def virus = entry[1].getBaseName().replaceFirst(/.+\./,"")
-        // Order matches ADDING_DEPTH input: meta, depth, consensus, bamstats, report
-        [[id: id, single_end: singleEnd, virus: virus], entry[1], entry[2], entry[3], entry[4]]
-    }
-
-    ADDING_DEPTH(
-        addingdepthin_ch
-    )
-
-    FINAL_REPORT(
-        (ADDING_DEPTH.out.repdepth.map{it[1]}).collect()
+        IVAR_CONSENSUS.out.fasta.join(
+            ch_virasign_confident.map { meta, bam, bai, ref, reads -> [ meta, ref ] },
+            by: 0
+        )
     )
 
 
@@ -398,12 +234,7 @@ workflow METATROPICS {
     if (params.run_virasign) {
         ch_versions = ch_versions.mix(VIRASIGN_DB.out.versions)
     }
-    ch_versions = ch_versions.mix(METAMAPS_MAP.out.versions.first())
-    ch_versions = ch_versions.mix(METAMAPS_CLASSIFY.out.versions.first())
-    ch_versions = ch_versions.mix(R_METAPLOT.out.versions.first())
-    ch_versions = ch_versions.mix(SEQTK_SUBSEQ.out.versions.first())
     ch_versions = ch_versions.mix(MEDAKA.out.versions.first())
-    ch_versions = ch_versions.mix(SAMTOOLS_COVERAGE.out.versions.first())
     ch_versions = ch_versions.mix(IVAR_CONSENSUS.out.versions.first())
     ch_versions = ch_versions.mix(HOMOPOLISH_POLISHING.out.versions.first())
     if (resolvedHumanHostFasta) {
@@ -412,18 +243,9 @@ workflow METATROPICS {
         ch_versions = ch_versions.mix(HUMAN_MAPPING.out.versionssamfastq)
     }
 
-    CUSTOM_DUMPSOFTWAREVERSIONS(
-    ch_versions.unique().collectFile(name: 'collated_versions.yml')
+    SOFTWARE_VERSIONS(
+        ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
-
-    // Run CLEANUP only if Docker cleanup is enabled
-    if (params.enable_docker_cleanup) {
-        CLEANUP(
-            CUSTOM_DUMPSOFTWAREVERSIONS.out.versions,
-            FINAL_REPORT.out.finalReport,
-            ReadCount.out.read_counts_csv
-        )
-    }
 
 }
 

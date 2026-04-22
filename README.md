@@ -49,27 +49,14 @@ docker run --rm hello-world
 
 ---
 
-## 4. Download databases
-Download and unpack the required database (Viral RefSeq and human host genomes):
+## 4. Configure paths (samplesheet, output)
 
-```
-mkdir -p Databases && cd Databases
-wget -c https://zenodo.org/records/13132915/files/combined_databases.tar.gz
-tar -xzvf combined_databases.tar.gz
-rm combined_databases.tar.gz
-```
-
----
-
-## 5. Configure paths (samplesheet, output, databases)
-
-At the repository root, choose the params file to match how you start: **[`params_fastq.yaml`](params_fastq.yaml)** when you already have basecalled reads (FASTQ), or **[`params_POD5.yaml`](params_POD5.yaml)** when you start from raw **POD5** signal (“squiggle”) data and need basecalling inside the pipeline. Edit that file using absolute paths.
+At the repository root, choose the params file to match how you start: **[`params_fastq.yaml`](params_fastq.yaml)** when you already have basecalled reads (FASTQ), or **[`params_POD5.yaml`](params_POD5.yaml)** when you start from raw POD5 signal (“squiggle”) data and need basecalling inside the pipeline. Edit that file using absolute paths.
 
 | Setting | Purpose |
 |-----|-------------------|
 | `input` | Samplesheet CSV: copy **[`fastq.csv`](nf-metatropics/assets/submission/fastq.csv)** (FASTQ) or **[`POD5.csv`](nf-metatropics/assets/submission/POD5.csv)** (POD5) from [`nf-metatropics/assets/submission/`](nf-metatropics/assets/submission/), edit it, then set `input` to that file’s absolute path. 
 | `outdir` | Where results are written. |
-| `dbmeta` | Set database path (from step 4). |
 | `Host` | Optional host depletion (e.g., `human,pan`). |
 | `input_dir` | POD5 only: directory containing POD5 files (with **`params_POD5.yaml`**) |
 
@@ -79,7 +66,7 @@ Additional options: **[`nf-metatropics/assets/submission/all_options.md`](nf-met
 
 ---
 
-## 6. Running Metatropics
+## 5. Running Metatropics
 
 With your `params_fastq.yaml` or `params_POD5.yaml` in place, run from the repository root (swap `-profile docker` for e.g. `-profile singularity`, if needed):
 
@@ -89,7 +76,7 @@ nextflow run nf-metatropics/ -profile docker -params-file params_fastq.yaml -res
 
 ---
 
-## 7. Output
+## 6. Output
 
 Results are written under your chosen `--outdir` and summarized below:
 
@@ -97,9 +84,8 @@ Results are written under your chosen `--outdir` and summarized below:
 |--------|------|
 | **`Basecalling/`** | Dorado basecalling and demultiplexing (optional). |
 | **`Reads/`** | Read QC, trimming, human / optional host depletion. |
-| **`Classification/`** | MetaMaps taxonomic outputs. |
-| **`Viral_reads/`** | Per-virus extracted FASTQs. |
-| **`Variant_calling/`** | Viral references, Medaka alignments/variants, merged depth tables. |
+| **`Classification/`** | Virasign viral classification outputs and reports. |
+| **`Variant_calling/`** | Medaka alignments and variant calls (VCFs). |
 | **`Consensus/`** | iVar draft and Homopolish polished genomes. |
 | **`Summary/`** | Final Metatropics report listing all viruses identified (`Summary/virasign/*.html`), plus read-count summaries and pipeline provenance. |
 
@@ -107,13 +93,13 @@ For a detailed description of each output subfolder, see [`nf-metatropics/assets
 
 ---
 
-## 8. High performance computing
+## 7. High performance computing
 
 You can run Metatropics on a high-performance cluster instead of a local workstation. For the Flemish Tier‑1 system CalcUA (VSC Antwerp), ready-made Slurm submission scripts and Nextflow profiles live under [`nf-metatropics/assets/calcua/`](nf-metatropics/assets/calcua/). Setup, editing the batch scripts, and `sbatch` commands are documented in the [CalcUA README](nf-metatropics/assets/calcua/README.md).
 
 ---
 
-## 9. Citation
+## 8. Citation
 
 If you use Metatropics in your research, please cite:
 

@@ -1,5 +1,5 @@
 process SAMPLESHEET_CHECK_METATROPICS {
-    tag "$samplesheet"
+    tag "Validate samplesheet"
     label 'process_single'
 
     conda "conda-forge::python=3.8.3"

@@ -1,20 +1,18 @@
 process VIRASIGN_CLASSIFICATION {
-    tag "$meta.id"
+    tag "Viral classification"
     label 'process_medium'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'library://jansendaan94_v2/metatropics/virasign:latest':
         'daanjansen94/virasign:latest' }"
 
-    // Bind host outdir so the process can merge results into a stable shared path.
-    // Passing the shared path as a `path` input has intermittently serialized to `false` on some setups.
+    // Bind outdir/db_dir so results persist outside the container.
     def outAbs = file(params.outdir).toAbsolutePath().toString()
     def pipelineRoot = new File("${projectDir}").parentFile.absolutePath
     def db_dir = params.virasign_db_dir ?: "${pipelineRoot}/Databases"
     def dbAbs = file(db_dir).toAbsolutePath().toString()
 
-    // If the user provides absolute paths for z-score controls / blind list, those files must
-    // be visible inside the container as well. Bind their parent directories.
+    // Ensure any user-provided control/blind files are visible in-container.
     def extraBindDirs = []
     def addBindDir = { String p ->
         if (!p) return
@@ -63,9 +61,7 @@ process VIRASIGN_CLASSIFICATION {
 
     def rawDbArg = params.virasign_database?.toString()?.trim()
     def effectiveDbArg = rawDbArg ?: 'RVDB'
-    // Database label for output isolation. This prevents mixing results across runs when
-    // users change `virasign_database` but run with `-resume` (cached processes can
-    // otherwise leave older files under a shared Classification/virasign root).
+    // Output isolation per database choice (avoid mixing when using -resume).
     def virasignDbLabel = effectiveDbArg.replaceAll(/[^A-Za-z0-9._-]+/, '_')
     def resolvedDbArg = effectiveDbArg
     if (effectiveDbArg) {
@@ -108,9 +104,7 @@ process VIRASIGN_CLASSIFICATION {
     # Barrier input from DB prep (ensures DB is prepared once).
     test -f "${db_ready}"
 
-    # Self-heal: if -resume cached the DB prep barrier but the database files were deleted,
-    # virasign will try to re-resolve the keyword and may fail mid-download. Re-run --prepare-db
-    # here if we couldn't resolve a concrete FASTA path for known built-in DBs.
+    # If -resume cached the barrier but DB files were deleted, retry prepare-db.
     if [ "${effectiveDbArg.toLowerCase()}" = "rvdb" ] && [ "${resolvedDbArg}" = "${effectiveDbArg}" ]; then
       virasign --prepare-db --db-dir "${db_dir}" -d 'RVDB' \
         ${params.virasign_rvdb_version != null ? "--rvdb-version ${params.virasign_rvdb_version}" : ""} \
@@ -122,24 +116,49 @@ process VIRASIGN_CLASSIFICATION {
     fi
 
     mkdir -p virasign_in
-    for f in *.fastq.gz *.fq.gz; do
+
+    # Stage input FASTQs into virasign_in/ (accept file or dir). Prefer canonical sample ID.
+    stage_one () {
+      local f="\$1"
+      [ -e "\$f" ] || return 0
+
+      local base="\${f##*/}"
+      base="\${base%.fastq.gz}"
+      base="\${base%.fq.gz}"
+      base="\${base%_other}"
+
+      local out="${meta.id}.fastq.gz"
+      # If multiple files are provided, avoid name collisions.
+      if [ -e "virasign_in/\$out" ]; then
+        out="\${base}.fastq.gz"
+      fi
+      ln -sfn "\$f" "virasign_in/\$out"
+    }
+
+    for f in ${virasign_input_fastqs}; do
       [ -e "\$f" ] || continue
-      [ -d "\$f" ] && continue
-      ln -sfn "\$PWD/\$f" "virasign_in/\$f"
+      if [ -d "\$f" ]; then
+        # Link all FASTQs in the directory.
+        while IFS= read -r -d '' fq; do
+          stage_one "\$fq"
+        done < <(find "\$f" -maxdepth 1 -type f \\( -name '*.fastq' -o -name '*.fq' -o -name '*.fastq.gz' -o -name '*.fq.gz' \\) -print0)
+      else
+        stage_one "\$f"
+      fi
     done
-    n=\$(find virasign_in -mindepth 1 -maxdepth 1 | wc -l)
+
+    n=\$(find virasign_in -maxdepth 1 -type l \\( -name '*.fastq' -o -name '*.fq' -o -name '*.fastq.gz' -o -name '*.fq.gz' \\) | wc -l)
     if [ "\$n" -eq 0 ]; then
-      echo "ERROR: no FASTQs staged into virasign_in (expected symlinks *.fastq.gz or *.fq.gz in work dir)." >&2
-      ls -la >&2
+      echo "ERROR: no FASTQs staged into virasign_in (input resolved to a directory with no FASTQ files, or empty optional upstream output)." >&2
+      ls -la virasign_in >&2 || true
       exit 1
     fi
     ${cmd}
 
-    # Don't propagate the per-run virasign log into the shared results tree.
+    # Don't propagate per-run virasign log into shared results.
     rm -f publish/.virasign.log || true
 
-    # Copy this sample's publish/ tree into the shared results dir.
-    # Use flock for parallel-safety, but lock the shared directory itself (no extra .lock file created).
+    # Copy publish/ into the shared results dir (parallel-safe with flock if available).
     mkdir -p "${shared}"
     if command -v flock >/dev/null 2>&1; then
       flock -x "${shared}" bash -lc "
