@@ -1,6 +1,6 @@
 # Metatropics result folders (detailed)
 
-Paths below are relative to your pipeline **`--outdir`**. The pipeline also creates a Nextflow **`work/`** directory (scratch); what follows is only what is **published** into `outdir`.
+Paths below are relative to your pipeline **`--outdir`**. The pipeline also creates a Nextflow **`work/`** directory; what follows is only what is **published** into `outdir`.
 
 ---
 
@@ -8,13 +8,13 @@ Paths below are relative to your pipeline **`--outdir`**. The pipeline also crea
 
 | Group | Role |
 |--------|------|
-| **`Basecalling/`** | POD5: Dorado basecalling and demultiplexing (optional). |
+| **`Basecalling/`** | Dorado basecalling and demultiplexing (optional). |
 | **`Reads/`** | Read QC, trimming, human / optional host depletion. |
 | **`Classification/`** | MetaMaps taxonomic outputs. |
 | **`Viral_reads/`** | Per-virus extracted FASTQs. |
 | **`Variant_calling/`** | Viral references, Medaka alignments/variants, merged depth tables. |
 | **`Consensus/`** | iVar draft and Homopolish polished genomes. |
-| **`Summary/`** | Final HTML/CSV reports listing viruses identified, read-count summaries and pipeline provenance (software versions + Nextflow trace/reports). |
+| **`Summary/`** | **Final Metatropics report** listing all viruses identified (`Summary/virasign/*.html`), plus read-count summaries and pipeline provenance. |
 
 ---
 
