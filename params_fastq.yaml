@@ -20,9 +20,9 @@ perform_rarefaction: true
 target_bases: 500000000
 
 # ── Virasign 
-#irasign_database: RefSeq            # or 'RefSeq' or 'RVDB,RefSeq' or a single accession (e.g. OP526856.1)
+virasign_database: RefSeq            # or 'RefSeq' or 'RVDB,RefSeq' or a single accession (e.g. OP526856.1)
 #virasign_db_dir: /data/Daan/Projects/DB/      # omit → <Metatropics repo>/Databases (expects e.g. Databases/RVDB)
-#virasign_ultrasensitive: true       # -u / --ultrasensitive
+virasign_ultrasensitive: true       # -u / --ultrasensitive
 #virasign_min_identity: 80            # --min_identity
 #virasign_min_mapped_reads: 100       # --min_mapped_reads
 #virasign_coverage_depth: 1.0         # --coverage_depth

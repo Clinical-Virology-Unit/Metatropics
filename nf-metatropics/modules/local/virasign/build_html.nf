@@ -37,8 +37,8 @@ process VIRASIGN_SUMMARY {
     val _virasign_final_json_count
 
     output:
-    path "results_summary_*.html", emit: html
-    path "results_summary_*.csv",  emit: csv
+    path "Metatropics_Summary_*.html", emit: html
+    path "Metatropics_Summary_*.csv",  emit: csv
     path "versions.yml",           emit: versions
 
     when:
@@ -49,6 +49,8 @@ process VIRASIGN_SUMMARY {
     def effectiveDbArg = rawDbArg ?: 'RVDB'
     def virasignDbLabel = effectiveDbArg.replaceAll(/[^A-Za-z0-9._-]+/, '_')
     def outroot = file("${params.outdir}/Classification/virasign/${virasignDbLabel}").toAbsolutePath().toString()
+    def outHtml = "Metatropics_Summary_${virasignDbLabel}.html"
+    def outCsv  = "Metatropics_Summary_${virasignDbLabel}.csv"
     def zscore = params.virasign_zscore ?: 'true'
     def zscore_controls = params.virasign_zscore_controls?.toString()?.trim()
     def opt = []
@@ -75,9 +77,8 @@ process VIRASIGN_SUMMARY {
     fi
     if ! find "\$OUT" -name '*_final_selected_references.json' \\( -type f -o -type l \\) 2>/dev/null | head -n1 | grep -q .; then
       # No confident hits in any sample: don't fail the pipeline; emit a small placeholder summary.
-      ts=\$(date +%Y%m%d_%H%M%S)
-      csv="results_summary_\${ts}.csv"
-      html="results_summary_\${ts}.html"
+      csv="${outCsv}"
+      html="${outHtml}"
       printf "sample,confident\\n" > "\$csv"
       cat > "\$html" <<'EOF'
 <!doctype html>
@@ -101,8 +102,10 @@ END_VERSIONS
     fi
 
     ${cmd}
-    cp -f "${outroot}"/results_summary_*.html .
-    cp -f "${outroot}"/results_summary_*.csv .
+    cp -f "${outroot}"/results_summary_*.html ./__results_summary.html
+    cp -f "${outroot}"/results_summary_*.csv  ./__results_summary.csv
+    mv -f ./__results_summary.html "${outHtml}"
+    mv -f ./__results_summary.csv  "${outCsv}"
     # Keep the shared Classification/virasign tree focused on per-sample outputs only.
     rm -f "${outroot}"/results_summary_*.html "${outroot}"/results_summary_*.csv "${outroot}"/.virasign.log || true
 
