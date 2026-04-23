@@ -2,8 +2,8 @@
 # Example samplesheet: nf-metatropics/assets/submission/fastq.csv
 
 # Required:
-input: /scratch/antwerpen/209/vsc20958/Metatropics_runs/Lassa/Input/fastq.csv
-outdir: /scratch/antwerpen/209/vsc20958/Metatropics_runs/Lassa/Output
+input: /data/Daan/Projects/T_DCT/Input/samplesheet.csv
+outdir: /data/Daan/Projects/T_DCT/Output
 
 # Optional:
 Host: human,pan
