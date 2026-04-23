@@ -49,7 +49,7 @@ docker run --rm hello-world
 
 ---
 
-## 4. Configure paths (samplesheet, output)
+## 4. Configure paths (input, output)
 
 At the repository root, choose the params file to match how you start and edit it using absolute paths.
 
