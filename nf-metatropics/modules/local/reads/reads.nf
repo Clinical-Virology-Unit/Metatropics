@@ -2,12 +2,13 @@ process ReadCount {
     label 'process_medium'
     tag "Read distribution summary"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'docker://python:3.11-bookworm' :
-        'python:3.11-bookworm' }"
+        'library://jansendaan94_v2/metatropics/readcount:latest':
+        'daanjansen94/readcount:latest' }"
+
 
     def outPath = file(params.outdir).toAbsolutePath().toString()
     if( workflow.containerEngine == 'docker' ) {
-        containerOptions "-v ${outPath}:${outPath} -u 0:0"
+        containerOptions "-v ${outPath}:${outPath}"
     }
     if( workflow.containerEngine == 'singularity' ) {
         containerOptions "--bind ${outPath}:${outPath}"
@@ -63,15 +64,8 @@ process ReadCount {
     fi
 
     # Generate read count outputs.
-    # Install to a writable per-task dir so this works in read-only containers.
-    # Note: Nextflow sets PYTHONNOUSERSITE=1 in container env, so `pip --user` may not be importable.
-    # Speed: keep a persistent pip wheel cache under outdir (works for both Docker+Apptainer).
-    PIP_CACHE_DIR="${outdir}/.cache/pip"
-    mkdir -p "$PIP_CACHE_DIR"
-    PYLIB="\$PWD/.pylibs"
-    mkdir -p "\$PYLIB"
-    python -m pip install --cache-dir "$PIP_CACHE_DIR" --target "\$PYLIB" pandas plotly matplotlib >/dev/null
-    export PYTHONPATH="\$PYLIB:\${PYTHONPATH:-}"
+    # This container should already provide pandas/plotly/matplotlib.
+    python -c "import pandas, plotly, matplotlib" >/dev/null
     python ${projectDir}/bin/readcount.py \
       --outdir "${outdir}" \
       --host-status "${host_genome_status}" \
