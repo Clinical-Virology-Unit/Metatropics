@@ -59,7 +59,7 @@ Use **[`params_fastq.yaml`](params_fastq.yaml)**.
 
 | Setting | Purpose |
 |-----|-------------------|
-| `input` | Samplesheet CSV: copy **[`fastq.csv`](nf-metatropics/assets/submission/fastq.csv)** from [`nf-metatropics/assets/submission/`](nf-metatropics/assets/submission/), edit it, then set `input` to that file’s absolute path. |
+| `input` | Copy **[`fastq.csv`](nf-metatropics/assets/submission/fastq.csv)** from [`nf-metatropics/assets/submission/`](nf-metatropics/assets/submission/), edit it, then set `input` to that file’s absolute path. |
 | `outdir` | Where results are written. |
 | `Host` | Optional: host depletion (e.g., `human,pan`). |
 | `virasign_ultrasensitive` | Optional: enable ultrasensitive viral identification mode. |
@@ -72,7 +72,7 @@ Use **[`params_POD5.yaml`](params_POD5.yaml)**.
 
 | Setting | Purpose |
 |-----|-------------------|
-| `input` | Samplesheet CSV: copy **[`POD5.csv`](nf-metatropics/assets/submission/POD5.csv)** from [`nf-metatropics/assets/submission/`](nf-metatropics/assets/submission/), edit it, then set `input` to that file’s absolute path. |
+| `input` | Copy **[`POD5.csv`](nf-metatropics/assets/submission/POD5.csv)** from [`nf-metatropics/assets/submission/`](nf-metatropics/assets/submission/), edit it, then set `input` to that file’s absolute path. |
 | `input_dir` | Directory containing POD5 files. |
 | `outdir` | Where results are written. |
 | `kit_name` | Dorado `--kit-name` (default: `TWIST-96A-UDI`). |
