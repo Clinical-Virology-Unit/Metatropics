@@ -26,17 +26,17 @@ To autogenerate a `samplesheet.csv` from a reads folder, run `pip install .` onc
 | Option | Description |
 |--------|-------------|
 | `--minLength` | Minimum read length to analyse. Default: 200. |
-| `--quality` | Minimum base quality for consensus. Default: 7. |
+| `--quality` | Minimum base quality for consensus. Default: 15. |
 | `--agreement` | Minimum base frequency for unambiguous consensus calls. Default: 0.7. |
-| `--depth` | Minimum per-position depth for consensus. Default: 5. |
-| `--front` | Bases to trim at 5′. Default: 0. |
-| `--tail` | Bases to trim at 3′. Default: 0. |
+| `--depth` | Minimum per-position depth for consensus. Default: 20. |
+| `--front` | Bases to trim at 5′. Default: 25. |
+| `--tail` | Bases to trim at 3′. Default: 25. |
 
 ## Rarefaction options
 
 | Option | Description |
 |--------|-------------|
-| `--perform_rarefaction` | Rarefy each sample to a target number of bases. Default: false. |
+| `--perform_rarefaction` | Rarefy each sample to a target number of bases. Default: true. |
 | `--target_bases` | Target bases per sample when rarefying (e.g. ~500k reads × 2 kb). Default: 1e9 bases. |
 
 ## Host depletion option

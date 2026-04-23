@@ -96,7 +96,7 @@
                 },
                 "quality": {
                     "type": "integer",
-                    "default": 7,
+                    "default": 15,
                     "description": "Minimum base quality for consensus.",
                     "fa_icon": "fas fa-star-half-alt"
                 },
@@ -108,19 +108,19 @@
                 },
                 "depth": {
                     "type": "integer",
-                    "default": 5,
+                    "default": 20,
                     "description": "Minimum per-position depth for consensus.",
                     "fa_icon": "fas fa-layer-group"
                 },
                 "front": {
                     "type": "integer",
-                    "default": 0,
+                    "default": 25,
                     "description": "Bases to trim at 5′.",
                     "fa_icon": "fas fa-cut"
                 },
                 "tail": {
                     "type": "integer",
-                    "default": 0,
+                    "default": 25,
                     "description": "Bases to trim at 3′.",
                     "fa_icon": "fas fa-cut"
                 }
@@ -134,7 +134,7 @@
             "properties": {
                 "perform_rarefaction": {
                     "type": "boolean",
-                    "default": false,
+                    "default": true,
                     "description": "Rarefy each sample to a target number of bases.",
                     "fa_icon": "fas fa-toggle-on"
                 },
