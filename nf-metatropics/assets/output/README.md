@@ -35,7 +35,7 @@ This stage optionally performs rarefaction, then removes low-quality reads, shor
 | `Reads/raw` | Per-sample raw reads after naming / format fixes (`*_fixed.fastq.gz`). |
 | `Reads/rarefaction` | Optional: Per-sample FASTQ after optional rarefaction subsampling. |
 | `Reads/nanoplot` | Read-length and quality summaries (NanoPlot) on the raw reads. |
-| `Reads/fastplong` | Trimmed reads and fastplong QC reports. |
+| `Reads/fastplong` | Trimmed, length-filtered reads (`*.fastp.fastq.gz`). |
 | `Reads/nohuman` | Human-depleted reads (`*_human_depleted.fastq.gz`); mapped reads (`*_human.fastq.gz`). |
 | `Reads/nohost` | Host-depleted reads (`*_host_depleted.fastq.gz`); mapped reads (`*_host.fastq.gz`). |
 
@@ -69,15 +69,13 @@ For each candidate virus, **[Medaka](https://github.com/nanoporetech/medaka)** f
 
 | Path | Contents |
 |------|----------|
-| `Variant_calling/reffix` | Reference FASTA with cleaned headers for each virus. |
-| `Variant_calling/medaka` | BAMs, VCF variant calls, and Medaka coverage text. |
-| `Variant_calling/addingDepth` | Per-virus **`*.sdepth.tsv`** depth tables (coverage + consensus + classification). |
+| `Variant_calling/medaka` | Variant calls (VCF only; `*.vcf`). |
 
 ---
 
 ## `Consensus/`
 
-Consensus building takes the Medaka-produced BAM and feeds it to iVar, which calls a draft consensus sequence; Homopolish then polishes that draft. 
+Consensus building takes the Virasign-produced alignment (BAM + BAI) and the Virasign-selected best-matching reference FASTA, feeds them to iVar to call a draft consensus sequence; Homopolish then polishes that draft. 
 
 | Path | Contents |
 |------|----------|
@@ -88,12 +86,12 @@ Consensus building takes the Medaka-produced BAM and feeds it to iVar, which cal
 
 ## `Summary/`
 
-Run-wide summaries and provenance.
+Metatropics reports, run-wide summaries, and provenance.
 
 | Path | Contents |
 |------|----------|
 | `Summary/readcount` | Read distribution (`read_distribution.html`). |
-| `Summary/virasign` | Final Metatropics HTML report for quick inspection across samples. |
-| `Summary/pipeline_info` | Nextflow trace/reports and software versions. |
+| `Summary/metatropics` | Final Metatropics HTML report (`Metatropics_Summary_*.html`). |
+| `Summary/pipeline_info` | Nextflow trace/reports and software versions (`software_versions.yml`). |
 
-For a quick overview of viruses found, open **`Summary/virasign/results_summary_*.html`**. 
+For a quick overview of viruses found, open the final HTML report **`Summary/metatropics/Metatropics_Summary_RVDB.html`**. 
