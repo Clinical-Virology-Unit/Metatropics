@@ -2,14 +2,14 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "$id": "https://raw.githubusercontent.com/nf-core/metatropics/master/nextflow_schema.json",
     "title": "nf-core/metatropics pipeline parameters",
-    "description": "Analyze Nanopore metagenomic data (fast5/fastq) to identify virus pathogen.",
+    "description": "Analyze Nanopore metagenomic data (POD5/FASTQ) to identify viral pathogens and generate summary reports.",
     "type": "object",
     "definitions": {
         "input_output_options": {
-            "title": "Input/output options",
+            "title": "FASTQ start (basecalled reads)",
             "type": "object",
             "fa_icon": "fas fa-terminal",
-            "description": "Define where the pipeline should find input data and save output data.",
+            "description": "To autogenerate a `samplesheet.csv` from a reads folder, run `pip install .` once at the repo root, then `metatropics-samplesheet -i .` from your FASTQ directory.",
             "required": ["outdir"],
             "properties": {
                 "input": {
@@ -18,42 +18,147 @@
                     "mimetype": "text/csv",
                     "pattern": "^\\S+\\.csv$",
                     "schema": "assets/samplesheet_schema/schema_input.json",
-                    "description": "Path to comma-separated file containing information about the samples in the experiment.",
-                    "help_text": "Path to the samplesheet CSV (columns: sample, barcode). Nanopore is always single-end; optional legacy column single_end is ignored. For FASTQ mode, barcode must be a full path ending in .fastq, .fq, .fastq.gz, or .fq.gz. Examples: nf-metatropics/assets/submission/fastq.csv (FASTQ paths) or POD5.csv (barcode labels for POD5). See nf-metatropics/assets/submission/README.md.",
+                    "description": "Path to the samplesheet CSV (example: `fastq.csv`).",
+                    "help_text": "Samplesheet CSV (columns: sample, barcode). FASTQ mode: barcode is a full path to FASTQ(.gz). POD5 mode: barcode is a barcode label (e.g. barcode01).",
+                    "fa_icon": "fas fa-file-csv"
+                },
+                "outdir": {
+                    "type": "string",
+                    "format": "directory-path",
+                    "description": "Output directory for results.",
+                    "fa_icon": "fas fa-folder-open"
+                }
+            }
+        },
+        
+        "basecalling_options": {
+            "title": "POD5 start (basecalling inside the pipeline)",
+            "type": "object",
+            "fa_icon": "fas fa-microchip",
+            "description": "",
+            "properties": {
+                "input": {
+                    "type": "string",
+                    "format": "file-path",
+                    "mimetype": "text/csv",
+                    "pattern": "^\\S+\\.csv$",
+                    "schema": "assets/samplesheet_schema/schema_input.json",
+                    "description": "Path to the samplesheet CSV (example: `POD5.csv`).",
                     "fa_icon": "fas fa-file-csv"
                 },
                 "input_dir": {
                     "type": "string",
                     "default": "None",
-                    "description": "Input directory with fast5 or fastq files. If fastq files, they should be one for each sample and named for instance as barcode01.fastq"
+                    "description": "Input directory with POD5.",
+                    "fa_icon": "fas fa-folder-open"
                 },
                 "outdir": {
                     "type": "string",
                     "format": "directory-path",
-                    "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
+                    "description": "Output directory for results. Use absolute paths on cloud storage.",
                     "fa_icon": "fas fa-folder-open"
+                },
+                "model": {
+                    "type": "string",
+                    "default": "hac",
+                    "enum": ["fast", "hac", "sup"],
+                    "description": "Dorado model (`fast`, `hac`, or `sup`).",
+                    "fa_icon": "fas fa-sliders-h"
+                },
+                "kit_name": {
+                    "type": "string",
+                    "default": "TWIST-96A-UDI",
+                    "description": "Dorado `--kit-name`.",
+                    "fa_icon": "fas fa-barcode",
+                    "enum": [
+                        "EXP-NBD103","EXP-NBD104","EXP-NBD114","EXP-NBD114-24","EXP-NBD196","EXP-PBC001","EXP-PBC096","SQK-16S024","SQK-16S114-24","SQK-LWB001","SQK-MLK111-96-XL","SQK-MLK114-96-XL","SQK-NBD111-24","SQK-NBD111-96",
+                        "SQK-NBD114-24","SQK-NBD114-96","SQK-PBK004","SQK-PCB109","SQK-PCB110",
+                        "SQK-PCB111-24","SQK-PCB114-24","SQK-RAB201","SQK-RAB204","SQK-RBK001",
+                        "SQK-RBK004","SQK-RBK110-96","SQK-RBK111-24","SQK-RBK111-96",
+                        "SQK-RBK114-24","SQK-RBK114-96","SQK-RLB001","SQK-RPB004",
+                        "SQK-RPB114-24","TWIST-16-UDI","TWIST-96A-UDI","VSK-PTC001",
+                        "VSK-VMK001","VSK-VMK004","VSK-VPS001"
+                    ]
                 }
             }
         },
-        "reference_genome_options": {
-            "title": "Reference genome options",
+        "read_processing_options": {
+            "title": "Read processing options",
             "type": "object",
-            "fa_icon": "fas fa-dna",
-            "description": "Reference genome related files and options required for the workflow.",
+            "fa_icon": "fas fa-stream",
+            "description": "Read filtering / trimming thresholds used by the pipeline.",
             "properties": {
-                "genome": {
-                    "type": "string",
-                    "description": "Name of iGenomes reference.",
-                    "fa_icon": "fas fa-book",
-                    "help_text": "If using a reference genome configured in the pipeline using iGenomes, use this parameter to give the ID for the reference. This is then used to build the full paths for all required reference genome files e.g. `--genome GRCh38`. \n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
+                "minLength": {
+                    "type": "integer",
+                    "default": 200,
+                    "description": "Minimum read length to analyse.",
+                    "fa_icon": "fas fa-ruler-horizontal"
                 },
+                "quality": {
+                    "type": "integer",
+                    "default": 7,
+                    "description": "Minimum base quality for consensus.",
+                    "fa_icon": "fas fa-star-half-alt"
+                },
+                "agreement": {
+                    "type": "number",
+                    "default": 0.7,
+                    "description": "Minimum base frequency for consensus calls.",
+                    "fa_icon": "fas fa-percentage"
+                },
+                "depth": {
+                    "type": "integer",
+                    "default": 5,
+                    "description": "Minimum per-position depth for consensus.",
+                    "fa_icon": "fas fa-layer-group"
+                },
+                "front": {
+                    "type": "integer",
+                    "default": 0,
+                    "description": "Bases to trim at 5′.",
+                    "fa_icon": "fas fa-cut"
+                },
+                "tail": {
+                    "type": "integer",
+                    "default": 0,
+                    "description": "Bases to trim at 3′.",
+                    "fa_icon": "fas fa-cut"
+                }
+            }
+        },
+        "rarefaction_options": {
+            "title": "Rarefaction options",
+            "type": "object",
+            "fa_icon": "fas fa-compress",
+            "description": "Optional subsampling by target bases per sample.",
+            "properties": {
+                "perform_rarefaction": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Rarefy each sample to a target number of bases.",
+                    "fa_icon": "fas fa-toggle-on"
+                },
+                "target_bases": {
+                    "type": "number",
+                    "default": 1000000000,
+                    "description": "Target bases per sample when rarefying.",
+                    "help_text": "",
+                    "fa_icon": "fas fa-bullseye"
+                }
+            }
+        },
+        "host_depletion_option": {
+            "title": "Host depletion option",
+            "type": "object",
+            "fa_icon": "fas fa-user-shield",
+            "description": "Configure human and optional additional host background subtraction.",
+            "properties": {
                 "Human_host_fasta": {
                     "type": "string",
                     "format": "file-path",
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
-                    "description": "Path to the FASTA file used for human background subtraction.",
-                    "help_text": "Optional. Provide when human host reads should be removed prior to downstream analyses. When omitted, the pipeline skips the human depletion step.",
+                    "description": "Optional FASTA for the human background removal step.",
                     "fa_icon": "far fa-file-code"
                 },
                 "Other_host_fasta": {
@@ -61,265 +166,144 @@
                     "format": "file-path",
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
-                    "description": "Path to an additional FASTA file for non-human host depletion.",
-                    "help_text": "Optional. Supply when another background genome (e.g. mosquito, primate) should be filtered after the human background.",
+                    "description": "Optional FASTA for an additional host background.",
                     "fa_icon": "far fa-file-code"
                 },
                 "Host": {
                     "type": "string",
-                    "description": "Host keyword(s) to enable automatic host FASTA download/caching under <repo>/Databases.",
-                    "help_text": "Optional. Alternative to supplying explicit --Human_host_fasta / --Other_host_fasta paths. Examples: --Host human (sets Human_host_fasta), --Host pan (sets Other_host_fasta), or --Host 'human,pan' (sets both). Multiple non-human hosts are supported and will be merged into a single FASTA for Other_host_fasta (e.g. --Host 'human,aedes,culex'). Supported keywords: human, pan, gorilla, orangutan, macaque, aedes, anopheles, culex, bat, rat, dog, cat, camel, goat, pig, cow, mouse, chicken.",
+                    "description": "Optional host keyword(s) for auto-download FASTA.",
+                    "help_text": "",
                     "fa_icon": "fas fa-dna"
-                },
-                "fasta": {
-                    "type": "string",
-                    "format": "file-path",
-                    "mimetype": "text/plain",
-                    "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
-                    "description": "Deprecated alias for `--Human_host_fasta`.",
-                    "help_text": "Retained for backwards compatibility only. Please migrate to `--Human_host_fasta`.",
-                    "fa_icon": "far fa-file-code",
-                    "hidden": true
-                },
-                "host_fasta": {
-                    "type": "string",
-                    "format": "file-path",
-                    "mimetype": "text/plain",
-                    "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
-                    "description": "Deprecated alias for `--Other_host_fasta`.",
-                    "help_text": "Retained for backwards compatibility only. Please migrate to `--Other_host_fasta`.",
-                    "fa_icon": "far fa-file-code",
-                    "hidden": true
-                },
-                "igenomes_base": {
-                    "type": "string",
-                    "format": "directory-path",
-                    "description": "Directory / URL base for iGenomes references.",
-                    "default": "s3://ngi-igenomes/igenomes",
-                    "fa_icon": "fas fa-cloud-download-alt",
-                    "hidden": true
-                },
-                "igenomes_ignore": {
-                    "type": "boolean",
-                    "description": "Do not load the iGenomes reference config.",
-                    "fa_icon": "fas fa-ban",
-                    "hidden": true,
-                    "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
                 }
             }
         },
-        "institutional_config_options": {
-            "title": "Institutional config options",
+        "viral_classifier_options_virasign": {
+            "title": "Viral classifier options (Virasign)",
             "type": "object",
-            "fa_icon": "fas fa-university",
-            "description": "Parameters used to describe centralised config profiles. These should not be edited.",
-            "help_text": "The centralised nf-core configuration profiles use a handful of pipeline parameters to describe themselves. This information is then printed to the Nextflow log when you run a pipeline. You should not need to change these values when you run a pipeline.",
+            "fa_icon": "fas fa-virus",
+            "description": "Options controlling Virasign database prep and viral classification.",
             "properties": {
-                "custom_config_version": {
+                "virasign_database": {
                     "type": "string",
-                    "description": "Git commit id for Institutional configs.",
-                    "default": "master",
-                    "hidden": true,
-                    "fa_icon": "fas fa-users-cog"
+                    "default": "RVDB",
+                    "description": "Database(s) (e.g., `RVDB,RefSeq`).",
+                    "help_text": "Comma-separated list of Virasign database labels.",
+                    "fa_icon": "fas fa-database"
                 },
-                "custom_config_base": {
+                "virasign_db_dir": {
                     "type": "string",
-                    "description": "Base directory for Institutional configs.",
-                    "default": "https://raw.githubusercontent.com/nf-core/configs/master",
-                    "hidden": true,
-                    "help_text": "If you're running offline, Nextflow will not be able to fetch the institutional config files from the internet. If you don't need them, then this is not a problem. If you do need them, you should download the files from the repo and tell Nextflow where to find them with this parameter.",
-                    "fa_icon": "fas fa-users-cog"
+                    "description": "Where Virasign databases are stored (defaults to `Databases/`).",
+                    "help_text": "",
+                    "fa_icon": "fas fa-folder-open"
                 },
-                "config_profile_name": {
-                    "type": "string",
-                    "description": "Institutional config name.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-users-cog"
-                },
-                "config_profile_description": {
-                    "type": "string",
-                    "description": "Institutional config description.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-users-cog"
-                },
-                "config_profile_contact": {
-                    "type": "string",
-                    "description": "Institutional config contact information.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-users-cog"
-                },
-                "config_profile_url": {
-                    "type": "string",
-                    "description": "Institutional config URL link.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-users-cog"
-                }
-            }
-        },
-        "max_job_request_options": {
-            "title": "Max job request options",
-            "type": "object",
-            "fa_icon": "fab fa-acquisitions-incorporated",
-            "description": "Set the top limit for requested resources for any single job.",
-            "help_text": "If you are running on a smaller system, a pipeline step requesting more resources than are available may cause the Nextflow to stop the run with an error. These options allow you to cap the maximum resources requested by any single job so that the pipeline will run on your system.\n\nNote that you can not _increase_ the resources requested by any job using these options. For that you will need your own configuration file. See [the nf-core website](https://nf-co.re/usage/configuration) for details.",
-            "properties": {
-                "max_cpus": {
-                    "type": "integer",
-                    "description": "Maximum number of CPUs that can be requested for any single job.",
-                    "default": 16,
-                    "fa_icon": "fas fa-microchip",
-                    "hidden": true,
-                    "help_text": "Use to set an upper-limit for the CPU requirement for each process. Should be an integer e.g. `--max_cpus 1`"
-                },
-                "max_memory": {
-                    "type": "string",
-                    "description": "Maximum amount of memory that can be requested for any single job.",
-                    "default": "128.GB",
-                    "fa_icon": "fas fa-memory",
-                    "pattern": "^\\d+(\\.\\d+)?\\.?\\s*(K|M|G|T)?B$",
-                    "hidden": true,
-                    "help_text": "Use to set an upper-limit for the memory requirement for each process. Should be a string in the format integer-unit e.g. `--max_memory '8.GB'`"
-                },
-                "max_time": {
-                    "type": "string",
-                    "description": "Maximum amount of time that can be requested for any single job.",
-                    "default": "240.h",
-                    "fa_icon": "far fa-clock",
-                    "pattern": "^(\\d+\\.?\\s*(s|m|h|day)\\s*)+$",
-                    "hidden": true,
-                    "help_text": "Use to set an upper-limit for the time requirement for each process. Should be a string in the format integer-unit e.g. `--max_time '2.h'`"
-                }
-            }
-        },
-        "generic_options": {
-            "title": "Generic options",
-            "type": "object",
-            "fa_icon": "fas fa-file-import",
-            "description": "Less common options for the pipeline, typically set in a config file.",
-            "help_text": "These options are common to all nf-core pipelines and allow you to customise some of the core preferences for how the pipeline runs.\n\nTypically these options would be set in a Nextflow config file loaded for all pipeline runs, such as `~/.nextflow/config`.",
-            "properties": {
-                "help": {
+                "virasign_ultrasensitive": {
                     "type": "boolean",
-                    "description": "Display help text.",
-                    "fa_icon": "fas fa-question-circle",
-                    "hidden": true
+                    "default": false,
+                    "description": "Enable Virasign ultrasensitive mode.",
+                    "fa_icon": "fas fa-search-plus"
                 },
-                "version": {
-                    "type": "boolean",
-                    "description": "Display version and exit.",
-                    "fa_icon": "fas fa-question-circle",
-                    "hidden": true
-                },
-                "publish_dir_mode": {
+                "virasign_blind": {
                     "type": "string",
-                    "default": "copy",
-                    "description": "Method used to save pipeline results to output directory.",
-                    "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
-                    "fa_icon": "fas fa-copy",
-                    "enum": ["symlink", "rellink", "link", "copy", "copyNoFollow", "move"],
-                    "hidden": true
+                    "description": "Blind viral species from analysis.",
+                    "help_text": "",
+                    "fa_icon": "fas fa-eye-slash"
                 },
-                "monochrome_logs": {
-                    "type": "boolean",
-                    "description": "Do not use coloured log outputs.",
-                    "fa_icon": "fas fa-palette",
-                    "hidden": true
-                },
-                "tracedir": {
+                "virasign_rvdb_version": {
                     "type": "string",
-                    "description": "Directory to keep pipeline Nextflow logs and reports.",
-                    "default": null,
-                    "fa_icon": "fas fa-cogs",
-                    "hidden": true
+                    "description": "RVDB release to use (optional).",
+                    "fa_icon": "fas fa-tag"
                 },
-                "validate_params": {
-                    "type": "boolean",
-                    "description": "Boolean whether to validate parameters against the schema at runtime",
-                    "default": true,
-                    "fa_icon": "fas fa-check-square",
-                    "hidden": true
-                },
-                "show_hidden_params": {
-                    "type": "boolean",
-                    "fa_icon": "far fa-eye-slash",
-                    "description": "Show all params when using `--help`",
-                    "hidden": true,
-                    "help_text": "By default, parameters set as _hidden_ in the schema are not shown on the command line when a user runs with `--help`. Specifying this option will tell the pipeline to show all parameters."
-                },
-                "basecall": {
-                    "type": "boolean",
-                    "description": "Basecalling mode (auto-detected).",
-                    "help_text": "Optional override. When --input_dir is provided, the pipeline automatically enables basecalling; otherwise it disables basecalling. You normally do not need to set this manually.",
-                    "hidden": true
-                },
-                "model": {
+                "virasign_accessions": {
                     "type": "string",
-                    "default": "dna_r9.4.1_450bps_hac.cfg",
-                    "description": "In case fast5 is the input, the guppy model for basecalling should be provide."
+                    "description": "Extra accessions to include (optional).",
+                    "help_text": "",
+                    "fa_icon": "fas fa-list"
                 },
-                "minLength": {
-                    "type": "integer",
-                    "default": 200,
-                    "description": "Minimum length for a read to be analyzed."
-                },
-                "usegpu": {
-                    "type": "boolean",
-                    "description": "Use NVIDIA GPU for basecalling (auto-detected).",
-                    "help_text": "Optional override. When basecalling is enabled (POD5 mode), the pipeline defaults to GPU. Set --usegpu false to force CPU basecalling.",
-                    "hidden": true
-                },
-                "nrdb": {
-                    "type": "string",
-                    "default": "None",
-                    "description": "Path for NCBI NR database to de novo contig annotation"
-                },
-                "pair": {
-                    "type": "boolean",
-                    "description": "If barcodes were added at both sides of a read (true) or only at one side (false)."
-                },
-                "quality": {
-                    "type": "integer",
-                    "default": 7,
-                    "description": "Minimum quality for a base to build the consensus"
-                },
-                "agreement": {
+                "virasign_min_identity": {
                     "type": "number",
-                    "default": 0.7,
-                    "description": "Minimum base frequency to be called without ambiguity"
+                    "description": "Minimum alignment identity threshold (optional).",
+                    "fa_icon": "fas fa-percentage"
                 },
-                "depth": {
+                "virasign_min_mapped_reads": {
                     "type": "integer",
-                    "default": 5,
-                    "description": "Minimum depth of a position to build the consensus"
+                    "description": "Minimum mapped reads to report a hit (optional).",
+                    "fa_icon": "fas fa-filter"
                 },
-                "front": {
+                "virasign_coverage_depth": {
                     "type": "integer",
-                    "default": 0,
-                    "description": "Number of bases to delete at 5 prime of the read"
+                    "description": "Minimum per-position depth for coverage filtering (optional).",
+                    "fa_icon": "fas fa-layer-group"
                 },
-                "tail": {
+                "virasign_coverage_breadth": {
+                    "type": "number",
+                    "description": "Minimum breadth (fraction) for coverage filtering (optional).",
+                    "fa_icon": "fas fa-ruler-horizontal"
+                },
+                "virasign_min_nogr": {
                     "type": "integer",
-                    "default": 0,
-                    "description": "Number of bases to delete at 3 prime of the read"
+                    "description": "Min number of non-overlapping genomic regions required (optional).",
+                    "fa_icon": "fas fa-project-diagram"
+                },
+                "virasign_zscore": {
+                    "type": "string",
+                    "description": "Enable/disable z-score filtering (optional).",
+                    "help_text": "",
+                    "fa_icon": "fas fa-chart-line"
+                },
+                "virasign_zscore_controls": {
+                    "type": "string",
+                    "description": "Path to negative-control FASTQs for z-score (optional).",
+                    "help_text": "",
+                    "fa_icon": "fas fa-file"
+                },
+                "virasign_threads": {
+                    "type": "integer",
+                    "description": "Threads for Virasign (optional; defaults to task CPUs).",
+                    "fa_icon": "fas fa-microchip"
+                },
+                "virasign_ram_gb": {
+                    "type": "integer",
+                    "description": "Minimap2 RAM/GB hint (`-I`) for Virasign (optional).",
+                    "fa_icon": "fas fa-memory"
+                },
+                "virasign_enable_clustering": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable clustering of references in database prep.",
+                    "fa_icon": "fas fa-compress-arrows-alt"
+                },
+                "virasign_cluster_identity": {
+                    "type": "number",
+                    "description": "Clustering identity threshold (optional).",
+                    "fa_icon": "fas fa-percentage"
+                },
+                "virasign_max_ambiguous_fraction": {
+                    "type": "number",
+                    "description": "Max allowed ambiguous fraction when preparing DB (optional).",
+                    "fa_icon": "fas fa-exclamation-triangle"
                 }
             }
-        }
+        },
+        
     },
     "allOf": [
         {
             "$ref": "#/definitions/input_output_options"
         },
         {
-            "$ref": "#/definitions/reference_genome_options"
+            "$ref": "#/definitions/basecalling_options"
         },
         {
-            "$ref": "#/definitions/institutional_config_options"
+            "$ref": "#/definitions/read_processing_options"
         },
         {
-            "$ref": "#/definitions/max_job_request_options"
+            "$ref": "#/definitions/rarefaction_options"
         },
         {
-            "$ref": "#/definitions/generic_options"
+            "$ref": "#/definitions/host_depletion_option"
+        },
+        {
+            "$ref": "#/definitions/viral_classifier_options_virasign"
         }
     ]
 }
