@@ -163,12 +163,13 @@ process VIRASIGN_CLASSIFICATION {
     # Copy publish/ into the shared results dir (parallel-safe with flock if available).
     mkdir -p "${shared}"
     if command -v flock >/dev/null 2>&1; then
-      flock -x "${shared}" bash -lc "
-        for d in \"\\\$PWD\"/publish/*; do
-          [ -e \"\\\$d\" ] || continue
-          cp -aL \"\\\$d\" \"${shared}/\"
+      (
+        flock -x 9
+        for d in "\${PWD}/publish/"*; do
+          [ -e "\$d" ] || continue
+          cp -aL "\$d" "${shared}/"
         done
-      "
+      ) 9>"${shared}/.copy.lock"
     else
       for d in "\${PWD}/publish/"*; do
         [ -e "\$d" ] || continue
