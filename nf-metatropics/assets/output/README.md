@@ -13,7 +13,7 @@ Paths below are relative to your pipeline **`--outdir`**. The pipeline also crea
 | **`Classification/`** | Virasign viral classification outputs and reports |
 | **`Variant_calling/`** | Medaka read alignments and variant calls (VCFs). |
 | **`Consensus/`** | iVar draft and Homopolish polished genomes. |
-| **`Summary/`** | Final Metatropics report listing all viruses identified (`Summary/metatropics/Metatropics_Summary_<DB>.html`), plus read-count summaries and pipeline provenance (`Summary/pipeline_info`: software versions + Nextflow reports). |
+| **`Summary/`** | Final Metatropics report (`Summary/metatropics/Metatropics_Summary_RVDB.html`) listing all identified viruses, plus read-count summaries and pipeline provenance. |
 
 ---
 
