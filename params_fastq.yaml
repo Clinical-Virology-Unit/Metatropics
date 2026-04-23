@@ -4,3 +4,7 @@
 # Required:
 input: /data/Daan/Projects/T_DCT/Input/samplesheet.csv
 outdir: /data/Daan/Projects/T_DCT/Output_l
+
+# Optional:
+# Host: human,pan
+# virasign_ultrasensitive: true
