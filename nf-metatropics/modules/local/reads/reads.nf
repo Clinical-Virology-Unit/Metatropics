@@ -63,10 +63,15 @@ process ReadCount {
     fi
 
     # Generate read count outputs.
-    # Install to a writable per-task prefix so this works in read-only containers (Apptainer/Singularity).
-    export PYTHONUSERBASE="\$PWD/.pyuserbase"
-    mkdir -p "\$PYTHONUSERBASE"
-    python -m pip install --no-cache-dir --user pandas plotly matplotlib >/dev/null
+    # Install to a writable per-task dir so this works in read-only containers.
+    # Note: Nextflow sets PYTHONNOUSERSITE=1 in container env, so `pip --user` may not be importable.
+    # Speed: keep a persistent pip wheel cache under outdir (works for both Docker+Apptainer).
+    PIP_CACHE_DIR="${outdir}/.cache/pip"
+    mkdir -p "$PIP_CACHE_DIR"
+    PYLIB="\$PWD/.pylibs"
+    mkdir -p "\$PYLIB"
+    python -m pip install --cache-dir "$PIP_CACHE_DIR" --target "\$PYLIB" pandas plotly matplotlib >/dev/null
+    export PYTHONPATH="\$PYLIB:\${PYTHONPATH:-}"
     python ${projectDir}/bin/readcount.py \
       --outdir "${outdir}" \
       --host-status "${host_genome_status}" \
