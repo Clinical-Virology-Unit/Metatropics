@@ -63,7 +63,10 @@ process ReadCount {
     fi
 
     # Generate read count outputs.
-    python -m pip install --no-cache-dir pandas plotly matplotlib >/dev/null
+    # Install to a writable per-task prefix so this works in read-only containers (Apptainer/Singularity).
+    export PYTHONUSERBASE="\$PWD/.pyuserbase"
+    mkdir -p "\$PYTHONUSERBASE"
+    python -m pip install --no-cache-dir --user pandas plotly matplotlib >/dev/null
     python ${projectDir}/bin/readcount.py \
       --outdir "${outdir}" \
       --host-status "${host_genome_status}" \
