@@ -51,16 +51,33 @@ docker run --rm hello-world
 
 ## 4. Configure paths (samplesheet, output)
 
-At the repository root, choose the params file to match how you start: **[`params_fastq.yaml`](params_fastq.yaml)** when you already have basecalled reads (FASTQ), or **[`params_POD5.yaml`](params_POD5.yaml)** when you start from raw POD5 signal (“squiggle”) data and need basecalling inside the pipeline. Edit that file using absolute paths.
+At the repository root, choose the params file to match how you start and edit it using absolute paths.
+
+### FASTQ start (basecalled reads)
+
+Use **[`params_fastq.yaml`](params_fastq.yaml)**.
 
 | Setting | Purpose |
 |-----|-------------------|
-| `input` | Samplesheet CSV: copy **[`fastq.csv`](nf-metatropics/assets/submission/fastq.csv)** (FASTQ) or **[`POD5.csv`](nf-metatropics/assets/submission/POD5.csv)** (POD5) from [`nf-metatropics/assets/submission/`](nf-metatropics/assets/submission/), edit it, then set `input` to that file’s absolute path. 
+| `input` | Samplesheet CSV: copy **[`fastq.csv`](nf-metatropics/assets/submission/fastq.csv)** from [`nf-metatropics/assets/submission/`](nf-metatropics/assets/submission/), edit it, then set `input` to that file’s absolute path. |
 | `outdir` | Where results are written. |
-| `Host` | Optional host depletion (e.g., `human,pan`). |
-| `input_dir` | POD5 only: directory containing POD5 files (with **`params_POD5.yaml`**) |
+| `Host` | Optional: host depletion (e.g., `human,pan`). |
+| `virasign_ultrasensitive` | Optional: enable ultrasensitive viral identification mode. |
 
 To autogenerate a [`fastq.csv`](nf-metatropics/assets/submission/fastq.csv) from a reads folder, run **`pip install .`** once at the repo root, then **`metatropics-samplesheet -i .`** from your FASTQ directory.
+
+### POD5 start (basecalling inside the pipeline)
+
+Use **[`params_POD5.yaml`](params_POD5.yaml)**.
+
+| Setting | Purpose |
+|-----|-------------------|
+| `input` | Samplesheet CSV: copy **[`POD5.csv`](nf-metatropics/assets/submission/POD5.csv)** from [`nf-metatropics/assets/submission/`](nf-metatropics/assets/submission/), edit it, then set `input` to that file’s absolute path. |
+| `input_dir` | Directory containing POD5 files. |
+| `outdir` | Where results are written. |
+| `kit_name` | Dorado `--kit-name` (default: `TWIST-96A-UDI`). |
+| `Host` | Optional: host depletion (e.g., `human,pan`). |
+| `virasign_ultrasensitive` | Optional: enable ultrasensitive viral identification mode. |
 
 Additional options: **[`nf-metatropics/assets/submission/all_options.md`](nf-metatropics/assets/submission/all_options.md)**.
 
