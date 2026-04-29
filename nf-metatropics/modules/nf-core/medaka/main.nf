@@ -25,6 +25,12 @@ process MEDAKA {
     def min_dpsp = params.depth
     """
     if [ -s $assembly ] && [ \$(grep -c ">" $assembly) -gt 0 ]; then
+        # Force CPU execution.
+        # Medaka's device selection is based on torch CUDA detection; in some container/runtime
+        # configurations it can think a GPU exists but CUDA isn't actually usable, causing
+        # model loading to fail. For Metatropics we prefer a robust CPU-only run.
+        export CUDA_VISIBLE_DEVICES=""
+
         if [ -n "${user_model}" ]; then
             MEDAKA_MODEL="${user_model}"
             echo "Using user-specified Medaka model: \${MEDAKA_MODEL}" >&2
