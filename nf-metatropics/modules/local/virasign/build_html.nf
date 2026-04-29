@@ -119,6 +119,7 @@ END_VERSIONS
     python3 - <<'PY'
 import csv
 import json
+import gzip
 import os
 import re
 from pathlib import Path
@@ -307,15 +308,77 @@ if cons_root.exists():
         rows.append(rec)
         by_pair[(sample, acc)] = rec
 
-    qc_reads_by_sample = {}
-if readcount_csv.exists():
-    with readcount_csv.open("r", newline="", encoding="utf-8") as handle:
-        reader = csv.DictReader(handle)
-        for row in reader:
-            sample = (row.get("sample") or "").strip()
-            trimmed = (row.get("trimmed_reads") or "").strip()
-            if sample:
-                qc_reads_by_sample[sample] = trimmed
+qc_reads_by_sample = {}
+
+# For the Metatropics Virasign report, "QC reads" should always mean:
+# the number of reads that were actually used as INPUT for Virasign
+# (post-fastplong, and post any enabled host depletion).
+def strip_extensions(name: str) -> str:
+    while True:
+        # NOTE: Use \\Z end-anchor to avoid Groovy interpolation inside Nextflow strings.
+        new = re.sub(r"\\.(fastq|fq|fastp|gz|meta|csv)\\Z", "", name)
+        if new == name:
+            return name
+        name = new
+
+def extract_sample_name(filename: str) -> str:
+    name = strip_extensions(filename)
+    name = re.sub(r"_(human_depleted|host_depleted)\\Z", "", name)
+    name = re.sub(r"_(human|host)\\Z", "", name)
+    name = re.sub(r"_other\\Z", "", name)
+    name = re.sub(r"_viral\\Z", "", name)
+    name = re.sub(r"_classification_results\\Z", "", name)
+    name = re.sub(r"_fixed\\Z", "", name)
+    name = re.sub(r"_T\\d+\\Z", "", name)
+    name = re.sub(r"\\.fastp\\Z", "", name)
+    return name
+
+def count_fastq_gz_reads(path: Path) -> int:
+    n = 0
+    with gzip.open(path, "rt", errors="replace") as fh:
+        while True:
+            l1 = fh.readline()
+            if not l1:
+                break
+            fh.readline()
+            fh.readline()
+            fh.readline()
+            n += 1
+    return n
+
+def count_dir(directory: Path, pattern: re.Pattern) -> dict:
+    out = {}
+    if not directory.exists():
+        return out
+    for p in directory.iterdir():
+        if not p.is_file():
+            continue
+        if not pattern.search(p.name):
+            continue
+        sample = extract_sample_name(p.name)
+        out[sample] = out.get(sample, 0) + count_fastq_gz_reads(p)
+    return out
+
+reads_root = outdir / "Reads"
+# Prefer the most-depleted stage if present (this matches readsForViralClassification).
+qc_reads_by_sample = count_dir(reads_root / "nohost", re.compile(r"_(host_depleted|other)\\.fastq\\.gz\\Z"))
+if not qc_reads_by_sample:
+    qc_reads_by_sample = count_dir(reads_root / "nohuman", re.compile(r"_(human_depleted|other)\\.fastq\\.gz\\Z"))
+if not qc_reads_by_sample:
+    qc_reads_by_sample = count_dir(reads_root / "fastplong", re.compile(r"\\.fastp\\.fastq\\.gz\\Z"))
+
+# As a last resort, fall back to whatever readcount produced (if available).
+if not qc_reads_by_sample and readcount_csv.exists():
+    try:
+        with readcount_csv.open("r", newline="", encoding="utf-8") as handle:
+            reader = csv.DictReader(handle)
+            for row in reader:
+                sample = (row.get("sample") or "").strip()
+                v = (row.get("trimmed_reads") or "").strip()
+                if sample:
+                    qc_reads_by_sample[sample] = v
+    except Exception:
+        qc_reads_by_sample = {}
 
 qc_map_json = json.dumps(qc_reads_by_sample, separators=(",", ":"))
 
