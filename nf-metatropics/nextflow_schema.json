@@ -177,6 +177,20 @@
                 }
             }
         },
+        "variant_calling_options": {
+            "title": "Variant calling options (Medaka)",
+            "type": "object",
+            "fa_icon": "fas fa-dna",
+            "description": "Options for Medaka per-virus haploid variant calling.",
+            "properties": {
+                "medaka_model": {
+                    "type": "string",
+                    "description": "Override auto-detection (e.g. r1041_e82_400bps_hac_variant_v5.0.0).",
+                    "help_text": "",
+                    "fa_icon": "fas fa-brain"
+                }
+            }
+        },
         "viral_classifier_options_virasign": {
             "title": "Viral classifier options (Virasign)",
             "type": "object",
@@ -283,8 +297,7 @@
                     "fa_icon": "fas fa-exclamation-triangle"
                 }
             }
-        },
-        
+        }
     },
     "allOf": [
         {
@@ -301,6 +314,9 @@
         },
         {
             "$ref": "#/definitions/host_depletion_option"
+        },
+        {
+            "$ref": "#/definitions/variant_calling_options"
         },
         {
             "$ref": "#/definitions/viral_classifier_options_virasign"
