@@ -329,7 +329,6 @@ def extract_sample_name(filename: str) -> str:
     name = re.sub(r"_viral\\Z", "", name)
     name = re.sub(r"_classification_results\\Z", "", name)
     name = re.sub(r"_fixed\\Z", "", name)
-    name = re.sub(r"_T\\d+\\Z", "", name)
     name = re.sub(r"\\.fastp\\Z", "", name)
     return name
 
@@ -447,13 +446,14 @@ if summary_csv.exists():
             if zscore_enabled and zscore_has_values:
                 row[bg_used_header] = "yes" if is_background_sample(sample) else "no"
             else:
-                row[bg_used_header] = ""
+                # If Z-score is not used (disabled or unusable), make this explicit instead of leaving blank.
+                row[bg_used_header] = "no"
             row[qc_header] = qc_reads_by_sample.get(sample, "")
             row[consensus_header] = "" if hit is None else hit["consensus_breadth_pct"]
     else:
         for row in data:
             row[qc_header] = ""
-            row[bg_used_header] = ""
+            row[bg_used_header] = "no"
             row[consensus_header] = ""
 
     with summary_csv.open("w", newline="", encoding="utf-8") as handle:
