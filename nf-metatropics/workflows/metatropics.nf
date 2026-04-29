@@ -29,7 +29,7 @@ include { FASTPLONG                   } from '../modules/local/fastplong/main'
 include { NANOPLOT                    } from '../modules/nf-core/nanoplot/main'
 include { VIRASIGN_CLASSIFICATION      } from '../modules/local/virasign/classification'
 include { VIRASIGN_DB                  } from '../modules/local/virasign/prepare_db'
-include { VIRASIGN_SUMMARY             } from '../modules/local/virasign/build_html'
+include { VIRASIGN_SUMMARY as METATROPICS_SUMMARY } from '../modules/local/virasign/build_html'
 include { MEDAKA                      } from '../modules/nf-core/medaka/main'
 include { ReadCount                   } from '../modules/local/reads/reads'
 include { IVAR_CONSENSUS              } from '../modules/nf-core/ivar/consensus/main'
@@ -160,14 +160,6 @@ workflow METATROPICS {
         virasign_db_ready = VIRASIGN_DB.out.ready
         VIRASIGN_CLASSIFICATION(virasign_db_ready, readsForViralClassification)
 
-        // Barrier = count(per-sample JSON (final if present, otherwise unfiltered)).
-        // VIRASIGN_SUMMARY reads `${params.outdir}/Classification/virasign` inside the container.
-        VIRASIGN_SUMMARY(
-            VIRASIGN_CLASSIFICATION.out.final_json
-                .mix(VIRASIGN_CLASSIFICATION.out.unfiltered_json)
-                .count()
-        )
-
         // Build per-(sample,accession) tuples directly from Virasign-produced JSONs.
         // IMPORTANT: Do not glob the outdir with `checkIfExists: true` here, because the files
         // only exist after VIRASIGN_CLASSIFICATION completes.
@@ -196,7 +188,9 @@ workflow METATROPICS {
 
     def ch_readcount_barrier
     if (params.run_virasign) {
-        ch_readcount_barrier = VIRASIGN_SUMMARY.out.csv
+        ch_readcount_barrier = VIRASIGN_CLASSIFICATION.out.final_json
+            .mix(VIRASIGN_CLASSIFICATION.out.unfiltered_json)
+            .count()
     } else {
         ch_readcount_barrier = readsForViralClassification.count()
     }
@@ -226,6 +220,12 @@ workflow METATROPICS {
             ch_virasign_confident.map { meta, bam, bai, ref, reads -> [ meta, ref ] },
             by: 0
         )
+    )
+
+    // Build final Metatropics summary only after polished consensuses are available.
+    // This ensures consensus-derived breadth metrics are included.
+    METATROPICS_SUMMARY(
+        HOMOPOLISH_POLISHING.out.polishconsensus.count()
     )
 
 

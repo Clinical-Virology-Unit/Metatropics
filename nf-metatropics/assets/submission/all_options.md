@@ -47,6 +47,12 @@ To autogenerate a `samplesheet.csv` from a reads folder, run `pip install .` onc
 | `--Other_host_fasta` | Optional FASTA for an additional host background (e.g. mosquito, primate). |
 | `--Host` | Optional host keyword(s) to auto-download FASTA under `Metatropics/Databases`. Multiple hosts are supported and will be merged (e.g. `human,aedes,culex`). Supported keywords include `human`, `pan`, `gorilla`, `orangutan`, `macaque`, `aedes`, `anopheles`, `culex`, `bat`, `rat`, `dog`, `cat`, `camel`, `goat`, `pig`, `cow`, `mouse`, `chicken`. |
 
+## Variant calling options (Medaka)
+
+| Option | Description |
+|--------|-------------|
+| `--medaka_model` | Model to override auto-detection (e.g. `r1041_e82_400bps_hac_variant_v5.0.0`).  |
+
 ## Viral classifier options (Virasign)
 
 ### Important options
