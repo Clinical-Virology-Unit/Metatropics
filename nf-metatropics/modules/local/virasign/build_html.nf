@@ -53,6 +53,11 @@ process VIRASIGN_SUMMARY {
     def outCsv  = "Metatropics_Summary_${virasignDbLabel}.csv"
     def zscore = params.virasign_zscore ?: 'true'
     def zscore_controls = params.virasign_zscore_controls?.toString()?.trim()
+    def zscore_controls_safe = zscore_controls ?: ''
+    def virasign_blind_safe = params.virasign_blind?.toString()?.trim() ?: ''
+    def zscore_json = groovy.json.JsonOutput.toJson(zscore?.toString()?.trim() ?: 'false')
+    def zscore_controls_json = groovy.json.JsonOutput.toJson(zscore_controls_safe)
+    def virasign_blind_json = groovy.json.JsonOutput.toJson(virasign_blind_safe)
     def quality = params.quality?.toString() ?: 'NA'
     def depth = params.depth?.toString() ?: 'NA'
     def agreement = params.agreement?.toString() ?: 'NA'
@@ -113,7 +118,9 @@ END_VERSIONS
     # Compute consensus-derived breadth from polished FASTA and merge into summary CSV.
     python3 - <<'PY'
 import csv
+import json
 import os
+import re
 from pathlib import Path
 
 outdir = Path("${params.outdir}")
@@ -121,6 +128,125 @@ summary_csv = Path("${outCsv}")
 summary_html = Path("${outHtml}")
 readcount_csv = outdir / "Summary" / "readcount" / "read_counts.csv"
 cons_root = outdir / "Consensus" / "homopolish"
+
+virasign_runtime_log = outdir / "Classification" / "virasign" / "${virasignDbLabel}" / ".virasign.log"
+
+# Virasign background/z-score configuration (for human-readable documentation in HTML).
+zscore_enabled_raw = ${zscore_json}
+zscore_controls_text = ${zscore_controls_json}
+virasign_blind_text = ${virasign_blind_json}
+zscore_enabled = str(zscore_enabled_raw).strip().lower() in {"true","1","yes","y"}
+zscore_controls_text = str(zscore_controls_text or "").strip()
+virasign_blind_text = str(virasign_blind_text or "").strip()
+
+if not zscore_enabled:
+    zscore_water_msg = f"Z-score disabled (--zscore={zscore_enabled_raw})."
+else:
+    if zscore_controls_text:
+        zscore_water_msg = f"Water controls (explicit --zscore-controls): {zscore_controls_text}"
+    else:
+        zscore_water_msg = "Water controls: auto-detected by Virasign (no --zscore-controls provided)."
+
+if virasign_blind_text:
+    blind_msg = f"Blind/background file (explicit --virasign_blind): {virasign_blind_text}"
+else:
+    blind_msg = "Blind/background file: not provided (Virasign uses defaults/auto when needed)."
+
+# If Virasign couldn't compute Z-scores due to missing/insufficient water controls,
+# the produced summary CSV will have an empty Z-score column.
+# Detect that so the HTML documentation can explicitly say "none detected/used".
+zscore_has_values = False
+try:
+    if summary_csv.exists():
+        with summary_csv.open("r", newline="", encoding="utf-8") as handle:
+            reader = csv.DictReader(handle)
+            if reader.fieldnames and ("Z-score" in reader.fieldnames or "Z-score " in reader.fieldnames):
+                zscore_col = "Z-score" if "Z-score" in reader.fieldnames else "Z-score "
+                for row in reader:
+                    raw_v = (row.get(zscore_col) or "").strip()
+                    if raw_v and raw_v not in {"—", "-"}:
+                        zscore_has_values = True
+                        break
+except Exception:
+    pass
+
+if zscore_enabled and not zscore_has_values:
+    if zscore_controls_text:
+        zscore_water_msg = (
+            f"Water controls provided, but none were usable/available for Z-score computation "
+            f"(Virasign left Z-score empty). Provided: {zscore_controls_text}"
+        )
+    else:
+        zscore_water_msg = (
+            "Water controls: none usable/available (Virasign skipped Z-score computation; Z-score column is empty)."
+        )
+
+# Values for CSV annotation (computed here after inspecting outputs)
+background_used = "yes" if (zscore_enabled and zscore_has_values) else "no"
+
+# Determine which samples are background controls for Z-score.
+# Prefer explicit `--zscore-controls` (paths or sample IDs). If not provided,
+# fall back to common naming patterns (H2O/water/blank/control).
+def _norm_sample_id(s: str) -> str:
+    s = (s or "").strip()
+    if not s:
+        return ""
+    for suf in (".fastq.gz", ".fq.gz", ".fastq", ".fq"):
+        if s.endswith(suf):
+            s = s[: -len(suf)]
+            break
+    # NOTE: Use \\Z instead of an end-of-line anchor to avoid Groovy interpolation issues.
+    s = re.sub(r"\\.fastp\\Z", "", s)
+    s = re.sub(r"(_T\\d+_other_T\\d+|_other_T\\d+|_T\\d+_other|_T\\d+|_other)\\Z", "", s)
+    return s
+
+def _parse_controls_list(txt: str) -> list:
+    if not txt:
+        return []
+    out = []
+    for part in str(txt).split(","):
+        p = part.strip()
+        if not p:
+            continue
+        p = os.path.basename(p)
+        out.append(_norm_sample_id(p))
+    return [x for x in out if x]
+
+controls_norm = set(_parse_controls_list(zscore_controls_text))
+
+def is_background_sample(sample: str) -> bool:
+    s_norm = _norm_sample_id(sample)
+    if not s_norm:
+        return False
+    if controls_norm:
+        return s_norm in controls_norm
+    s = s_norm.lower()
+    # Heuristic fallback: be strict and only match typical water/blank controls.
+    # Do NOT match generic substrings like "neg" because many studies encode that in sample names
+    # (e.g. LASVnegRUN1_...) and it would incorrectly flag all samples as background.
+    return any(k in s for k in ("h2o", "water", "blank"))
+
+# For auto-detection mode, show exact Virasign log lines where available.
+# This can include explicit control files selected or "none/insufficient controls".
+zscore_runtime_lines = []
+try:
+    if virasign_runtime_log.exists():
+        seen = set()
+        with virasign_runtime_log.open("r", encoding="utf-8", errors="ignore") as handle:
+            for line in handle:
+                s = line.strip()
+                if not s:
+                    continue
+                lo = s.lower()
+                if ("z-score" in lo) or ("zscore" in lo) or ("water control" in lo) or ("zscore-controls" in lo):
+                    if s not in seen:
+                        seen.add(s)
+                        zscore_runtime_lines.append(s)
+except Exception:
+    pass
+
+if zscore_enabled and not zscore_controls_text and zscore_runtime_lines:
+    zscore_water_msg = "Water controls: auto-detected by Virasign. " + " | ".join(zscore_runtime_lines[:3])
 
 def safe_pct(num, den):
     if den == 0:
@@ -191,6 +317,8 @@ if readcount_csv.exists():
             if sample:
                 qc_reads_by_sample[sample] = trimmed
 
+qc_map_json = json.dumps(qc_reads_by_sample, separators=(",", ":"))
+
 if summary_csv.exists():
     with summary_csv.open("r", newline="", encoding="utf-8") as handle:
         reader = csv.DictReader(handle)
@@ -211,11 +339,20 @@ if summary_csv.exists():
 
     qc_header = "QC reads"
     consensus_header = "Consensus Breadth (%)"
+    bg_used_header = "Background"
 
     out_fields = list(in_fields)
 
     # Remove any old technical consensus header so we can re-add consistently.
     out_fields = [f for f in out_fields if f != "consensus_breadth_pct"]
+    out_fields = [f for f in out_fields if f != bg_used_header]
+
+    # Place Background after Sample when Sample column exists, otherwise keep first.
+    if sample_col and sample_col in out_fields:
+        sample_idx = out_fields.index(sample_col)
+        out_fields.insert(sample_idx + 1, bg_used_header)
+    else:
+        out_fields = [bg_used_header] + out_fields
 
     # Enforce QC column before mapped reads.
     if qc_header in out_fields:
@@ -244,11 +381,16 @@ if summary_csv.exists():
                 sample_hits = by_sample.get(sample, [])
                 if len(sample_hits) == 1:
                     hit = sample_hits[0]
+            if zscore_enabled and zscore_has_values:
+                row[bg_used_header] = "yes" if is_background_sample(sample) else "no"
+            else:
+                row[bg_used_header] = ""
             row[qc_header] = qc_reads_by_sample.get(sample, "")
             row[consensus_header] = "" if hit is None else hit["consensus_breadth_pct"]
     else:
         for row in data:
             row[qc_header] = ""
+            row[bg_used_header] = ""
             row[consensus_header] = ""
 
     with summary_csv.open("w", newline="", encoding="utf-8") as handle:
@@ -304,16 +446,43 @@ if summary_html.exists():
             pass
     cons_map_json = json.dumps(cons_map, separators=(",", ":"))
 
+    # Sample -> Background (yes/no) map for CSV downloads triggered from HTML.
+    bg_map = {}
+    try:
+        if sample_col:
+            for row in data:
+                s = (row.get(sample_col) or "").strip()
+                if not s:
+                    continue
+                bg_map[s] = (row.get(bg_used_header) or "").strip()
+    except Exception:
+        bg_map = {}
+    bg_map_json = json.dumps(bg_map, separators=(",", ":"))
+
     inj_script = '''
 <script>
 (function(){
   const consensusMap = __CONS_MAP_JSON__;
+  const qcReadsMap = __QC_READS_MAP_JSON__;
+  const bgMap = __BG_MAP_JSON__;
 
   function getVal(sampleName, accession){
     if (!consensusMap || !consensusMap[sampleName]) return null;
     const v = consensusMap[sampleName][accession];
     if (v === undefined || v === null || v === '') return null;
     return Number(v);
+  }
+
+  function getQcReads(sampleName){
+    if (!qcReadsMap) return '';
+    const v = qcReadsMap[sampleName];
+    return (v === undefined || v === null) ? '' : String(v);
+  }
+
+  function getBackground(sampleName){
+    if (!bgMap) return '';
+    const v = bgMap[sampleName];
+    return (v === undefined || v === null) ? '' : String(v);
   }
 
   function ensureHeader(table){
@@ -450,6 +619,8 @@ if summary_html.exists():
           const show =
             (dataCol === 'consensus_breadth_pct') ||
             (dataSort === 'breadth') ||
+            (dataSort === 'nogr_regions') ||
+            (dataSort === 'zscore') ||
             (!dataSort); // base columns have no data-sort
           cols[i].style.display = show ? '' : 'none';
         }
@@ -461,16 +632,16 @@ if summary_html.exists():
     }
 
     // 2) Hide/show the other columns when consensus view is enabled
-    //    Wanted compact view:
-    //      Accession | Organism | Viral species | Clade | Segment | Breadth | Consensus Breadth
-    //    So hide: Mapped reads (#), Identity, Depth, NOGR, Z-score.
-    const hideMainSorts = ['mapped_reads','identity','depth','nogr_regions','zscore'];
+    //    Compact view (keep these):
+    //      Accession | Organism | Viral species | Clade | Segment | Breadth | Consensus Breadth | NOGR | Z-score
+    //    Hide only: Mapped reads (#), Identity, Depth.
+    const hideMainSorts = ['mapped_reads','identity','depth'];
     hideMainSorts.forEach(s => {
       const th = mainRow.querySelector('th[data-sort="' + s + '"]');
       if (th) th.style.display = visible ? 'none' : '';
     });
 
-    const hidePlaceholders = new Set(['Min Reads','Min ID','Min Depth','Min NOGR','Min Z-score']);
+    const hidePlaceholders = new Set(['Min Reads','Min ID','Min Depth']);
     if (filterRow) {
       filterRow.querySelectorAll('input[type="text"]').forEach(inp => {
         const ph = inp.getAttribute('placeholder') || '';
@@ -492,8 +663,9 @@ if summary_html.exists():
           tds[5].style.display = visible ? 'none' : '';
           tds[6].style.display = visible ? 'none' : '';
           tds[7].style.display = visible ? 'none' : '';
-          tds[9].style.display = visible ? 'none' : '';
-          tds[10].style.display = visible ? 'none' : '';
+          // Keep NOGR and Z-score visible
+          tds[9].style.display = '';
+          tds[10].style.display = '';
         }
       });
     }
@@ -551,6 +723,105 @@ if summary_html.exists():
     };
   }
 
+  // (No Z-score background metadata injection: keep HTML clean.)
+
+  // Override downloadTableAsCSV so the downloaded CSV includes QC reads + consensus breadth.
+  const origDownloadTableAsCSV = window.downloadTableAsCSV;
+  window.downloadTableAsCSV = function(sampleName) {
+    const tbody = document.getElementById('tbody-' + sampleName);
+    if (!tbody) return;
+
+    const NL = String.fromCharCode(10);
+    let csv = 'Sample,Background,Accession,Organism,Viral Species,Nextclade Clade,Segment,QC reads,Mapped Reads (#),Identity (%),Coverage Depth (x),Coverage Breadth (%),NOGR (#/bases),Z-score,Consensus Breadth (%)' + NL;
+    const rows = tbody.querySelectorAll('tr:not([style*="display: none"])');
+
+    rows.forEach(row => {
+      const cells = row.querySelectorAll('td');
+      const accession = row.getAttribute('data-accession') || '';
+      const qc = getQcReads(sampleName);
+      const bg = getBackground(sampleName);
+      const cons = getVal(sampleName, accession);
+      const consTxt = (cons === null) ? '' : cons.toFixed(2);
+
+      // Base table has 11 cells (up to Z-score). The injected consensus cell is appended at end
+      // but may be hidden; we always compute it from consensusMap to keep download consistent.
+      const out = [];
+      for (let i = 0; i < Math.min(cells.length, 11); i++) {
+        let text = cells[i].textContent.trim();
+        // strip the chart icon used in breadth column
+        text = text.replace(/📊/g, '').trim();
+        if (text.includes(',') || text.includes('\"')) {
+          text = '\"' + text.replace(/\"/g, '\"\"') + '\"';
+        }
+        out.push(text);
+      }
+
+      // Prepend Sample + Background, insert QC reads after Segment, append Consensus Breadth.
+      out.unshift(sampleName);
+      out.splice(1, 0, bg);
+      out.splice(7, 0, qc);
+      out.push(consTxt);
+      csv += out.join(',') + NL;
+    });
+
+    const blob = new Blob(['\\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = sampleName + '_results.csv';
+    link.click();
+  };
+
+  // Override the all-samples CSV export to include Background + QC reads + consensus breadth.
+  // This does not change what is shown in the HTML tables; it only affects the downloaded file.
+  if (typeof window.downloadAllSamplesCSV === 'function') {
+    const origDownloadAll = window.downloadAllSamplesCSV;
+    window.downloadAllSamplesCSV = function() {
+      const NL = String.fromCharCode(10);
+      let rows = [['Sample','Background','Accession','Organism','Viral Species','Nextclade Clade','Segment','QC reads','Mapped Reads (#)','Avg Identity (%)','Coverage Depth (x)','Coverage Breadth (%)','NOGR (#/bases)','Z-score','Consensus Breadth (%)']];
+      if (typeof allSamples === 'undefined' || typeof samplesData === 'undefined') return origDownloadAll();
+
+      allSamples.forEach(sname => {
+        const sdata = samplesData[sname];
+        const qc = getQcReads(sname);
+        const bg = getBackground(sname);
+        if (!sdata) { rows.push([sname,bg,'','','','','',qc,'','','','','','','']); return; }
+        let refs = [];
+        Object.keys(sdata).forEach(db => { if (sdata[db].references) refs = refs.concat(sdata[db].references); });
+        if (refs.length === 0) { rows.push([sname,bg,'','','','','',qc,'','','','','','','']); return; }
+        refs.sort((a,b) => (b.coverage_breadth||0)-(a.coverage_breadth||0));
+        refs.forEach(r => {
+          const acc = r.accession||'';
+          const cons = getVal(sname, acc);
+          rows.push([
+            sname,
+            bg,
+            acc,
+            r.organism||'',
+            r.viral_species||'',
+            r.nextclade_clade||'',
+            r.segment||'',
+            qc,
+            r.mapped_reads||0,
+            (r.avg_identity||0).toFixed(2),
+            (r.coverage_depth||0).toFixed(2),
+            ((r.coverage_breadth||0)*100).toFixed(1),
+            String((r.nogr_regions||r.non_overlapping_reads||0)) + '|' + String((r.nogr_bases||r.non_overlapping_bases||0)),
+            (r.zscore !== undefined && r.zscore !== null) ? Number(r.zscore).toFixed(2) : '',
+            (cons === null) ? '' : cons.toFixed(2)
+          ]);
+        });
+      });
+      const csv = rows.map(r => r.map(c => '\"'+String(c).replace(/\"/g,'\"\"')+'\"').join(',')).join(NL);
+      const blob = new Blob([csv], {type:'text/csv'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'results_summary_all_samples.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+    };
+  }
+
   // Extend filtering with an additional consensus-breadth rule, but only when
   // the consensus column + its filter input are visible.
   const origApplyAllFilters = window.applyAllFilters;
@@ -596,6 +867,8 @@ if summary_html.exists():
 '''
 
     inj_script = inj_script.replace("__CONS_MAP_JSON__", cons_map_json)
+    inj_script = inj_script.replace("__QC_READS_MAP_JSON__", qc_map_json)
+    inj_script = inj_script.replace("__BG_MAP_JSON__", bg_map_json)
 
     if 'data-col="consensus_breadth_pct"' not in text:
         if "</body>" in text:
