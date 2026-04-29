@@ -170,7 +170,7 @@ workflow METATROPICS {
                 .replaceFirst(/\\.fastp$/, '')
                 .replaceFirst(/(_T\\d+_other_T\\d+|_other_T\\d+|_T\\d+_other|_T\\d+|_other)$/, '')
 
-            def hits = (List) new JsonSlurper().parse(jsonFile)
+            def hits = (List) (new JsonSlurper().parse(jsonFile))
             hits.collect { hit ->
                 def acc = hit.accession?.toString()
                 def accDir = file("${sampleDir}/${acc}")
