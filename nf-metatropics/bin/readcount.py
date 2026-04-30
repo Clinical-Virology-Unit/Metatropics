@@ -110,15 +110,19 @@ def read_samplesheet_order(outdir: Path) -> List[str]:
 
 def count_fastq_gz_reads(path: Path) -> int:
     n = 0
-    with gzip.open(path, "rt", errors="replace") as fh:
-        while True:
-            l1 = fh.readline()
-            if not l1:
-                break
-            fh.readline()
-            fh.readline()
-            fh.readline()
-            n += 1
+    try:
+        with gzip.open(path, "rt", errors="replace") as fh:
+            while True:
+                l1 = fh.readline()
+                if not l1:
+                    break
+                fh.readline()
+                fh.readline()
+                fh.readline()
+                n += 1
+    except EOFError as e:
+        # This almost always indicates a truncated/corrupt .gz (incomplete copy/download).
+        raise RuntimeError(f"Corrupt gzip FASTQ (unexpected EOF): {path}") from e
     return n
 
 
@@ -232,7 +236,9 @@ def compute_rows(
     outdir: Path,
     host_status: str,
 ) -> Tuple[List[Row], bool, bool]:
-    raw = count_dir(re.compile(r"_fixed\.fastq\.gz$"), read_count_dir)
+    # Raw reads can be named either `*_fixed.fastq.gz` (older convention) or `*.fastq.gz`.
+    # Exclude fastp outputs which are counted separately.
+    raw = count_dir(re.compile(r"(?<!\\.fastp)(?:_fixed)?\\.fastq\\.gz$"), read_count_dir)
     trimmed = count_dir(re.compile(r"\.fastp\.fastq\.gz$"), read_count_dir)
     human_dep = count_dir(re.compile(r"\.fastq\.gz$"), read_count_dir / "nohuman")
     host_dep = count_dir(re.compile(r"\.fastq\.gz$"), read_count_dir / "nohost")
@@ -242,7 +248,7 @@ def compute_rows(
     # directly from the pipeline outdir's Reads/* structure.
     if not raw and not trimmed:
         reads_root = outdir / "Reads"
-        raw = count_dir(re.compile(r"_fixed\.fastq\.gz$"), reads_root / "fix")
+        raw = count_dir(re.compile(r"(?<!\\.fastp)(?:_fixed)?\\.fastq\\.gz$"), reads_root / "fix")
         trimmed = count_dir(re.compile(r"\.fastp\.fastq\.gz$"), reads_root / "fastplong")
         # Depletion folders now publish *_human_depleted.fastq.gz / *_host_depleted.fastq.gz.
         # Keep the legacy *_other.fastq.gz pattern so older outdirs still count correctly.
