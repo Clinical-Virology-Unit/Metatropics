@@ -18,10 +18,13 @@ process HOMOPOLISH_POLISHING {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}.${meta.virus}"
+    def prefix = task.ext.prefix ?: "${meta.id}.${meta.virus_slug}"
+    def spp = (meta.species_slug ?: '').toString().trim()
+    def fastaHdr = spp ? ">${meta.id}_${spp}_polished" : ">${meta.id}_polished"
     """
     homopolish polish -a $consensus -l $reffasta $args -o $prefix
     mv $prefix/* ${prefix}.polish.fasta
+    awk 'NR==1{print "${fastaHdr}"; next}1' ${prefix}.polish.fasta > ${prefix}.polish.hdr.tmp && mv ${prefix}.polish.hdr.tmp ${prefix}.polish.fasta
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

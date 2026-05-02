@@ -140,8 +140,8 @@
                 },
                 "target_bases": {
                     "type": "number",
-                    "default": 1000000000,
-                    "description": "Target bases per sample when rarefying.",
+                    "default": 500000000,
+                    "description": "Target bases per sample when rarefying (default 5×10⁸ ≈ 0.5 Gb).",
                     "help_text": "",
                     "fa_icon": "fas fa-bullseye"
                 }
@@ -188,6 +188,42 @@
                     "description": "Override auto-detection (e.g. r1041_e82_400bps_hac_variant_v5.0.0).",
                     "help_text": "",
                     "fa_icon": "fas fa-brain"
+                },
+                "medaka_min_bq": {
+                    "type": "integer",
+                    "default": 20,
+                    "description": "Minimum base quality when re-counting alleles from the per-virus BAM during Medaka uniform post-processing.",
+                    "fa_icon": "fas fa-signal"
+                },
+                "medaka_min_alt_reads": {
+                    "type": "integer",
+                    "default": 10,
+                    "description": "Minimum ALT-supporting reads (from uniform BAM recount) to keep a variant.",
+                    "fa_icon": "fas fa-layer-group"
+                },
+                "medaka_major_vaf": {
+                    "type": "number",
+                    "default": 0.2,
+                    "description": "Major tier threshold: VAF ≥ this value (uniform recount).",
+                    "fa_icon": "fas fa-percentage"
+                },
+                "medaka_minor_vaf_min": {
+                    "type": "number",
+                    "default": 0.03,
+                    "description": "Minor tier lower bound (inclusive) on VAF.",
+                    "fa_icon": "fas fa-percentage"
+                },
+                "medaka_minor_vaf_max": {
+                    "type": "number",
+                    "default": 0.2,
+                    "description": "Minor tier upper bound (exclusive) on VAF.",
+                    "fa_icon": "fas fa-percentage"
+                },
+                "medaka_min_sb_pvalue": {
+                    "type": "number",
+                    "default": 0.05,
+                    "description": "Minimum Fisher strand-bias p-value to keep a variant (two-sided). Set to 0 to disable SB filtering.",
+                    "fa_icon": "fas fa-balance-scale"
                 }
             }
         },

@@ -1,5 +1,5 @@
-process MEDAKA {
-    tag "Variant calling"
+process MEDAKA_VARIANTS {
+    tag "Medaka variant calling"
     label 'process_medium'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -11,6 +11,7 @@ process MEDAKA {
 
     output:
     tuple val(meta), path("*.vcf"), optional: true, emit: assembly
+    tuple val(meta), path("*.medaka.filtered.vcf"), emit: filtered
     path "versions.yml", emit: versions
 
     when:
@@ -18,12 +19,26 @@ process MEDAKA {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}.${meta.virus}"
+    def prefix = task.ext.prefix ?: "${meta.id}.${meta.virus_slug}"
     def user_model = params.medaka_model ?: ''
     def hac_fallback = 'r1041_e82_400bps_hac_variant_v5.0.0'
     def min_qual = params.quality
     def min_dpsp = params.depth
     """
+    write_skeleton_filtered_vcf() {
+        # Medaka did not emit a usable annotated VCF. Downstream postprocessing still expects a valid VCF header.
+        : > "${prefix}.medaka.filtered.vcf"
+        echo '##fileformat=VCFv4.2' >> "${prefix}.medaka.filtered.vcf"
+        if [ ! -s "${assembly}.fai" ]; then
+            samtools faidx $assembly
+        fi
+        cut -f1,2 "${assembly}.fai" | while read -r chrom clen; do
+            echo "##contig=<ID=\${chrom},length=\${clen}>" >> "${prefix}.medaka.filtered.vcf"
+        done
+        echo '##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">' >> "${prefix}.medaka.filtered.vcf"
+        echo '#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tSAMPLE' >> "${prefix}.medaka.filtered.vcf"
+    }
+
     if [ -s $assembly ] && [ \$(grep -c ">" $assembly) -gt 0 ]; then
         # Force CPU execution.
         # Medaka's device selection is based on torch CUDA detection; in some container/runtime
@@ -59,17 +74,20 @@ process MEDAKA {
             # easier downstream inspection.
             bcftools view -e 'QUAL<${min_qual} || INFO/DPSP<${min_dpsp}' \\
                 medaka.annotated.vcf > medaka.filtered.vcf
+            cp medaka.filtered.vcf ${prefix}.medaka.filtered.vcf
             bcftools view -v snps   medaka.filtered.vcf > ${prefix}_snps.vcf
             bcftools view -v indels medaka.filtered.vcf > ${prefix}_indel.vcf
         else
             echo "Medaka produced no annotated VCF for ${prefix}." >&2
             touch ${prefix}_snps.vcf
             touch ${prefix}_indel.vcf
+            write_skeleton_filtered_vcf
         fi
     else
         echo "Assembly file is empty or contains no sequences for ${prefix}. Skipping Medaka." >&2
         touch ${prefix}_snps.vcf
         touch ${prefix}_indel.vcf
+        write_skeleton_filtered_vcf
     fi
 
     # Drop Medaka's own intermediate VCFs so only the per-virus _snps/_indel
@@ -77,7 +95,8 @@ process MEDAKA {
     rm -f medaka.vcf medaka.sorted.vcf medaka.annotated.vcf medaka.filtered.vcf
 
     # Remove empty placeholder VCFs so the optional emit stays empty on failure.
-    find . -maxdepth 1 -name '*.vcf' -type f -empty -delete
+    # Keep `${prefix}.medaka.filtered.vcf` even if it only contains a header (no variant rows).
+    find . -maxdepth 1 -type f -name '*.vcf' ! -name '*.medaka.filtered.vcf' -empty -delete
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
