@@ -279,6 +279,53 @@ def parse_fasta_counts(path: Path):
                     acgt += 1
     return total, called, n_bases, gap_bases, acgt
 
+vsign_parent = outdir / "Classification" / "virasign"
+
+def sanitize_species_slug(raw):
+    if raw is None:
+        return ""
+    s = str(raw).strip()
+    if not s:
+        return ""
+    s = re.sub(r"[^A-Za-z0-9._-]+", "_", s)
+    s = re.sub(r"_+", "_", s).strip("_")
+    return s
+
+def virus_slug_from_hit(hit):
+    acc = str(hit.get("accession") or "").strip()
+    if not acc:
+        return ""
+    raw_sp = hit.get("organism") or hit.get("viral_species") or ""
+    raw_sp = str(raw_sp).strip() if raw_sp else ""
+    if not raw_sp and hit.get("description"):
+        raw_sp = str(hit.get("description")).strip()[:120]
+    sp = sanitize_species_slug(raw_sp)
+    return f"{acc}_{sp}" if sp else acc
+
+def load_slug_to_accession():
+    m = {}
+    if not vsign_parent.is_dir():
+        return m
+    for js in sorted(vsign_parent.rglob("*_final_selected_references.json")):
+        try:
+            data = json.loads(js.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if not isinstance(data, list):
+            continue
+        for hit in data:
+            if not isinstance(hit, dict):
+                continue
+            acc = str(hit.get("accession") or "").strip()
+            if not acc:
+                continue
+            slug = virus_slug_from_hit(hit)
+            if slug:
+                m[slug] = acc
+    return m
+
+slug_to_accession = load_slug_to_accession()
+
 rows = []
 by_pair = {}
 if cons_root.exists():
@@ -286,27 +333,30 @@ if cons_root.exists():
         sample = fasta.parent.name
         base = fasta.name
         suffix = ".polished.consensus.fasta"
-        acc = ""
+        virus_key = ""
         if base.endswith(suffix):
             core = base[:-len(suffix)]
             prefix = f"{sample}."
             if core.startswith(prefix):
-                acc = core[len(prefix):]
+                virus_key = core[len(prefix):]
             else:
                 parts = core.split(".", 1)
-                acc = parts[1] if len(parts) == 2 else core
+                virus_key = parts[1] if len(parts) == 2 else core
 
+        bare_acc = slug_to_accession.get(virus_key, virus_key)
         total, called, n_bases, gap_bases, acgt = parse_fasta_counts(fasta)
         breadth = safe_pct(called, total)
         strict_breadth = safe_pct(acgt, total)
         rec = {
             "sample": sample,
-            "accession": acc,
+            "accession": bare_acc,
             "consensus_breadth_pct": breadth,
             "consensus_acgt_breadth_pct": strict_breadth,
         }
         rows.append(rec)
-        by_pair[(sample, acc)] = rec
+        by_pair[(sample, bare_acc)] = rec
+        if virus_key and virus_key != bare_acc:
+            by_pair[(sample, virus_key)] = rec
 
 qc_reads_by_sample = {}
 

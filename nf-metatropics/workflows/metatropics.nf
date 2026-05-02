@@ -30,9 +30,10 @@ include { NANOPLOT                    } from '../modules/nf-core/nanoplot/main'
 include { VIRASIGN_CLASSIFICATION      } from '../modules/local/virasign/classification'
 include { VIRASIGN_DB                  } from '../modules/local/virasign/prepare_db'
 include { VIRASIGN_SUMMARY as METATROPICS_SUMMARY } from '../modules/local/virasign/build_html'
-include { MEDAKA                      } from '../modules/nf-core/medaka/main'
+include { MEDAKA_VARIANTS          } from '../modules/local/medaka/variants'
+include { MEDAKA_POSTPROCESSING    } from '../modules/local/medaka/postprocessing'
+include { MEDAKA_CONSENSUS_BCFTOOLS } from '../modules/local/medaka/consensus'
 include { ReadCount                   } from '../modules/local/reads/reads'
-include { IVAR_CONSENSUS              } from '../modules/nf-core/ivar/consensus/main'
 include { HOMOPOLISH_POLISHING        } from '../modules/local/homopolish/polishing'
 
 /* Main workflow */
@@ -173,8 +174,20 @@ workflow METATROPICS {
             def hits = (List) (new JsonSlurper().parse(jsonFile))
             hits.collect { hit ->
                 def acc = hit.accession?.toString()
+                def rawSp = (hit.organism ?: hit.viral_species ?: '')?.toString()?.trim()
+                if ((!rawSp || rawSp.isEmpty()) && hit.description) {
+                    rawSp = hit.description.toString().trim().take(120)
+                }
+                def spSlug = (rawSp && !rawSp.isEmpty()) ? rawSp.replaceAll(/[^A-Za-z0-9._-]+/, '_').replaceAll(/^_+|_+$/, '').replaceAll(/_+/, '_') : ''
+                def virusSlug = (spSlug && !spSlug.isEmpty()) ? "${acc}_${spSlug}" : acc
                 def accDir = file("${sampleDir}/${acc}")
-                def meta2 = [ id: sampleId, single_end: true, virus: acc ]
+                def meta2 = [
+                    id          : sampleId,
+                    single_end : true,
+                    virus       : acc,
+                    virus_slug  : virusSlug,
+                    species_slug: spSlug,
+                ]
                 [
                     meta2,
                     file("${accDir}/${acc}.bam"),
@@ -199,24 +212,29 @@ workflow METATROPICS {
 
 
     if (!params.run_virasign) {
-        exit 1, "This pipeline configuration requires 'run_virasign: true' to generate per-virus inputs for Medaka/iVar."
+        exit 1, "This pipeline configuration requires 'run_virasign: true' to generate per-virus inputs for Medaka."
     }
 
     def ch_medaka_in = ch_virasign_confident.map { meta, bam, bai, ref, reads ->
         [ meta, reads, ref ]
     }
-    MEDAKA( ch_medaka_in )
+    MEDAKA_VARIANTS( ch_medaka_in )
 
-    // iVar consensus runs directly from Virasign BAM + BAI + reference FASTA.
-    def ch_ivar_in = ch_virasign_confident.map { meta, bam, bai, ref, reads ->
-        [ meta, bam, bai, ref ]
-    }
+    def ch_medaka_uniform_in = ch_virasign_confident
+        .map { meta, bam, bai, ref, reads -> [ meta, bam, bai, ref ] }
+        .join(MEDAKA_VARIANTS.out.filtered, by: 0)
+        .map { meta, bam, bai, ref, filtered -> [ meta, filtered, bam, bai, ref ] }
 
-    savempileup = false
-    IVAR_CONSENSUS( ch_ivar_in, savempileup )
+    MEDAKA_POSTPROCESSING( ch_medaka_uniform_in )
+
+    def ch_medaka_consensus_in = MEDAKA_POSTPROCESSING.out.vcf
+        .join(MEDAKA_POSTPROCESSING.out.vcf_index, by: 0)
+        .join(ch_virasign_confident.map { meta, bam, bai, ref, reads -> [ meta, ref ] }, by: 0)
+
+    MEDAKA_CONSENSUS_BCFTOOLS( ch_medaka_consensus_in )
 
     HOMOPOLISH_POLISHING(
-        IVAR_CONSENSUS.out.fasta.join(
+        MEDAKA_CONSENSUS_BCFTOOLS.out.fasta.join(
             ch_virasign_confident.map { meta, bam, bai, ref, reads -> [ meta, ref ] },
             by: 0
         )
@@ -234,8 +252,9 @@ workflow METATROPICS {
     if (params.run_virasign) {
         ch_versions = ch_versions.mix(VIRASIGN_DB.out.versions)
     }
-    ch_versions = ch_versions.mix(MEDAKA.out.versions.first())
-    ch_versions = ch_versions.mix(IVAR_CONSENSUS.out.versions.first())
+    ch_versions = ch_versions.mix(MEDAKA_VARIANTS.out.versions.first())
+    ch_versions = ch_versions.mix(MEDAKA_POSTPROCESSING.out.versions.first())
+    ch_versions = ch_versions.mix(MEDAKA_CONSENSUS_BCFTOOLS.out.versions.first())
     ch_versions = ch_versions.mix(HOMOPOLISH_POLISHING.out.versions.first())
     if (resolvedHumanHostFasta) {
         ch_versions = ch_versions.mix(HUMAN_MAPPING.out.versionsmini)
