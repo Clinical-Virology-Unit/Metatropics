@@ -670,6 +670,15 @@ def main() -> None:
     ap.add_argument("--minor-vaf-min", type=float, required=True)
     ap.add_argument("--minor-vaf-max", type=float, required=True)
     ap.add_argument("--min-sb-pvalue", type=float, required=True)
+    ap.add_argument(
+        "--sb-min-alt-strand",
+        type=int,
+        default=0,
+        help=(
+            "Skip the SB (strand-bias) filter for non-APOBEC3 sites when BOTH ALT_F and ALT_R "
+            "are >= this value. Set to 0 to always apply SB filtering when enabled."
+        ),
+    )
     args = ap.parse_args()
 
     prefix = str(args.out_prefix)
@@ -723,11 +732,13 @@ def main() -> None:
         dp = int(counts["DP"])
         ad_ref = int(counts["REF_F"] + counts["REF_R"])
         ad_alt = int(counts["ALT_F"] + counts["ALT_R"])
+        alt_f = int(counts["ALT_F"])
+        alt_r = int(counts["ALT_R"])
         if dp <= 0:
             continue
 
         vaf = float(ad_alt / dp) if dp else 0.0
-        sb = _strand_bias_pvalue(int(counts["REF_F"]), int(counts["REF_R"]), int(counts["ALT_F"]), int(counts["ALT_R"]))
+        sb = _strand_bias_pvalue(int(counts["REF_F"]), int(counts["REF_R"]), alt_f, alt_r)
         ctx, _, is_apobec, _ = _apobec_context(fasta, c.chrom, c.pos, c.ref, c.alt)
         vtype = "SNP" if _is_snp(c.ref, c.alt) else "INDEL"
 
@@ -743,6 +754,11 @@ def main() -> None:
             and sb is not None
             and float(sb) < float(args.min_sb_pvalue)
             and not is_apobec
+            and not (
+                int(args.sb_min_alt_strand) > 0
+                and alt_f >= int(args.sb_min_alt_strand)
+                and alt_r >= int(args.sb_min_alt_strand)
+            )
         ):
             fail_chain.append("strand_bias")
 
@@ -772,8 +788,8 @@ def main() -> None:
                 "DP": dp,
                 "AD": f"{ad_ref},{ad_alt}",
                 "VAF": f"{vaf:.5f}",
-                "ALT_F": int(counts["ALT_F"]),
-                "ALT_R": int(counts["ALT_R"]),
+                "ALT_F": alt_f,
+                "ALT_R": alt_r,
                 "REF_F": int(counts["REF_F"]),
                 "REF_R": int(counts["REF_R"]),
                 "SB": f"{sb:.3g}" if sb is not None else ".",
@@ -812,8 +828,8 @@ def main() -> None:
                 "DP": dp,
                 "AD": f"{ad_ref},{ad_alt}",
                 "VAF": f"{vaf:.5f}",
-                "ALT_F": int(counts["ALT_F"]),
-                "ALT_R": int(counts["ALT_R"]),
+                "ALT_F": alt_f,
+                "ALT_R": alt_r,
                 "REF_F": int(counts["REF_F"]),
                 "REF_R": int(counts["REF_R"]),
                 "SB": f"{sb:.3g}" if sb is not None else ".",

@@ -224,6 +224,12 @@
                     "default": 0.001,
                     "description": "Minimum ALT strand-bias p-value to keep a variant (uniform recount; two-sided). Set to 0 to disable SB filtering. Not applied when INFO/APOBEC3=Yes (classic motif); other filters still apply.",
                     "fa_icon": "fas fa-balance-scale"
+                },
+                "medaka_sb_min_alt_strand": {
+                    "type": "integer",
+                    "default": 100,
+                    "description": "If both ALT_F and ALT_R (uniform recount) are ≥ this value, do not reject a non-APOBEC3 variant on SB alone (even if SB < medaka_min_sb_pvalue). Set to 0 to always apply SB filtering when enabled.",
+                    "fa_icon": "fas fa-arrows-alt-h"
                 }
             }
         },
