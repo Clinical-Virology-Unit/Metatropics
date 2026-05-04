@@ -228,7 +228,6 @@ workflow METATROPICS {
     MEDAKA_POSTPROCESSING( ch_medaka_uniform_in )
 
     def ch_medaka_consensus_in = MEDAKA_POSTPROCESSING.out.vcf
-        .join(MEDAKA_POSTPROCESSING.out.vcf_index, by: 0)
         .join(ch_virasign_confident.map { meta, bam, bai, ref, reads -> [ meta, ref ] }, by: 0)
 
     MEDAKA_CONSENSUS_BCFTOOLS( ch_medaka_consensus_in )

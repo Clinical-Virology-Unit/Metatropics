@@ -61,7 +61,6 @@ def extract_sample_name(filename: str) -> str:
     name = re.sub(r"_viral$", "", name)
     name = re.sub(r"_classification_results$", "", name)
     name = re.sub(r"_fixed$", "", name)
-    name = re.sub(r"_T\d+$", "", name)
     name = re.sub(r"\.fastp$", "", name)
     return name
 
@@ -238,7 +237,7 @@ def compute_rows(
 ) -> Tuple[List[Row], bool, bool]:
     # Raw reads can be named either `*_fixed.fastq.gz` (older convention) or `*.fastq.gz`.
     # Exclude fastp outputs which are counted separately.
-    raw = count_dir(re.compile(r"(?<!\\.fastp)(?:_fixed)?\\.fastq\\.gz$"), read_count_dir)
+    raw = count_dir(re.compile(r"(?<!\.fastp)(?:_fixed)?\.fastq\.gz$"), read_count_dir)
     trimmed = count_dir(re.compile(r"\.fastp\.fastq\.gz$"), read_count_dir)
     human_dep = count_dir(re.compile(r"\.fastq\.gz$"), read_count_dir / "nohuman")
     host_dep = count_dir(re.compile(r"\.fastq\.gz$"), read_count_dir / "nohost")
@@ -248,7 +247,7 @@ def compute_rows(
     # directly from the pipeline outdir's Reads/* structure.
     if not raw and not trimmed:
         reads_root = outdir / "Reads"
-        raw = count_dir(re.compile(r"(?<!\\.fastp)(?:_fixed)?\\.fastq\\.gz$"), reads_root / "fix")
+        raw = count_dir(re.compile(r"(?<!\.fastp)(?:_fixed)?\.fastq\.gz$"), reads_root / "fix")
         trimmed = count_dir(re.compile(r"\.fastp\.fastq\.gz$"), reads_root / "fastplong")
         # Depletion folders now publish *_human_depleted.fastq.gz / *_host_depleted.fastq.gz.
         # Keep the legacy *_other.fastq.gz pattern so older outdirs still count correctly.

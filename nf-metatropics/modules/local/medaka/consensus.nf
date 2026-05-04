@@ -7,7 +7,7 @@ process MEDAKA_CONSENSUS_BCFTOOLS {
         'daanjansen94/medaka:2.0.0' }"
 
     input:
-    tuple val(meta), path(uniform_vcf), path(uniform_vcf_index), path(ref_fasta)
+    tuple val(meta), path(uniform_vcf), path(ref_fasta)
 
     output:
     tuple val(meta), path("${meta.id}.${meta.virus_slug}.consensus.fasta"), emit: fasta

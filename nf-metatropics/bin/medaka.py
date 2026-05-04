@@ -5,11 +5,13 @@ Uniform Medaka post-processing for Metatropics.
 Ported from TWist_DCT/VariantCallingTest_26021935/variant_calling/postprocess.py:
 - Re-count ref/alt support from the per-virus BAM (SNPs + simple left-anchored indels).
 - Apply uniform filters (QUAL when present, DP, ALT reads, optional strand-bias p-value).
+  Strand bias is skipped only for SNPs that match the APOBEC3 dinucleotide motifs (same cases as INFO/APOBEC3=Yes); all other filters still apply.
 - Classify variants as major or minor by VAF thresholds (stored as INFO/TIER=major|minor in VCF).
-- Emit a single coordinate-sorted VCF (required for `tabix`; split `_snps` / `_indel` files are type-filtered) with INFO tags:
+- Emit a single coordinate-sorted tiered VCF `<prefix>.variants.filtered.vcf` with INFO tags:
   TIER, TYPE, DP, AD, VAF, REF_F, REF_R, ALT_F, ALT_R, SB, CTX, APOBEC3
-- Emit an HTML report: settings as value boxes; separate SNP and indel tables (major/minor variant labels; SB, CTX, APOBEC3).
-- Emit HTML with settings summary and separate SNP / indel tables.
+- For QC: copy Medaka input as `<prefix>.medaka_filtered.in.vcf` and write `<prefix>.variants.unfiltered.vcf`
+  (all uniform-recount sites with DP>0; INFO UFR = filter status, FIN = 1 if the row is also in variants.filtered).
+- Emit an HTML report: settings as value boxes; separate SNP and indel tables (major/minor variant labels; SB = exact strand test on ALT_F vs ALT_R, CTX, APOBEC3).
 
 Dependencies: pysam only (available in daanjansen94/medaka:2.0.0).
 """
@@ -20,6 +22,7 @@ import argparse
 import html
 import math
 import re
+import shutil
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
@@ -230,53 +233,42 @@ def _log_factorial(n: int) -> float:
     return math.lgamma(n + 1)
 
 
-def _hypergeom_logpmf(k: int, K: int, n: int, N: int) -> float:
-    # log [ C(K,k) C(N-K,n-k) / C(N,n) ]  (hypergeometric PMF for Fisher's exact 2×2)
-    return (
-        _log_factorial(K)
-        - _log_factorial(k)
-        - _log_factorial(K - k)
-        + _log_factorial(N - K)
-        - _log_factorial(n - k)
-        - _log_factorial(N - K - n + k)
-        + _log_factorial(n)
-        + _log_factorial(N - n)
-        - _log_factorial(N)
-    )
+def _log_binom_pmf_half(n: int, k: int) -> float:
+    """log P(X=k) for X ~ Binomial(n, 0.5)."""
+    return _log_factorial(n) - _log_factorial(k) - _log_factorial(n - k) - n * math.log(2.0)
 
 
-def _fisher_exact_two_sided(ref_f: int, ref_r: int, alt_f: int, alt_r: int) -> Optional[float]:
-    a, b, c, d = ref_f, ref_r, alt_f, alt_r
-    if min(a, b, c, d) < 0:
+def _binom_twosided_strand_alt(alt_f: int, alt_r: int) -> Optional[float]:
+    """
+    Two-sided exact test that ALT_F vs ALT_R are 50/50 (Binomial(n, 0.5)).
+    """
+    n = alt_f + alt_r
+    if n <= 0 or alt_f < 0 or alt_r < 0:
         return None
-    if (a + b) == 0 or (c + d) == 0:
-        return None
-
-    row1 = a + b
-    row2 = c + d
-    col1 = a + c
-    n = a + b + c + d
-
-    logps: List[float] = []
-    lo = max(0, row1 + col1 - n)
-    hi = min(row1, col1)
-    for k in range(lo, hi + 1):
-        logps.append(_hypergeom_logpmf(k, col1, row1, n))
-
-    obs_k = a
-    obs_lp = _hypergeom_logpmf(obs_k, col1, row1, n)
-
-    mx = max(logps)
+    if n > 8000:
+        z = (alt_f - n * 0.5) / math.sqrt(n * 0.25 + 1e-12)
+        return float(min(1.0, max(0.0, math.erfc(abs(z) / math.sqrt(2.0)))))
+    log_obs = _log_binom_pmf_half(n, alt_f)
     p = 0.0
-    for lp in logps:
-        if lp <= obs_lp + 1e-12:
-            p += math.exp(lp - mx)
-    p *= math.exp(mx)
+    for x in range(n + 1):
+        lp = _log_binom_pmf_half(n, x)
+        if lp <= log_obs + 1e-14:
+            p += math.exp(lp)
     return float(min(1.0, max(0.0, p)))
 
 
 def _strand_bias_pvalue(ref_f: int, ref_r: int, alt_f: int, alt_r: int) -> Optional[float]:
-    return _fisher_exact_two_sided(ref_f, ref_r, alt_f, alt_r)
+    """
+    Strand bias of the **ALT** allele only: are ALT-supporting reads skewed toward
+    one sequencing strand (forward vs reverse)?
+
+    We use one **exact two-sided** test on (ALT_F, ALT_R) under H0 that each ALT read
+    is equally likely to be forward or reverse (Binomial(n, ½)). That is the
+    standard exact test for a 2-category table; it applies whether or not REF
+    reads exist (REF counts are ignored for SB — only ALT strand composition matters).
+    """
+    _ = (ref_f, ref_r)  # signature kept for uniform recount; SB uses ALT strand counts only
+    return _binom_twosided_strand_alt(alt_f, alt_r)
 
 
 def _apobec_context(
@@ -648,7 +640,7 @@ def _build_html_report(*, sample: str, virus: str, settings: dict, rows: List[di
 {snp_block}
 {indel_block}
         <div class="footer">
-          <p><strong>SB (strand bias).</strong> Cells show <code>NA</code> when no Fisher two-sided p-value is computed. That happens when ref or alt strand counts form a degenerate 2×2 table (for example <strong>VAF = 1</strong> with no REF reads on either strand, or no ALT reads), so one table margin is zero. Published VCFs use a missing <code>INFO/SB</code> (.) in those cases.</p>
+          <p><strong>SB (ALT strand bias).</strong> SB is the <strong>two-sided exact p-value</strong> for whether <strong>ALT-supporting reads</strong> are split evenly between forward and reverse (<strong>ALT_F</strong> vs <strong>ALT_R</strong>, Binomial(<em>n</em>, ½)). Low SB means the ALT allele is much more often on one strand. REF read counts are not used for SB. <code>NA</code> only if there are no ALT reads. Sites with <strong>APOBEC3 = Yes</strong> (classic dinucleotide context) are <strong>not rejected on SB alone</strong>; depth, ALT support, QUAL, and VAF tiering still apply.</p>
         </div>
         {qual_note}
       </div>
@@ -705,15 +697,23 @@ def main() -> None:
         '##INFO=<ID=ALT_R,Number=1,Type=Integer,Description="ALT supporting reads on reverse strand (uniform recount)">',
         '##INFO=<ID=REF_F,Number=1,Type=Integer,Description="REF supporting reads on forward strand (uniform recount)">',
         '##INFO=<ID=REF_R,Number=1,Type=Integer,Description="REF supporting reads on reverse strand (uniform recount)">',
-        '##INFO=<ID=SB,Number=1,Type=Float,Description="Fisher exact strand-bias p-value (two-sided) from uniform recount">',
+        '##INFO=<ID=SB,Number=1,Type=Float,Description="ALT strand-bias p-value (two-sided exact): forward vs reverse among ALT-supporting reads (Binomial n=ALT_F+ALT_R, p=0.5); REF reads not used">',
         '##INFO=<ID=CTX,Number=1,Type=String,Description="Reference 3-mer context centered on POS (plus strand)">',
         '##INFO=<ID=APOBEC3,Number=1,Type=String,Description="APOBEC3 dinucleotide motif on ref: C<->T with 5-prime T (TC/TT) or G<->A with 3-prime A (GA/AA); Yes or No">',
     ]
+    extra_info_unf_only = [
+        '##INFO=<ID=UFR,Number=1,Type=String,Description="Uniform filter status: PASS or comma-separated failure codes">',
+        '##INFO=<ID=FIN,Number=1,Type=Integer,Description="1 if row is emitted in variants.filtered VCF else 0">',
+    ]
 
     merged_header = _merge_header_lines(header_lines, extra_info_defs)
+    merged_header_unf = _merge_header_lines(header_lines, extra_info_defs + extra_info_unf_only)
+
+    shutil.copy2(args.medaka_filtered_vcf, Path(f"{prefix}.medaka_filtered.in.vcf"))
 
     rows_out: List[dict] = []
     vcf_body_lines: List[str] = []
+    unf_body_lines: List[str] = []
 
     for c in calls:
         if c.chrom != contig:
@@ -729,6 +729,7 @@ def main() -> None:
         vaf = float(ad_alt / dp) if dp else 0.0
         sb = _strand_bias_pvalue(int(counts["REF_F"]), int(counts["REF_R"]), int(counts["ALT_F"]), int(counts["ALT_R"]))
         ctx, _, is_apobec, _ = _apobec_context(fasta, c.chrom, c.pos, c.ref, c.alt)
+        vtype = "SNP" if _is_snp(c.ref, c.alt) else "INDEL"
 
         fail_chain: List[str] = []
         if dp < int(args.min_dp):
@@ -737,22 +738,72 @@ def main() -> None:
             fail_chain.append("min_alt_reads")
         if c.qual is not None and float(c.qual) < float(args.min_qual):
             fail_chain.append("min_qual")
-        if float(args.min_sb_pvalue) > 0.0 and sb is not None and float(sb) < float(args.min_sb_pvalue):
+        if (
+            float(args.min_sb_pvalue) > 0.0
+            and sb is not None
+            and float(sb) < float(args.min_sb_pvalue)
+            and not is_apobec
+        ):
             fail_chain.append("strand_bias")
 
-        if fail_chain:
+        passes_uniform = len(fail_chain) == 0
+        tier_label = "filtered"
+        in_tiered_vcf = False
+        if passes_uniform:
+            if vaf >= float(args.major_vaf):
+                tier_label = "major"
+                in_tiered_vcf = True
+            elif float(args.minor_vaf_min) <= vaf < float(args.minor_vaf_max):
+                tier_label = "minor"
+                in_tiered_vcf = True
+            else:
+                tier_label = "other_vaf"
+
+        ufr = ",".join(fail_chain) if fail_chain else "PASS"
+        qual_out = "." if c.qual is None else f"{c.qual:.3g}"
+        fmt = c.format_keys if c.format_keys else "GT"
+        smp = c.sample_cell if c.sample_cell else "1/1"
+
+        unf_info: Dict[str, object] = dict(c.info)
+        unf_info.update(
+            {
+                "TIER": tier_label,
+                "TYPE": vtype,
+                "DP": dp,
+                "AD": f"{ad_ref},{ad_alt}",
+                "VAF": f"{vaf:.5f}",
+                "ALT_F": int(counts["ALT_F"]),
+                "ALT_R": int(counts["ALT_R"]),
+                "REF_F": int(counts["REF_F"]),
+                "REF_R": int(counts["REF_R"]),
+                "SB": f"{sb:.3g}" if sb is not None else ".",
+                "CTX": ctx if ctx else ".",
+                "APOBEC3": "Yes" if is_apobec else "No",
+                "UFR": ufr,
+                "FIN": 1 if in_tiered_vcf else 0,
+            }
+        )
+        unf_body_lines.append(
+            "\t".join(
+                [
+                    c.chrom,
+                    str(c.pos),
+                    ".",
+                    c.ref,
+                    c.alt,
+                    qual_out,
+                    "PASS",
+                    _fmt_info(unf_info),
+                    fmt,
+                    smp,
+                ]
+            )
+        )
+
+        if not in_tiered_vcf:
             continue
 
-        tier = "other"
-        if vaf >= float(args.major_vaf):
-            tier = "major"
-        elif float(args.minor_vaf_min) <= vaf < float(args.minor_vaf_max):
-            tier = "minor"
-        else:
-            continue
-
-        vtype = "SNP" if _is_snp(c.ref, c.alt) else "INDEL"
-
+        tier = tier_label
         info_out: Dict[str, object] = dict(c.info)
         info_out.update(
             {
@@ -771,12 +822,7 @@ def main() -> None:
             }
         )
 
-        qual_out = "." if c.qual is None else f"{c.qual:.3g}"
         filt_out = "PASS"
-
-        fmt = c.format_keys if c.format_keys else "GT"
-        smp = c.sample_cell if c.sample_cell else "1/1"
-
         vcf_body_lines.append(
             "\t".join(
                 [
@@ -805,7 +851,7 @@ def main() -> None:
                 "DP": dp,
                 "AD": f"{ad_ref},{ad_alt}",
                 "VAF": f"{vaf:.5f}",
-                "SB": f"{sb:.3g}" if sb is not None else "",
+                "SB": f"{sb:.3g}" if sb is not None else "NA",
                 "CTX": ctx or "",
                 "APOBEC3": "Yes" if is_apobec else "No",
             }
@@ -820,35 +866,19 @@ def main() -> None:
         return (pos, ref, alt)
 
     vcf_body_lines.sort(key=vcf_sort_key)
+    unf_body_lines.sort(key=vcf_sort_key)
 
     rows_out.sort(key=lambda rr: (int(rr["POS"]), str(rr["REF"]), str(rr["ALT"])))
 
-    out_vcf = Path(f"{prefix}.variants.uniform.vcf")
-    out_snps = Path(f"{prefix}_snps.vcf")
-    out_indel = Path(f"{prefix}_indel.vcf")
+    out_unf = Path(f"{prefix}.variants.unfiltered.vcf")
+    with open(out_unf, "wt", encoding="utf-8") as out:
+        for hl in merged_header_unf:
+            out.write(hl + "\n")
+        for line in unf_body_lines:
+            out.write(line + "\n")
+
+    out_vcf = Path(f"{prefix}.variants.filtered.vcf")
     out_html = Path(f"{prefix}.variants.html")
-
-    snp_lines: List[str] = []
-    indel_lines: List[str] = []
-    for line in vcf_body_lines:
-        parts = line.split("\t")
-        if len(parts) < 5:
-            continue
-        ref, alt = parts[3], parts[4]
-        if _is_snp(ref, alt):
-            snp_lines.append(line)
-        else:
-            indel_lines.append(line)
-
-    def _write_split_vcf(path: Path, body: List[str]) -> None:
-        with open(path, "wt", encoding="utf-8") as out:
-            for hl in merged_header:
-                out.write(hl + "\n")
-            for bl in body:
-                out.write(bl + "\n")
-
-    _write_split_vcf(out_snps, snp_lines)
-    _write_split_vcf(out_indel, indel_lines)
 
     with open(out_vcf, "wt", encoding="utf-8") as out:
         for hl in merged_header:

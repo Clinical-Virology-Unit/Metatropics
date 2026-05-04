@@ -10,11 +10,10 @@ process MEDAKA_POSTPROCESSING {
     tuple val(meta), path(medaka_filtered_vcf), path(bam), path(bai), path(ref_fasta)
 
     output:
-    tuple val(meta), path("*.variants.uniform.vcf.gz")     , emit: vcf
-    tuple val(meta), path("*.variants.uniform.vcf.gz.tbi"), emit: vcf_index
-    tuple val(meta), path("*_snps.vcf")                   , emit: snps
-    tuple val(meta), path("*_indel.vcf")                  , emit: indels
-    tuple val(meta), path("*.variants.html")              , emit: html
+    tuple val(meta), path("*.variants.filtered.vcf")   , emit: vcf
+    tuple val(meta), path("*.variants.html")           , emit: html
+    tuple val(meta), path("*.variants.unfiltered.vcf"), emit: variants_unfiltered
+    tuple val(meta), path("*.medaka_filtered.in.vcf")  , emit: medaka_filtered_in
     path "versions.yml", emit: versions
 
     when:
@@ -40,10 +39,6 @@ process MEDAKA_POSTPROCESSING {
         --minor-vaf-min ${params.medaka_minor_vaf_min} \\
         --minor-vaf-max ${params.medaka_minor_vaf_max} \\
         --min-sb-pvalue ${params.medaka_min_sb_pvalue}
-
-    bgzip -c ${prefix}.variants.uniform.vcf > ${prefix}.variants.uniform.vcf.gz
-    tabix -p vcf ${prefix}.variants.uniform.vcf.gz
-    rm -f ${prefix}.variants.uniform.vcf
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
