@@ -38,7 +38,8 @@ process MEDAKA_POSTPROCESSING {
         --major-vaf ${params.medaka_major_vaf} \\
         --minor-vaf-min ${params.medaka_minor_vaf_min} \\
         --minor-vaf-max ${params.medaka_minor_vaf_max} \\
-        --min-sb-pvalue ${params.medaka_min_sb_pvalue}
+        --min-sb-pvalue ${params.medaka_min_sb_pvalue} \\
+        --sb-min-alt-strand ${params.medaka_sb_min_alt_strand}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
