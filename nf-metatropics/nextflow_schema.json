@@ -221,8 +221,8 @@
                 },
                 "medaka_min_sb_pvalue": {
                     "type": "number",
-                    "default": 0.05,
-                    "description": "Minimum Fisher strand-bias p-value to keep a variant (two-sided). Set to 0 to disable SB filtering.",
+                    "default": 0.001,
+                    "description": "Minimum ALT strand-bias p-value to keep a variant (uniform recount; two-sided). Set to 0 to disable SB filtering. Not applied when INFO/APOBEC3=Yes (classic motif); other filters still apply.",
                     "fa_icon": "fas fa-balance-scale"
                 }
             }

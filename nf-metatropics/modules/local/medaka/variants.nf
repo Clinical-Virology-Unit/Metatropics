@@ -68,30 +68,21 @@ process MEDAKA_VARIANTS {
             -o ./
 
         if [ -s medaka.annotated.vcf ]; then
-            # Filter Medaka's annotated VCF: drop variants with low confidence
-            # (QUAL) or low spoa-realigned spanning depth (DPSP). Then split the
-            # surviving variants into separate SNP-only and indel-only files for
-            # easier downstream inspection.
+            # Filter Medaka's annotated VCF: drop variants with low confidence (QUAL) or low
+            # spoa-realigned spanning depth (DPSP). SNP/indel split lives in postprocessing.
             bcftools view -e 'QUAL<${min_qual} || INFO/DPSP<${min_dpsp}' \\
                 medaka.annotated.vcf > medaka.filtered.vcf
             cp medaka.filtered.vcf ${prefix}.medaka.filtered.vcf
-            bcftools view -v snps   medaka.filtered.vcf > ${prefix}_snps.vcf
-            bcftools view -v indels medaka.filtered.vcf > ${prefix}_indel.vcf
         else
             echo "Medaka produced no annotated VCF for ${prefix}." >&2
-            touch ${prefix}_snps.vcf
-            touch ${prefix}_indel.vcf
             write_skeleton_filtered_vcf
         fi
     else
         echo "Assembly file is empty or contains no sequences for ${prefix}. Skipping Medaka." >&2
-        touch ${prefix}_snps.vcf
-        touch ${prefix}_indel.vcf
         write_skeleton_filtered_vcf
     fi
 
-    # Drop Medaka's own intermediate VCFs so only the per-virus _snps/_indel
-    # files are emitted.
+    # Drop Medaka intermediate VCFs; keep `${prefix}.medaka.filtered.vcf` for downstream.
     rm -f medaka.vcf medaka.sorted.vcf medaka.annotated.vcf medaka.filtered.vcf
 
     # Remove empty placeholder VCFs so the optional emit stays empty on failure.
