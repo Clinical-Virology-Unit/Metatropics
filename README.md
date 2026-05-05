@@ -26,8 +26,8 @@ cd Metatropics
 
 ---
 
-## 2. Java and Nextflow 25.04.6
-You need **Java 17+** and **[Nextflow](https://www.nextflow.io/docs/latest/getstarted.html#installation) ≥ 22.10.1**. On Debian/Ubuntu you can do:
+## 2. Java and Nextflow
+You need **Java 17+** and **[Nextflow](https://www.nextflow.io/docs/latest/getstarted.html#installation) 25.04.6**. On Debian/Ubuntu you can do:
 ```bash
 sudo apt update && sudo apt install -y openjdk-17-jdk curl
 curl -sSL https://get.nextflow.io | bash
