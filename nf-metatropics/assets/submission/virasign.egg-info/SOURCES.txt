@@ -1,0 +1,12 @@
+LICENSE
+README.md
+pyproject.toml
+setup.py
+nf-metatropics/assets/submission/metatropics_samplesheet/__init__.py
+nf-metatropics/assets/submission/metatropics_samplesheet/__main__.py
+nf-metatropics/assets/submission/metatropics_samplesheet/samplesheet.py
+nf-metatropics/assets/submission/virasign.egg-info/PKG-INFO
+nf-metatropics/assets/submission/virasign.egg-info/SOURCES.txt
+nf-metatropics/assets/submission/virasign.egg-info/dependency_links.txt
+nf-metatropics/assets/submission/virasign.egg-info/entry_points.txt
+nf-metatropics/assets/submission/virasign.egg-info/top_level.txt
