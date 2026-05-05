@@ -33,7 +33,8 @@ sudo apt update && sudo apt install -y openjdk-17-jdk curl
 curl -sSL https://get.nextflow.io | bash
 chmod +x nextflow && sudo mv nextflow /usr/local/bin/
 nextflow self-update 25.04.6
-nextflow -version 
+nextflow -version
+# If `self-update` fails: add `export NXF_VER=25.04.6` to `~/.bashrc`
 ```
 
 ---
