@@ -19,6 +19,7 @@ process MEDAKA_CONSENSUS_BCFTOOLS {
     script:
     def prefix = task.ext.prefix ?: "${meta.id}.${meta.virus_slug}"
     def outFasta = "${meta.id}.${meta.virus_slug}.consensus.fasta"
+    def consensus_vaf = (params.agreement != null) ? (params.agreement as Double) : 0.7d
     def spp = (meta.species_slug ?: '').toString().trim()
     def fastaHdr = spp ? ">${meta.id}_${spp}" : ">${meta.id}"
     """
@@ -26,7 +27,10 @@ process MEDAKA_CONSENSUS_BCFTOOLS {
 
     samtools faidx $ref_fasta
 
-    bcftools view -i 'INFO/TIER="major"' -Oz -o ${prefix}.major.vcf.gz $uniform_vcf
+    # Keep only "major" variants, but enforce a stricter VAF threshold for consensus assembly.
+    # This allows the VCF/HTML report to keep a more permissive major tier (e.g. 0.2),
+    # while the consensus uses `params.agreement` (default 0.7).
+    bcftools view -i "INFO/TIER=\\"major\\" && INFO/VAF>=${consensus_vaf}" -Oz -o ${prefix}.major.vcf.gz $uniform_vcf
     tabix -p vcf ${prefix}.major.vcf.gz
 
     bcftools consensus -f $ref_fasta -o raw_consensus.fasta ${prefix}.major.vcf.gz
