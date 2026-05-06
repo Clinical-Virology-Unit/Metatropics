@@ -50,7 +50,7 @@ References for the **programs and frameworks** used in the Metatropics pipeline.
 
 > Li H, et al. The Sequence Alignment/Map format and SAMtools. *Bioinformatics*. 2009 Aug 15;25(16):2078-2079. doi: [10.1093/bioinformatics/btp352](https://doi.org/10.1093/bioinformatics/btp352).
 
-### Virasign (viral classification)
+### [Virasign] (https://github.com/DaanJansen94/virasign) (viral classification)
 
 > Jansen, D., & Vercauteren, K. (2026). Virasign: A viral taxonomic classification tool designed for nanopore sequencing data (v0.0.6). Zenodo. doi: [10.5281/zenodo.18387008](https://doi.org/10.5281/zenodo.18387008).
 
