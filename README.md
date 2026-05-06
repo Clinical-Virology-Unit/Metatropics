@@ -104,8 +104,8 @@ Results are written under your chosen `--outdir` and summarized below:
 | **`Basecalling/`** | Dorado basecalling and demultiplexing (optional). |
 | **`Reads/`** | Read QC, trimming, human / optional host depletion. |
 | **`Classification/`** | Virasign viral classification outputs and reports. |
-| **`Variant_calling/`** | Medaka alignments and variant calls (VCFs). |
-| **`Consensus/`** | iVar draft and Homopolish polished genomes. |
+| **`Variant_calling/`** | Clair3 variant calls (VCFs) and HTML report. |
+| **`Consensus/`** | bcftools consensus genome. |
 | **`Summary/`** | Final Metatropics report (`Summary/metatropics/Metatropics_Summary_RVDB.html`) listing all identified viruses, plus read-count summaries and pipeline provenance. |
 
 For a detailed description of each output subfolder, see [`nf-metatropics/assets/output/README.md`](nf-metatropics/assets/output/README.md).
