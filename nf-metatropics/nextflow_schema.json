@@ -55,7 +55,7 @@
                 "outdir": {
                     "type": "string",
                     "format": "directory-path",
-                    "description": "Output directory for results. Use absolute paths on cloud storage.",
+                    "description": "Output directory for results. Use absolute paths.",
                     "fa_icon": "fas fa-folder-open"
                 },
                 "model": {
@@ -91,25 +91,25 @@
                 "minLength": {
                     "type": "integer",
                     "default": 200,
-                    "description": "Minimum read length to analyse.",
+                    "description": "Min read length to analyse.",
                     "fa_icon": "fas fa-ruler-horizontal"
                 },
                 "quality": {
                     "type": "integer",
                     "default": 15,
-                    "description": "Minimum base quality for consensus.",
+                    "description": "Min base quality for consensus.",
                     "fa_icon": "fas fa-star-half-alt"
                 },
                 "agreement": {
                     "type": "number",
                     "default": 0.7,
-                    "description": "Minimum base frequency for consensus calls.",
+                    "description": "Min base frequency for consensus calls.",
                     "fa_icon": "fas fa-percentage"
                 },
                 "depth": {
                     "type": "integer",
                     "default": 25,
-                    "description": "Minimum per-position depth for consensus.",
+                    "description": "Min per-position depth for consensus.",
                     "fa_icon": "fas fa-layer-group"
                 },
                 "front": {
@@ -135,13 +135,13 @@
                 "perform_rarefaction": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Rarefy each sample to a target number of bases.",
+                    "description": "Rarefy each sample to number of bases.",
                     "fa_icon": "fas fa-toggle-on"
                 },
                 "target_bases": {
                     "type": "number",
                     "default": 500000000,
-                    "description": "Target bases per sample when rarefying (default 5×10⁸ ≈ 0.5 Gb).",
+                    "description": "Rarefying (default 5×10⁸).",
                     "help_text": "",
                     "fa_icon": "fas fa-bullseye"
                 }
@@ -177,68 +177,6 @@
                 }
             }
         },
-        "variant_calling_options": {
-            "title": "Variant calling options (Clair3)",
-            "type": "object",
-            "fa_icon": "fas fa-dna",
-            "description": "Options for Clair3 per-virus haploid variant calling and uniform post-processing.",
-            "properties": {
-                "clair3_model": {
-                    "type": "string",
-                    "description": "Optional: override Clair3 model directory name under /opt/models (e.g. r1041_e82_400bps_hac_v500). If unset, Metatropics attempts to autodetect from the BAM header and falls back to r1041_e82_400bps_hac_v500.",
-                    "help_text": "",
-                    "fa_icon": "fas fa-brain"
-                },
-                "clair3_min_mq": {
-                    "type": "integer",
-                    "default": 15,
-                    "description": "Minimum mapping quality (MAPQ) used when recounting alleles and applying uniform depth/ALT filters.",
-                    "fa_icon": "fas fa-map-marked-alt"
-                },
-                "clair3_min_bq": {
-                    "type": "integer",
-                    "default": 15,
-                    "description": "Minimum base quality used when recounting alleles from the per-virus BAM during uniform post-processing. This is separate from --quality (used by read QC).",
-                    "fa_icon": "fas fa-signal"
-                },
-                "clair3_min_alt_reads": {
-                    "type": "integer",
-                    "default": 10,
-                    "description": "Minimum ALT-supporting reads (from uniform BAM recount) to keep a variant.",
-                    "fa_icon": "fas fa-layer-group"
-                },
-                "major_vaf": {
-                    "type": "number",
-                    "default": 0.2,
-                    "description": "Major tier threshold: VAF ≥ this value (uniform recount).",
-                    "fa_icon": "fas fa-percentage"
-                },
-                "minor_vaf_min": {
-                    "type": "number",
-                    "default": 0.03,
-                    "description": "Minor tier lower bound (inclusive) on VAF.",
-                    "fa_icon": "fas fa-percentage"
-                },
-                "minor_vaf_max": {
-                    "type": "number",
-                    "default": 0.2,
-                    "description": "Minor tier upper bound (exclusive) on VAF.",
-                    "fa_icon": "fas fa-percentage"
-                },
-                "min_sb_pvalue": {
-                    "type": "number",
-                    "default": 0,
-                    "description": "Minimum ALT strand-bias p-value to keep a variant (uniform recount; two-sided). Default is disabled (0) so SB is reported but not used as a filter. Not applied when INFO/APOBEC3=Yes (classic motif); other filters still apply.",
-                    "fa_icon": "fas fa-balance-scale"
-                },
-                "sb_min_alt_strand": {
-                    "type": "integer",
-                    "default": 100,
-                    "description": "If both ALT_F and ALT_R (uniform recount) are ≥ this value, do not reject a non-APOBEC3 variant on SB alone (even if SB < min_sb_pvalue). Set to 0 to always apply SB filtering when enabled.",
-                    "fa_icon": "fas fa-arrows-alt-h"
-                }
-            }
-        },
         "viral_classifier_options_virasign": {
             "title": "Viral classifier options (Virasign)",
             "type": "object",
@@ -254,7 +192,7 @@
                 },
                 "virasign_db_dir": {
                     "type": "string",
-                    "description": "Where Virasign databases are stored (defaults to `Databases/`).",
+                    "description": "Databases location (defaults: `Databases/`).",
                     "help_text": "",
                     "fa_icon": "fas fa-folder-open"
                 },
@@ -283,27 +221,27 @@
                 },
                 "virasign_min_identity": {
                     "type": "number",
-                    "description": "Minimum alignment identity threshold (optional).",
+                    "description": "Min alignment identity threshold (optional).",
                     "fa_icon": "fas fa-percentage"
                 },
                 "virasign_min_mapped_reads": {
                     "type": "integer",
-                    "description": "Minimum mapped reads to report a hit (optional).",
+                    "description": "Min mapped reads to report a hit (optional).",
                     "fa_icon": "fas fa-filter"
                 },
                 "virasign_coverage_depth": {
                     "type": "integer",
-                    "description": "Minimum per-position depth for coverage filtering (optional).",
+                    "description": "Min depth for cov filtering (optional).",
                     "fa_icon": "fas fa-layer-group"
                 },
                 "virasign_coverage_breadth": {
                     "type": "number",
-                    "description": "Minimum breadth (fraction) for coverage filtering (optional).",
+                    "description": "Min breadth for coverage filtering (optional).",
                     "fa_icon": "fas fa-ruler-horizontal"
                 },
                 "virasign_min_nogr": {
                     "type": "integer",
-                    "description": "Min number of non-overlapping genomic regions required (optional).",
+                    "description": "Min non-overlapping genomic regions (optional).",
                     "fa_icon": "fas fa-project-diagram"
                 },
                 "virasign_zscore": {
@@ -314,13 +252,13 @@
                 },
                 "virasign_zscore_controls": {
                     "type": "string",
-                    "description": "Path to negative-control FASTQs for z-score (optional).",
+                    "description": "Path negative-control FASTQs for z-score (optional).",
                     "help_text": "",
                     "fa_icon": "fas fa-file"
                 },
                 "virasign_threads": {
                     "type": "integer",
-                    "description": "Threads for Virasign (optional; defaults to task CPUs).",
+                    "description": "Threads (optional; defaults to task CPUs).",
                     "fa_icon": "fas fa-microchip"
                 },
                 "virasign_ram_gb": {
@@ -331,7 +269,7 @@
                 "virasign_enable_clustering": {
                     "type": "boolean",
                     "default": false,
-                    "description": "Enable clustering of references in database prep.",
+                    "description": "Clustering of database.",
                     "fa_icon": "fas fa-compress-arrows-alt"
                 },
                 "virasign_cluster_identity": {
@@ -341,8 +279,70 @@
                 },
                 "virasign_max_ambiguous_fraction": {
                     "type": "number",
-                    "description": "Max allowed ambiguous fraction when preparing DB (optional).",
+                    "description": "Max ambiguous % when preparing DB (optional).",
                     "fa_icon": "fas fa-exclamation-triangle"
+                }
+            }
+        },
+        "variant_calling_options": {
+            "title": "Variant calling and consensus",
+            "type": "object",
+            "fa_icon": "fas fa-dna",
+            "description": "Options for Clair3 per-virus haploid variant calling and uniform post-processing.",
+            "properties": {
+                "clair3_model": {
+                    "type": "string",
+                    "description": "Override model(e.g. r1041_e82_400bps_hac_v500).",
+                    "help_text": "",
+                    "fa_icon": "fas fa-brain"
+                },
+                "clair3_min_mq": {
+                    "type": "integer",
+                    "default": 15,
+                    "description": "Min mapping quality (MAPQ).",
+                    "fa_icon": "fas fa-map-marked-alt"
+                },
+                "clair3_min_bq": {
+                    "type": "integer",
+                    "default": 15,
+                    "description": "Min base quality.",
+                    "fa_icon": "fas fa-signal"
+                },
+                "clair3_min_alt_reads": {
+                    "type": "integer",
+                    "default": 10,
+                    "description": "Min ALT-supporting reads.",
+                    "fa_icon": "fas fa-layer-group"
+                },
+                "major_vaf": {
+                    "type": "number",
+                    "default": 0.2,
+                    "description": "Major tier: VAF ≥ this value.",
+                    "fa_icon": "fas fa-percentage"
+                },
+                "minor_vaf_min": {
+                    "type": "number",
+                    "default": 0.03,
+                    "description": "Minor lower bound for VAF.",
+                    "fa_icon": "fas fa-percentage"
+                },
+                "minor_vaf_max": {
+                    "type": "number",
+                    "default": 0.2,
+                    "description": "Minor upper bound for VAF.",
+                    "fa_icon": "fas fa-percentage"
+                },
+                "min_sb_pvalue": {
+                    "type": "number",
+                    "default": 0,
+                    "description": "Min ALT strand-bias p-value.",
+                    "fa_icon": "fas fa-balance-scale"
+                },
+                "sb_min_alt_strand": {
+                    "type": "integer",
+                    "default": 100,
+                    "description": "If ALT_F and ALT_R are ≥ this value.",
+                    "fa_icon": "fas fa-arrows-alt-h"
                 }
             }
         }
