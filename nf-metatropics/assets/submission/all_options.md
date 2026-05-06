@@ -25,10 +25,8 @@ To autogenerate a `samplesheet.csv` from a reads folder, run `pip install .` onc
 
 | Option | Description |
 |--------|-------------|
-| `--minLength` | Minimum read length to analyse. Default: 200. |
-| `--quality` | Minimum base quality for consensus. Default: 15. |
-| `--agreement` | Minimum base frequency for unambiguous consensus calls. Default: 0.7. |
-| `--depth` | Minimum per-position depth for consensus. Default: 20. |
+| `--minLength` | Min read length to analyse. Default: 200. |
+| `--quality` | Min base quality used by QC and variant filtering. Default: 15. |
 | `--front` | Bases to trim at 5′. Default: 25. |
 | `--tail` | Bases to trim at 3′. Default: 25. |
 
@@ -47,12 +45,6 @@ To autogenerate a `samplesheet.csv` from a reads folder, run `pip install .` onc
 | `--Other_host_fasta` | Optional FASTA for an additional host background (e.g. mosquito, primate). |
 | `--Host` | Optional host keyword(s) to auto-download FASTA under `Metatropics/Databases`. Multiple hosts are supported and will be merged (e.g. `human,aedes,culex`). Supported keywords include `human`, `pan`, `gorilla`, `orangutan`, `macaque`, `aedes`, `anopheles`, `culex`, `bat`, `rat`, `dog`, `cat`, `camel`, `goat`, `pig`, `cow`, `mouse`, `chicken`. |
 
-## Variant calling options (Medaka)
-
-| Option | Description |
-|--------|-------------|
-| `--medaka_model` | Model to override auto-detection (e.g. `r1041_e82_400bps_hac_variant_v5.0.0`).  |
-
 ## Viral classifier options (Virasign)
 
 ### Important options
@@ -70,10 +62,10 @@ To autogenerate a `samplesheet.csv` from a reads folder, run `pip install .` onc
 |--------|-------------|
 | `--virasign_rvdb_version` | RVDB release to use (optional). |
 | `--virasign_accessions` | Extra accessions to include (optional). |
-| `--virasign_min_identity` | Minimum alignment identity threshold (optional). |
-| `--virasign_min_mapped_reads` | Minimum mapped reads to report a hit (optional). |
-| `--virasign_coverage_depth` | Minimum per-position depth for coverage filtering (optional). |
-| `--virasign_coverage_breadth` | Minimum breadth (fraction) for coverage filtering (optional). |
+| `--virasign_min_identity` | Min alignment identity threshold (optional). |
+| `--virasign_min_mapped_reads` | Min mapped reads to report a hit (optional). |
+| `--virasign_coverage_depth` | Min per-position depth for coverage filtering (optional). |
+| `--virasign_coverage_breadth` | Min breadth (fraction) for coverage filtering (optional). |
 | `--virasign_min_nogr` | Min number of non-overlapping genomic regions (NoGR) required (optional). |
 | `--virasign_zscore` | Enable/disable z-score filtering (optional). |
 | `--virasign_zscore_controls` | Path to negative-control FASTQs for z-score (optional). |
@@ -82,3 +74,14 @@ To autogenerate a `samplesheet.csv` from a reads folder, run `pip install .` onc
 | `--virasign_enable_clustering` | Enable clustering of references in database prep. Default: false. |
 | `--virasign_cluster_identity` | Clustering identity threshold (optional). |
 | `--virasign_max_ambiguous_fraction` | Max allowed ambiguous fraction when preparing DB (optional). |
+
+## Variant calling options and consensus thresholds (Clair3)
+
+| Option | Description |
+|--------|-------------|
+| `--clair3_model` | Optional override for the Nanopore model. |
+| `--clair3_min_mq` | Min mapping quality (MAPQ). Default: 15. |
+| `--clair3_min_bq` | Min base quality (BQ). Default: 15. |
+| `--clair3_min_alt_reads` | Min ALT-supporting reads. Default: 10. |
+| `--depth` | Min per-position depth. Default: 25. |
+| `--agreement` | Min VAF for applying variants into the consensus. Default: 0.7. |

@@ -54,16 +54,12 @@ References for the **programs and frameworks** used in the Metatropics pipeline.
 
 > Jansen, D., & Vercauteren, K. (2026). Virasign: A viral taxonomic classification tool designed for nanopore sequencing data (v0.0.6). Zenodo. doi: [10.5281/zenodo.18387008](https://doi.org/10.5281/zenodo.18387008).
 
-### [Medaka](https://github.com/nanoporetech/medaka) (per-virus variant calling)
+### [Clair3](https://github.com/HKU-BAL/Clair3) (per-virus variant calling)
 
-> Oxford Nanopore Technologies. Medaka: neural-network inference on read pileups against a reference (consensus polishing and haploid variant calling). [https://github.com/nanoporetech/medaka](https://github.com/nanoporetech/medaka).
+> Zheng Z, Li S, Su J, Leung AW-S, Lam TTY, Luo R. Clair3: a deep learning based variant caller for long-read sequencing data. (Project homepage / code) [https://github.com/HKU-BAL/Clair3](https://github.com/HKU-BAL/Clair3).
 
-### [iVar](https://doi.org/10.1186/s13059-018-1618-7) (consensus calling)
+### [bcftools](https://samtools.github.io/bcftools/) (draft consensus calling)
 
-> Grubaugh ND, Gangavarapu K, Quick J, Matteson NL, De Jesus JG, Main BJ, Tan AL, Paul LM, Brackney DE, Grewal S, Gurfield N, Van Rompay KKA, Isern S, Michael SF, Coffey LL, Loman NJ, Andersen KG. An amplicon-based sequencing framework for accurately measuring intrahost virus diversity using PrimalSeq and iVar. *Genome Biol*. 2019 Jan 8;20(1):8. doi: [10.1186/s13059-018-1618-7](https://doi.org/10.1186/s13059-018-1618-7). 
-
-### [Homopolish](https://doi.org/10.1186/s13059-021-02282-6) (consensus polishing)
-
-> Huang YT, Liu PY, Shih PW. Homopolish: a method for the removal of systematic errors in nanopore sequencing by homologous polishing. *Genome Biol*. 2021 Mar 11;22:95. doi: [10.1186/s13059-021-02282-6](https://doi.org/10.1186/s13059-021-02282-6). 
+> Danecek P, et al. Twelve years of SAMtools and BCFtools. *GigaScience*. 2021;10(2):giab008. doi: [10.1093/gigascience/giab008](https://doi.org/10.1093/gigascience/giab008).
 
 ---

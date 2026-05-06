@@ -1,24 +1,26 @@
 #!/usr/bin/env python3
 """
-Uniform Medaka post-processing for Metatropics.
+Uniform Clair3 post-processing for Metatropics.
 
-Ported from TWist_DCT/VariantCallingTest_26021935/variant_calling/postprocess.py:
+Purpose:
 - Re-count ref/alt support from the per-virus BAM (SNPs + simple left-anchored indels).
 - Apply uniform filters (QUAL when present, DP, ALT reads, optional strand-bias p-value).
-  Strand bias is skipped only for SNPs that match the APOBEC3 dinucleotide motifs (same cases as INFO/APOBEC3=Yes); all other filters still apply.
+- Apply MAPQ filter during recount (min_mq).
 - Classify variants as major or minor by VAF thresholds (stored as INFO/TIER=major|minor in VCF).
-- Emit a single coordinate-sorted tiered VCF `<prefix>.variants.filtered.vcf` with INFO tags:
-  TIER, TYPE, DP, AD, VAF, REF_F, REF_R, ALT_F, ALT_R, SB, CTX, APOBEC3
-- For QC: copy Medaka input as `<prefix>.medaka_filtered.in.vcf` and write `<prefix>.variants.unfiltered.vcf`
-  (all uniform-recount sites with DP>0; INFO UFR = filter status, FIN = 1 if the row is also in variants.filtered).
-- Emit an HTML report: settings as value boxes; separate SNP and indel tables (major/minor variant labels; SB = exact strand test on ALT_F vs ALT_R, CTX, APOBEC3).
+- Emit:
+  - <prefix>.variants.filtered.vcf
+  - <prefix>.variants.unfiltered.vcf  (includes INFO/UFR and INFO/FIN)
+  - <prefix>.variants.html
 
-Dependencies: pysam only (available in daanjansen94/medaka:2.0.0).
+This script is adapted from the original Metatropics Medaka post-processor, but uses Clair3 VCF as input.
+
+Dependencies: pysam.
 """
 
 from __future__ import annotations
 
 import argparse
+import gzip
 import html
 import math
 import re
@@ -72,7 +74,8 @@ def _parse_info(info: str) -> Dict[str, str]:
 def _read_vcf_calls(path: Path) -> Tuple[List[str], List[VcfCall]]:
     header_lines: List[str] = []
     calls: List[VcfCall] = []
-    with open(path, "rt", encoding="utf-8", errors="replace") as fh:
+    opener = gzip.open if path.name.endswith(".gz") else open
+    with opener(path, "rt", encoding="utf-8", errors="replace") as fh:
         for line in fh:
             if not line:
                 continue
@@ -121,6 +124,7 @@ def _count_alleles_at_variant(
     ref: str,
     alt: str,
     min_bq: int,
+    min_mq: int,
 ) -> Dict[str, int]:
     pos0 = pos1 - 1
 
@@ -146,6 +150,9 @@ def _count_alleles_at_variant(
             aln = pr.alignment
             if aln.is_unmapped or aln.is_secondary or aln.is_supplementary:
                 continue
+            if aln.mapping_quality < min_mq:
+                continue
+
             is_rev = aln.is_reverse
 
             if is_snp:
@@ -234,14 +241,10 @@ def _log_factorial(n: int) -> float:
 
 
 def _log_binom_pmf_half(n: int, k: int) -> float:
-    """log P(X=k) for X ~ Binomial(n, 0.5)."""
     return _log_factorial(n) - _log_factorial(k) - _log_factorial(n - k) - n * math.log(2.0)
 
 
 def _binom_twosided_strand_alt(alt_f: int, alt_r: int) -> Optional[float]:
-    """
-    Two-sided exact test that ALT_F vs ALT_R are 50/50 (Binomial(n, 0.5)).
-    """
     n = alt_f + alt_r
     if n <= 0 or alt_f < 0 or alt_r < 0:
         return None
@@ -258,16 +261,7 @@ def _binom_twosided_strand_alt(alt_f: int, alt_r: int) -> Optional[float]:
 
 
 def _strand_bias_pvalue(ref_f: int, ref_r: int, alt_f: int, alt_r: int) -> Optional[float]:
-    """
-    Strand bias of the **ALT** allele only: are ALT-supporting reads skewed toward
-    one sequencing strand (forward vs reverse)?
-
-    We use one **exact two-sided** test on (ALT_F, ALT_R) under H0 that each ALT read
-    is equally likely to be forward or reverse (Binomial(n, ½)). That is the
-    standard exact test for a 2-category table; it applies whether or not REF
-    reads exist (REF counts are ignored for SB — only ALT strand composition matters).
-    """
-    _ = (ref_f, ref_r)  # signature kept for uniform recount; SB uses ALT strand counts only
+    _ = (ref_f, ref_r)
     return _binom_twosided_strand_alt(alt_f, alt_r)
 
 
@@ -278,14 +272,6 @@ def _apobec_context(
     ref: str,
     alt: str,
 ) -> Tuple[Optional[str], Optional[str], bool, bool]:
-    """
-    APOBEC3-related dinucleotide motifs on the reference (3-mer centered on SNP; ctx[1] = REF).
-
-    - C<->T: **TC** dinucleotide (5' T next to REF C) or inverse **TT** (5' T next to REF T for T->C).
-    - G<->A: **GA** dinucleotide (3' A next to REF G) or inverse **AA** (3' A next to REF A for A->G).
-
-    Third base of the trimer is unrestricted (any context beyond that dinucleotide).
-    """
     if not _is_snp(ref, alt):
         return None, None, False, False
 
@@ -307,14 +293,12 @@ def _apobec_context(
     apobec_tag: Optional[str] = None
 
     if is_ct:
-        # TC* -> TT* (C->T) or TT* -> TC* (T->C); ctx[1] is REF at variant site
         if r == "C" and a == "T" and ctx[0] == "T" and ctx[1] == "C":
             is_apobec, apobec_tag = True, "TC_TT"
         elif r == "T" and a == "C" and ctx[0] == "T" and ctx[1] == "T":
             is_apobec, apobec_tag = True, "TT_TC"
 
     if is_ag:
-        # *GA -> *AA (G->A) or *AA -> *GA (A->G)
         if r == "G" and a == "A" and ctx[1] == "G" and ctx[2] == "A":
             is_apobec, apobec_tag = True, "GA_AA"
         elif r == "A" and a == "G" and ctx[1] == "A" and ctx[2] == "A":
@@ -332,17 +316,17 @@ def _apobec_context(
 _INFO_LINE_RE = re.compile(r"^##INFO=<ID=([^,>]+)")
 
 
-def _merge_header_lines(medaka_header_lines: List[str], extra_info_defs: List[str]) -> List[str]:
+def _merge_header_lines(base_header_lines: List[str], extra_info_defs: List[str]) -> List[str]:
     existing_ids = set()
     out: List[str] = []
-    for line in medaka_header_lines:
+    for line in base_header_lines:
         if line.startswith("##INFO=<ID="):
             m = _INFO_LINE_RE.match(line)
             if m:
                 existing_ids.add(m.group(1))
         out.append(line)
 
-    insert_at = max(0, len(out) - 1)  # before #CHROM line (last header line)
+    insert_at = max(0, len(out) - 1)
     for d in extra_info_defs:
         m = _INFO_LINE_RE.match(d)
         if not m:
@@ -377,34 +361,39 @@ def _pct(x: object) -> str:
 
 
 def _build_settings_inner_html(settings: dict) -> str:
-    """Settings: uniform stat boxes in one grid (filters + reference accession)."""
     uf = settings.get("uniform_filters") or {}
     min_sb = float(uf.get("min_sb_pvalue", 0) or 0)
-    fisher_val = "off" if min_sb <= 0 else f"&gt; {min_sb:g}"
 
     major_v = uf.get("major_vaf")
     mmin, mmax = uf.get("minor_vaf_min"), uf.get("minor_vaf_max")
     minor_band = f"{_pct(mmin)}-{_pct(mmax)}"
 
+    acc = str(settings.get("virus") or "").strip()
+    ref_box: Optional[Tuple[str, str]] = ("Reference", html.escape(acc)) if acc else None
+
     boxes: List[Tuple[str, str]] = [
         ("Min quality", html.escape(str(uf.get("min_qual", "")))),
         ("Min depth (DP)", html.escape(str(uf.get("min_dp", "")))),
         ("Min ALT reads", html.escape(str(uf.get("min_alt_reads", "")))),
+        ("Min MAPQ", html.escape(str(uf.get("min_mq", "")))),
         ("Major", html.escape(f"VAF ≥ {_pct(major_v)}")),
         ("Minor", minor_band),
-        ("Fisher", fisher_val),
     ]
+    # Only show a Fisher/SB threshold box if enabled.
+    # If disabled, use that slot for the Reference (so we never show "off").
+    if min_sb > 0:
+        boxes.append(("SB Fisher", f"&gt; {min_sb:g}"))
+        if ref_box:
+            boxes.append(ref_box)
+    else:
+        if ref_box:
+            boxes.append(ref_box)
+
     bits = []
     for label, val in boxes:
         bits.append(
             f'<div class="stat-box"><div class="stat-label">{html.escape(label)}</div>'
             f'<div class="stat-value">{val}</div></div>'
-        )
-    acc = str(settings.get("virus") or "").strip()
-    if acc:
-        bits.append(
-            f'<div class="stat-box"><div class="stat-label">Reference</div>'
-            f'<div class="stat-value">{html.escape(acc)}</div></div>'
         )
     return f'<div class="settings-row"><div class="stat-grid">{"".join(bits)}</div></div>'
 
@@ -485,9 +474,8 @@ def _build_html_report(*, sample: str, virus: str, settings: dict, rows: List[di
     )
 
     qual_note = (
-        '<p class="qual-hint"><strong>QUAL</strong> is Medaka&rsquo;s variant-level confidence (Phred-like: '
-        "higher = more confident; values well above 100 are normal). "
-        "It comes from the neural call, not FASTQ base quality.</p>"
+        '<p class="qual-hint"><strong>QUAL</strong> is the variant-level confidence from the caller (Phred-like: '
+        "higher = more confident). It is not FASTQ base quality.</p>"
     )
 
     settings_boxes = _build_settings_inner_html(settings)
@@ -499,7 +487,7 @@ def _build_html_report(*, sample: str, virus: str, settings: dict, rows: List[di
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Medaka variants — {html.escape(sample)} / {html.escape(virus)}</title>
+  <title>Clair3 variants — {html.escape(sample)} / {html.escape(virus)}</title>
   <style>
     :root {{
       --bg: #0b1020;
@@ -507,7 +495,6 @@ def _build_html_report(*, sample: str, virus: str, settings: dict, rows: List[di
       --text: #e8ecff;
       --muted: #a9b4e6;
       --border: rgba(255,255,255,0.10);
-      --accent: #7aa2ff;
     }}
     body {{
       margin: 0;
@@ -517,7 +504,6 @@ def _build_html_report(*, sample: str, virus: str, settings: dict, rows: List[di
     }}
     .wrap {{ max-width: 1200px; margin: 0 auto; padding: 28px 20px 40px; }}
     h1 {{ font-size: 22px; margin: 0 0 20px; letter-spacing: 0.2px; }}
-    .sub {{ color: var(--muted); margin: 0 0 18px; font-size: 14px; line-height: 1.45; }}
     .grid {{ display: grid; grid-template-columns: 1fr; gap: 14px; }}
     .card {{
       background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
@@ -620,28 +606,21 @@ def _build_html_report(*, sample: str, virus: str, settings: dict, rows: List[di
     }}
     tr:hover td {{ background: rgba(122, 162, 255, 0.06); }}
     td {{ font-size: 13px; color: #eef1ff; }}
-    .footer {{ margin-top: 14px; color: var(--muted); font-size: 12px; line-height: 1.5; }}
-    .footer p {{ margin: 0; }}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="pill">Metatropics · Medaka variant calling</div>
+    <div class="pill">Metatropics · Clair3 variant calling</div>
     <h1>Variants</h1>
-
     <div class="grid">
       <div class="card">
         <div style="font-weight:650; margin-bottom:8px;">Settings</div>
         {settings_boxes}
       </div>
-
       <div class="card">
         {summary_line}
 {snp_block}
 {indel_block}
-        <div class="footer">
-          <p><strong>SB (ALT strand bias).</strong> SB is the <strong>two-sided exact p-value</strong> for whether <strong>ALT-supporting reads</strong> are split evenly between forward and reverse (<strong>ALT_F</strong> vs <strong>ALT_R</strong>, Binomial(<em>n</em>, ½)). Low SB means the ALT allele is much more often on one strand. REF read counts are not used for SB. <code>NA</code> only if there are no ALT reads. Sites with <strong>APOBEC3 = Yes</strong> (classic dinucleotide context) are <strong>not rejected on SB alone</strong>; depth, ALT support, QUAL, and VAF tiering still apply.</p>
-        </div>
         {qual_note}
       </div>
     </div>
@@ -649,7 +628,6 @@ def _build_html_report(*, sample: str, virus: str, settings: dict, rows: List[di
 </body>
 </html>
 """
-
     out_path.write_text(doc, encoding="utf-8")
 
 
@@ -659,11 +637,12 @@ def main() -> None:
     ap.add_argument("--virus", required=True)
     ap.add_argument("--bam", required=True, type=Path)
     ap.add_argument("--ref-fasta", required=True, type=Path)
-    ap.add_argument("--medaka-filtered-vcf", required=True, type=Path)
+    ap.add_argument("--clair3-vcf", required=True, type=Path)
     ap.add_argument("--out-prefix", required=True, help="Prefix for outputs in cwd")
 
     ap.add_argument("--min-qual", type=float, required=True)
     ap.add_argument("--min-bq", type=int, required=True)
+    ap.add_argument("--min-mq", type=int, required=True)
     ap.add_argument("--min-dp", type=int, required=True)
     ap.add_argument("--min-alt-reads", type=int, required=True)
     ap.add_argument("--major-vaf", type=float, required=True)
@@ -692,20 +671,20 @@ def main() -> None:
     contig = contigs[0]
     contig_len = int(fasta.get_reference_length(contig))
 
-    header_lines, calls = _read_vcf_calls(args.medaka_filtered_vcf)
+    header_lines, calls = _read_vcf_calls(args.clair3_vcf)
     if not header_lines or not any(h.startswith("#CHROM") for h in header_lines):
-        raise SystemExit(f"Missing VCF header in {args.medaka_filtered_vcf}")
+        raise SystemExit(f"Missing VCF header in {args.clair3_vcf}")
 
     extra_info_defs = [
         '##INFO=<ID=TIER,Number=1,Type=String,Description="Allele fraction class (values major|minor; major or minor variant by VAF band)">',
         '##INFO=<ID=TYPE,Number=1,Type=String,Description="Variant type: SNP|INDEL">',
-        '##INFO=<ID=DP,Number=1,Type=Integer,Description="Biallelic ref+alt supporting read depth (uniform recount)">',
-        '##INFO=<ID=AD,Number=2,Type=Integer,Description="Allelic depths (REF,ALT) from uniform recount">',
-        '##INFO=<ID=VAF,Number=1,Type=Float,Description="ALT/(REF+ALT) from uniform recount">',
-        '##INFO=<ID=ALT_F,Number=1,Type=Integer,Description="ALT supporting reads on forward strand (uniform recount)">',
-        '##INFO=<ID=ALT_R,Number=1,Type=Integer,Description="ALT supporting reads on reverse strand (uniform recount)">',
-        '##INFO=<ID=REF_F,Number=1,Type=Integer,Description="REF supporting reads on forward strand (uniform recount)">',
-        '##INFO=<ID=REF_R,Number=1,Type=Integer,Description="REF supporting reads on reverse strand (uniform recount)">',
+        '##INFO=<ID=DP,Number=1,Type=Integer,Description="Biallelic ref+alt supporting read depth (uniform recount, MAPQ-filtered)">',
+        '##INFO=<ID=AD,Number=2,Type=Integer,Description="Allelic depths (REF,ALT) from uniform recount (MAPQ-filtered)">',
+        '##INFO=<ID=VAF,Number=1,Type=Float,Description="ALT/(REF+ALT) from uniform recount (MAPQ-filtered)">',
+        '##INFO=<ID=ALT_F,Number=1,Type=Integer,Description="ALT supporting reads on forward strand (uniform recount, MAPQ-filtered)">',
+        '##INFO=<ID=ALT_R,Number=1,Type=Integer,Description="ALT supporting reads on reverse strand (uniform recount, MAPQ-filtered)">',
+        '##INFO=<ID=REF_F,Number=1,Type=Integer,Description="REF supporting reads on forward strand (uniform recount, MAPQ-filtered)">',
+        '##INFO=<ID=REF_R,Number=1,Type=Integer,Description="REF supporting reads on reverse strand (uniform recount, MAPQ-filtered)">',
         '##INFO=<ID=SB,Number=1,Type=Float,Description="ALT strand-bias p-value (two-sided exact): forward vs reverse among ALT-supporting reads (Binomial n=ALT_F+ALT_R, p=0.5); REF reads not used">',
         '##INFO=<ID=CTX,Number=1,Type=String,Description="Reference 3-mer context centered on POS (plus strand)">',
         '##INFO=<ID=APOBEC3,Number=1,Type=String,Description="APOBEC3 dinucleotide motif on ref: C<->T with 5-prime T (TC/TT) or G<->A with 3-prime A (GA/AA); Yes or No">',
@@ -718,7 +697,7 @@ def main() -> None:
     merged_header = _merge_header_lines(header_lines, extra_info_defs)
     merged_header_unf = _merge_header_lines(header_lines, extra_info_defs + extra_info_unf_only)
 
-    shutil.copy2(args.medaka_filtered_vcf, Path(f"{prefix}.medaka_filtered.in.vcf"))
+    shutil.copy2(args.clair3_vcf, Path(f"{prefix}.clair3.in.vcf.gz"))
 
     rows_out: List[dict] = []
     vcf_body_lines: List[str] = []
@@ -728,7 +707,16 @@ def main() -> None:
         if c.chrom != contig:
             continue
 
-        counts = _count_alleles_at_variant(bam, fasta, c.chrom, c.pos, c.ref, c.alt, min_bq=int(args.min_bq))
+        counts = _count_alleles_at_variant(
+            bam,
+            fasta,
+            c.chrom,
+            c.pos,
+            c.ref,
+            c.alt,
+            min_bq=int(args.min_bq),
+            min_mq=int(args.min_mq),
+        )
         dp = int(counts["DP"])
         ad_ref = int(counts["REF_F"] + counts["REF_R"])
         ad_alt = int(counts["ALT_F"] + counts["ALT_R"])
@@ -819,11 +807,10 @@ def main() -> None:
         if not in_tiered_vcf:
             continue
 
-        tier = tier_label
         info_out: Dict[str, object] = dict(c.info)
         info_out.update(
             {
-                "TIER": tier,
+                "TIER": tier_label,
                 "TYPE": vtype,
                 "DP": dp,
                 "AD": f"{ad_ref},{ad_alt}",
@@ -838,7 +825,6 @@ def main() -> None:
             }
         )
 
-        filt_out = "PASS"
         vcf_body_lines.append(
             "\t".join(
                 [
@@ -848,7 +834,7 @@ def main() -> None:
                     c.ref,
                     c.alt,
                     qual_out,
-                    filt_out,
+                    "PASS",
                     _fmt_info(info_out),
                     fmt,
                     smp,
@@ -862,7 +848,7 @@ def main() -> None:
                 "REF": c.ref,
                 "ALT": c.alt,
                 "TYPE": vtype,
-                "TIER": tier,
+                "TIER": tier_label,
                 "QUAL": qual_out,
                 "DP": dp,
                 "AD": f"{ad_ref},{ad_alt}",
@@ -874,7 +860,6 @@ def main() -> None:
         )
 
     def vcf_sort_key(line: str) -> Tuple[int, str, str]:
-        """POS, REF, ALT — coordinate order for bgzip/tabix (not SNP-before-indel)."""
         p = line.split("\t")
         pos = int(p[1])
         ref = p[3]
@@ -883,7 +868,6 @@ def main() -> None:
 
     vcf_body_lines.sort(key=vcf_sort_key)
     unf_body_lines.sort(key=vcf_sort_key)
-
     rows_out.sort(key=lambda rr: (int(rr["POS"]), str(rr["REF"]), str(rr["ALT"])))
 
     out_unf = Path(f"{prefix}.variants.unfiltered.vcf")
@@ -894,13 +878,13 @@ def main() -> None:
             out.write(line + "\n")
 
     out_vcf = Path(f"{prefix}.variants.filtered.vcf")
-    out_html = Path(f"{prefix}.variants.html")
-
     with open(out_vcf, "wt", encoding="utf-8") as out:
         for hl in merged_header:
             out.write(hl + "\n")
         for line in vcf_body_lines:
             out.write(line + "\n")
+
+    out_html = Path(f"{prefix}.variants.html")
 
     settings = {
         "sample": args.sample,
@@ -908,6 +892,7 @@ def main() -> None:
         "uniform_filters": {
             "min_qual": args.min_qual,
             "min_bq": args.min_bq,
+            "min_mq": args.min_mq,
             "min_dp": args.min_dp,
             "min_alt_reads": args.min_alt_reads,
             "major_vaf": args.major_vaf,
@@ -918,7 +903,7 @@ def main() -> None:
         "inputs": {
             "bam": str(args.bam),
             "ref_fasta": str(args.ref_fasta),
-            "medaka_filtered_vcf": str(args.medaka_filtered_vcf),
+            "clair3_vcf": str(args.clair3_vcf),
         },
         "reference": {"contig": contig, "length": contig_len},
     }
@@ -930,3 +915,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
