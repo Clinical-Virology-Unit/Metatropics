@@ -12,7 +12,7 @@ Paths below are relative to your pipeline **`--outdir`**. The pipeline also crea
 | **`Reads/`** | Read QC, trimming, human / optional host depletion. |
 | **`Classification/`** | Virasign viral classification outputs and reports |
 | **`Variant_calling/`** | Clair3 variant calls (VCFs) and reports. |
-| **`Consensus/`** | bcftools draft and Homopolish polished genomes. |
+| **`Consensus/`** | Final consensus genomes produced by `bcftools consensus`. |
 | **`Summary/`** | Final Metatropics report (`Summary/metatropics/Metatropics_Summary_RVDB.html`) listing all identified viruses, plus read-count summaries and pipeline provenance. |
 
 ---
