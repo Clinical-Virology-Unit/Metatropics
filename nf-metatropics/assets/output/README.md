@@ -11,8 +11,8 @@ Paths below are relative to your pipeline **`--outdir`**. The pipeline also crea
 | **`Basecalling/`** | Dorado basecalling and demultiplexing (optional). |
 | **`Reads/`** | Read QC, trimming, human / optional host depletion. |
 | **`Classification/`** | Virasign viral classification outputs and reports |
-| **`Variant_calling/`** | Medaka read alignments and variant calls (VCFs). |
-| **`Consensus/`** | iVar draft and Homopolish polished genomes. |
+| **`Variant_calling/`** | Clair3 variant calls (VCFs) and reports. |
+| **`Consensus/`** | bcftools draft and Homopolish polished genomes. |
 | **`Summary/`** | Final Metatropics report (`Summary/metatropics/Metatropics_Summary_RVDB.html`) listing all identified viruses, plus read-count summaries and pipeline provenance. |
 
 ---
@@ -65,22 +65,21 @@ For more Virasign details, see [`DaanJansen94/virasign`](https://github.com/Daan
 
 ## `Variant_calling/`
 
-For each candidate virus, **[Medaka](https://github.com/nanoporetech/medaka)** first writes a BAM of reads aligned to the viral reference. It then uses that BAM in haploid variant calling, applying neural-network inference on pileups of those aligned reads (networks trained for Oxford Nanopore basecalled data), and emits a VCF describing differences from that reference.
+For each candidate virus, **[Clair3](https://github.com/HKU-BAL/Clair3)** performs haploid variant calling on the Virasign-produced BAM (reads aligned to the selected viral reference) and emits a VCF describing differences from that reference. Metatropics then applies a uniform post-processing step that re-counts allele support from the BAM (with mapping/base-quality filters), labels variants as major/minor, and produces a VCF + HTML report.
 
 | Path | Contents |
 |------|----------|
-| `Variant_calling/medaka` | Variant calls (VCF only; `*.vcf`). |
+| `Variant_calling/clair3` | Variant calls and report (`*.variants.filtered.vcf`, `*.variants.unfiltered.vcf`, `*.variants.html`). |
 
 ---
 
 ## `Consensus/`
 
-Consensus building takes the Virasign-produced alignment (BAM + BAI) and the Virasign-selected best-matching reference FASTA, feeds them to iVar to call a draft consensus sequence; Homopolish then polishes that draft. 
+Consensus building starts from the Virasign-selected reference FASTA and then applies only the variants called by Clair3 to produce the final consensus with `bcftools consensus`. By default, only variants labelled major and with VAF ≥ `--agreement` are applied; everything else remains as the reference base.
 
 | Path | Contents |
 |------|----------|
-| `Consensus/ivar` | Consensus sequences from iVar (input to Homopolish). |
-| `Consensus/homopolish` | Polished consensus FASTA (typical final genome per virus per sample). |
+| `Consensus/bcftools` | Final consensus FASTA produced by `bcftools consensus`. |
 
 ---
 

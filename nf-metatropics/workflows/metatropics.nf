@@ -30,11 +30,10 @@ include { NANOPLOT                    } from '../modules/nf-core/nanoplot/main'
 include { VIRASIGN_CLASSIFICATION      } from '../modules/local/virasign/classification'
 include { VIRASIGN_DB                  } from '../modules/local/virasign/prepare_db'
 include { VIRASIGN_SUMMARY as METATROPICS_SUMMARY } from '../modules/local/virasign/build_html'
-include { MEDAKA_VARIANTS          } from '../modules/local/medaka/variants'
-include { MEDAKA_POSTPROCESSING    } from '../modules/local/medaka/postprocessing'
-include { MEDAKA_CONSENSUS_BCFTOOLS } from '../modules/local/medaka/consensus'
+include { CLAIR3_VARIANTS              } from '../modules/local/clair3/variants'
+include { CLAIR3_POSTPROCESSING        } from '../modules/local/clair3/postprocessing'
+include { CONSENSUS_BCFTOOLS           } from '../modules/local/bcftools/consensus'
 include { ReadCount                   } from '../modules/local/reads/reads'
-include { HOMOPOLISH_POLISHING        } from '../modules/local/homopolish/polishing'
 
 /* Main workflow */
 
@@ -212,37 +211,36 @@ workflow METATROPICS {
 
 
     if (!params.run_virasign) {
-        exit 1, "This pipeline configuration requires 'run_virasign: true' to generate per-virus inputs for Medaka."
+        exit 1, "This pipeline configuration requires 'run_virasign: true' to generate per-virus inputs for variant calling."
     }
 
-    def ch_medaka_in = ch_virasign_confident.map { meta, bam, bai, ref, reads ->
-        [ meta, reads, ref ]
-    }
-    MEDAKA_VARIANTS( ch_medaka_in )
+    // Provide Clair3 with the fixed/raw reads used earlier in the pipeline so we can
+    // autodetect the Dorado/Guppy model from the FASTQ header (when the BAM header lacks it).
+    def ch_raw_reads_for_model = ch_fixed_reads.map { meta, fq -> [ meta.id, fq ] }
 
-    def ch_medaka_uniform_in = ch_virasign_confident
+    def ch_clair3_in = ch_virasign_confident
+        .map { meta, bam, bai, ref, virasign_reads -> [ meta.id, meta, bam, bai, ref ] }
+        .join(ch_raw_reads_for_model, by: 0)
+        .map { sample, meta, bam, bai, ref, raw_fq -> [ meta, bam, bai, ref, raw_fq ] }
+
+    CLAIR3_VARIANTS( ch_clair3_in )
+
+    def ch_clair3_uniform_in = ch_virasign_confident
         .map { meta, bam, bai, ref, reads -> [ meta, bam, bai, ref ] }
-        .join(MEDAKA_VARIANTS.out.filtered, by: 0)
-        .map { meta, bam, bai, ref, filtered -> [ meta, filtered, bam, bai, ref ] }
+        .join(CLAIR3_VARIANTS.out.vcf_gz.join(CLAIR3_VARIANTS.out.vcf_tbi, by: 0), by: 0)
+        .map { meta, bam, bai, ref, vcfgz, tbi -> [ meta, vcfgz, tbi, bam, bai, ref ] }
 
-    MEDAKA_POSTPROCESSING( ch_medaka_uniform_in )
+    CLAIR3_POSTPROCESSING( ch_clair3_uniform_in )
 
-    def ch_medaka_consensus_in = MEDAKA_POSTPROCESSING.out.vcf
+    def ch_consensus_in = CLAIR3_POSTPROCESSING.out.vcf
         .join(ch_virasign_confident.map { meta, bam, bai, ref, reads -> [ meta, ref ] }, by: 0)
 
-    MEDAKA_CONSENSUS_BCFTOOLS( ch_medaka_consensus_in )
+    CONSENSUS_BCFTOOLS( ch_consensus_in )
 
-    HOMOPOLISH_POLISHING(
-        MEDAKA_CONSENSUS_BCFTOOLS.out.fasta.join(
-            ch_virasign_confident.map { meta, bam, bai, ref, reads -> [ meta, ref ] },
-            by: 0
-        )
-    )
-
-    // Build final Metatropics summary only after polished consensuses are available.
-    // This ensures consensus-derived breadth metrics are included.
+    // Build final Metatropics summary only after draft consensuses are available.
+    // (Consensus-derived breadth metrics are computed from these FASTAs.)
     METATROPICS_SUMMARY(
-        HOMOPOLISH_POLISHING.out.polishconsensus.count()
+        CONSENSUS_BCFTOOLS.out.fasta.count()
     )
 
 
@@ -251,10 +249,9 @@ workflow METATROPICS {
     if (params.run_virasign) {
         ch_versions = ch_versions.mix(VIRASIGN_DB.out.versions)
     }
-    ch_versions = ch_versions.mix(MEDAKA_VARIANTS.out.versions.first())
-    ch_versions = ch_versions.mix(MEDAKA_POSTPROCESSING.out.versions.first())
-    ch_versions = ch_versions.mix(MEDAKA_CONSENSUS_BCFTOOLS.out.versions.first())
-    ch_versions = ch_versions.mix(HOMOPOLISH_POLISHING.out.versions.first())
+    ch_versions = ch_versions.mix(CLAIR3_VARIANTS.out.versions.first())
+    ch_versions = ch_versions.mix(CLAIR3_POSTPROCESSING.out.versions.first())
+    ch_versions = ch_versions.mix(CONSENSUS_BCFTOOLS.out.versions.first())
     if (resolvedHumanHostFasta) {
         ch_versions = ch_versions.mix(HUMAN_MAPPING.out.versionsmini)
         ch_versions = ch_versions.mix(HUMAN_MAPPING.out.versionssamsort)

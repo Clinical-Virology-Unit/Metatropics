@@ -108,7 +108,7 @@
                 },
                 "depth": {
                     "type": "integer",
-                    "default": 20,
+                    "default": 25,
                     "description": "Minimum per-position depth for consensus.",
                     "fa_icon": "fas fa-layer-group"
                 },
@@ -178,57 +178,63 @@
             }
         },
         "variant_calling_options": {
-            "title": "Variant calling options (Medaka)",
+            "title": "Variant calling options (Clair3)",
             "type": "object",
             "fa_icon": "fas fa-dna",
-            "description": "Options for Medaka per-virus haploid variant calling.",
+            "description": "Options for Clair3 per-virus haploid variant calling and uniform post-processing.",
             "properties": {
-                "medaka_model": {
+                "clair3_model": {
                     "type": "string",
-                    "description": "Override auto-detection (e.g. r1041_e82_400bps_hac_variant_v5.0.0).",
+                    "description": "Optional: override Clair3 model directory name under /opt/models (e.g. r1041_e82_400bps_hac_v500). If unset, Metatropics attempts to autodetect from the BAM header and falls back to r1041_e82_400bps_hac_v500.",
                     "help_text": "",
                     "fa_icon": "fas fa-brain"
                 },
-                "medaka_min_bq": {
+                "clair3_min_mq": {
                     "type": "integer",
-                    "default": 20,
-                    "description": "Minimum base quality when re-counting alleles from the per-virus BAM during Medaka uniform post-processing.",
+                    "default": 15,
+                    "description": "Minimum mapping quality (MAPQ) used when recounting alleles and applying uniform depth/ALT filters.",
+                    "fa_icon": "fas fa-map-marked-alt"
+                },
+                "clair3_min_bq": {
+                    "type": "integer",
+                    "default": 15,
+                    "description": "Minimum base quality used when recounting alleles from the per-virus BAM during uniform post-processing. This is separate from --quality (used by read QC).",
                     "fa_icon": "fas fa-signal"
                 },
-                "medaka_min_alt_reads": {
+                "clair3_min_alt_reads": {
                     "type": "integer",
                     "default": 10,
                     "description": "Minimum ALT-supporting reads (from uniform BAM recount) to keep a variant.",
                     "fa_icon": "fas fa-layer-group"
                 },
-                "medaka_major_vaf": {
+                "major_vaf": {
                     "type": "number",
                     "default": 0.2,
                     "description": "Major tier threshold: VAF ≥ this value (uniform recount).",
                     "fa_icon": "fas fa-percentage"
                 },
-                "medaka_minor_vaf_min": {
+                "minor_vaf_min": {
                     "type": "number",
                     "default": 0.03,
                     "description": "Minor tier lower bound (inclusive) on VAF.",
                     "fa_icon": "fas fa-percentage"
                 },
-                "medaka_minor_vaf_max": {
+                "minor_vaf_max": {
                     "type": "number",
                     "default": 0.2,
                     "description": "Minor tier upper bound (exclusive) on VAF.",
                     "fa_icon": "fas fa-percentage"
                 },
-                "medaka_min_sb_pvalue": {
+                "min_sb_pvalue": {
                     "type": "number",
-                    "default": 0.001,
-                    "description": "Minimum ALT strand-bias p-value to keep a variant (uniform recount; two-sided). Set to 0 to disable SB filtering. Not applied when INFO/APOBEC3=Yes (classic motif); other filters still apply.",
+                    "default": 0,
+                    "description": "Minimum ALT strand-bias p-value to keep a variant (uniform recount; two-sided). Default is disabled (0) so SB is reported but not used as a filter. Not applied when INFO/APOBEC3=Yes (classic motif); other filters still apply.",
                     "fa_icon": "fas fa-balance-scale"
                 },
-                "medaka_sb_min_alt_strand": {
+                "sb_min_alt_strand": {
                     "type": "integer",
                     "default": 100,
-                    "description": "If both ALT_F and ALT_R (uniform recount) are ≥ this value, do not reject a non-APOBEC3 variant on SB alone (even if SB < medaka_min_sb_pvalue). Set to 0 to always apply SB filtering when enabled.",
+                    "description": "If both ALT_F and ALT_R (uniform recount) are ≥ this value, do not reject a non-APOBEC3 variant on SB alone (even if SB < min_sb_pvalue). Set to 0 to always apply SB filtering when enabled.",
                     "fa_icon": "fas fa-arrows-alt-h"
                 }
             }

@@ -115,7 +115,7 @@ END_VERSIONS
     mv -f ./__results_summary.html "${outHtml}"
     mv -f ./__results_summary.csv  "${outCsv}"
 
-    # Compute consensus-derived breadth from polished FASTA and merge into summary CSV.
+# Compute consensus-derived breadth from draft consensus FASTA and merge into summary CSV.
     python3 - <<'PY'
 import csv
 import json
@@ -128,7 +128,7 @@ outdir = Path("${params.outdir}")
 summary_csv = Path("${outCsv}")
 summary_html = Path("${outHtml}")
 readcount_csv = outdir / "Summary" / "readcount" / "read_counts.csv"
-cons_root = outdir / "Consensus" / "homopolish"
+cons_root = outdir / "Consensus" / "bcftools"
 
 virasign_runtime_log = outdir / "Classification" / "virasign" / "${virasignDbLabel}" / ".virasign.log"
 
@@ -329,10 +329,10 @@ slug_to_accession = load_slug_to_accession()
 rows = []
 by_pair = {}
 if cons_root.exists():
-    for fasta in sorted(cons_root.rglob("*.polished.consensus.fasta")):
+    for fasta in sorted(cons_root.rglob("*.consensus.fasta")):
         sample = fasta.parent.name
         base = fasta.name
-        suffix = ".polished.consensus.fasta"
+        suffix = ".consensus.fasta"
         virus_key = ""
         if base.endswith(suffix):
             core = base[:-len(suffix)]

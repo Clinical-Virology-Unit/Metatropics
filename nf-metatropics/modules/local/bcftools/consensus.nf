@@ -1,10 +1,10 @@
-process MEDAKA_CONSENSUS_BCFTOOLS {
+process CONSENSUS_BCFTOOLS {
     tag "Consensus (bcftools, major tier)"
     label 'process_medium'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'library://jansendaan94_v2/metatropics/medaka:2.0.0' :
-        'daanjansen94/medaka:2.0.0' }"
+        'library://daanjansen94/metatropics/bcftools:1.23.1' :
+        'daanjansen94/bcftools:1.23.1' }"
 
     input:
     tuple val(meta), path(uniform_vcf), path(ref_fasta)
@@ -25,10 +25,14 @@ process MEDAKA_CONSENSUS_BCFTOOLS {
     """
     set -euo pipefail
 
-    samtools faidx $ref_fasta
+    # Optional: index reference if samtools is available in the container.
+    # (The bcftools biocontainer ships bcftools+tabix but not samtools.)
+    if command -v samtools >/dev/null 2>&1; then
+        samtools faidx $ref_fasta
+    fi
 
     # Keep only "major" variants, but enforce a stricter VAF threshold for consensus assembly.
-    # This allows the VCF/HTML report to keep a more permissive major tier (e.g. 0.2),
+    # The tiered VCF (uniform_vcf) can keep a permissive major tier (e.g. 0.2),
     # while the consensus uses `params.agreement` (default 0.7).
     bcftools view -i "INFO/TIER=\\"major\\" && INFO/VAF>=${consensus_vaf}" -Oz -o ${prefix}.major.vcf.gz $uniform_vcf
     tabix -p vcf ${prefix}.major.vcf.gz
@@ -42,7 +46,8 @@ process MEDAKA_CONSENSUS_BCFTOOLS {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         bcftools: \$(bcftools --version 2>/dev/null | sed -n '1s/^bcftools //p')
-        samtools: \$(samtools --version 2>/dev/null | head -n1 | sed 's/samtools //')
+        tabix: \$(tabix --version 2>/dev/null | head -n1 | sed -n 's/^tabix (htslib) //p')
     END_VERSIONS
     """
 }
+
