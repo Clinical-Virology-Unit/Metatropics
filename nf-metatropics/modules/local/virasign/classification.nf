@@ -157,6 +157,25 @@ process VIRASIGN_CLASSIFICATION {
     fi
     ${cmd}
 
+    # Create per-virus depth mask BEDs alongside Virasign BAMs.
+    # These are later used to N-mask consensus sequences (depth < params.depth).
+    # Virasign's container includes samtools.
+    MIN_DEPTH="${params.depth ?: 25}"
+    if command -v samtools >/dev/null 2>&1; then
+      while IFS= read -r -d '' bam; do
+        bai="\${bam}.bai"
+        if [ ! -e "\$bai" ] && [ -e "\${bam%.bam}.bam.bai" ]; then
+          bai="\${bam%.bam}.bam.bai"
+        fi
+        samtools index "\$bam" >/dev/null 2>&1 || true
+        samtools depth -aa -d 0 "\$bam" \
+          | awk -v min="\$MIN_DEPTH" 'BEGIN{OFS="\\t"} { if(\$3 < min) print \$1, \$2-1, \$2 }' \
+          > "\${bam%.bam}.depth_lt_min.bed"
+      done < <(find publish -type f -name '*.bam' -print0)
+    else
+      echo "WARNING: samtools not found in Virasign container; depth mask BEDs will not be generated." >&2
+    fi
+
     # Don't propagate per-run virasign log into shared results.
     rm -f publish/.virasign.log || true
 
@@ -167,13 +186,23 @@ process VIRASIGN_CLASSIFICATION {
         flock -x 9
         for d in "\${PWD}/publish/"*; do
           [ -e "\$d" ] || continue
+          bn="\$(basename \"\$d\")"
+          echo "[virasign] Copying \${bn} -> ${shared}/" >&2
           cp -aL "\$d" "${shared}/"
+          [ -e "${shared}/\${bn}" ] || { echo "[virasign] ERROR: destination missing after copy: ${shared}/\${bn}" >&2; exit 1; }
+          # Do not keep internal mask artifacts in the published results tree.
+          # They are only needed downstream during the current workflow execution.
+          find "${shared}/\${bn}" -type f -name '*.depth_lt_min.bed' -delete 2>/dev/null || true
         done
       ) 9>"${shared}/.copy.lock"
     else
       for d in "\${PWD}/publish/"*; do
         [ -e "\$d" ] || continue
+        bn="\$(basename \"\$d\")"
+        echo "[virasign] Copying \${bn} -> ${shared}/" >&2
         cp -aL "\$d" "${shared}/"
+        [ -e "${shared}/\${bn}" ] || { echo "[virasign] ERROR: destination missing after copy: ${shared}/\${bn}" >&2; exit 1; }
+        find "${shared}/\${bn}" -type f -name '*.depth_lt_min.bed' -delete 2>/dev/null || true
       done
     fi
 

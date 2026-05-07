@@ -484,6 +484,23 @@ def _viral_detail_figure(
         color_discrete_sequence=(px.colors.qualitative.Bold + px.colors.qualitative.Dark24) * 4,
         labels={"sample": "Sample", "virus": ""},
     )
+
+    # Ensure samples with zero viral reads are still shown in the Viral detail view.
+    # Plotly does not reliably render empty categories if no trace references them.
+    present_samples = set(df["sample"].astype(str).unique().tolist())
+    missing_samples = [str(s) for s in sample_order if str(s) not in present_samples]
+    if missing_samples:
+        fig.add_trace(
+            go.Bar(
+                x=[0.0 if as_fraction else 0] * len(missing_samples),
+                y=missing_samples,
+                name="No viral reads",
+                orientation="h",
+                showlegend=False,
+                marker=dict(color="rgba(0,0,0,0)"),
+                hovertemplate="<b>%{y}</b><br>No viral reads<extra></extra>",
+            )
+        )
     for tr in fig.data:
         vname = str(getattr(tr, "name", "") or "")
         ys = list(tr.y) if getattr(tr, "y", None) is not None else []

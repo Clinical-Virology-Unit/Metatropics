@@ -32,7 +32,7 @@ include { VIRASIGN_DB                  } from '../modules/local/virasign/prepare
 include { VIRASIGN_SUMMARY as METATROPICS_SUMMARY } from '../modules/local/virasign/build_html'
 include { CLAIR3_VARIANTS              } from '../modules/local/clair3/variants'
 include { CLAIR3_POSTPROCESSING        } from '../modules/local/clair3/postprocessing'
-include { CONSENSUS_BCFTOOLS           } from '../modules/local/bcftools/consensus'
+include { CONSENSUS_BCFTOOLS } from '../modules/local/bcftools/consensus'
 include { ReadCount                   } from '../modules/local/reads/reads'
 
 /* Main workflow */
@@ -192,6 +192,7 @@ workflow METATROPICS {
                     file("${accDir}/${acc}.bam"),
                     file("${accDir}/${acc}.bam.bai"),
                     file("${accDir}/${acc}.fasta"),
+                    file("${accDir}/${acc}.depth_lt_min.bed"),
                     file("${accDir}/mread.fastq.gz")
                 ]
             }
@@ -219,21 +220,23 @@ workflow METATROPICS {
     def ch_raw_reads_for_model = ch_fixed_reads.map { meta, fq -> [ meta.id, fq ] }
 
     def ch_clair3_in = ch_virasign_confident
-        .map { meta, bam, bai, ref, virasign_reads -> [ meta.id, meta, bam, bai, ref ] }
+        .map { meta, bam, bai, ref, bed, virasign_reads -> [ meta.id, meta, bam, bai, ref ] }
         .join(ch_raw_reads_for_model, by: 0)
         .map { sample, meta, bam, bai, ref, raw_fq -> [ meta, bam, bai, ref, raw_fq ] }
 
     CLAIR3_VARIANTS( ch_clair3_in )
 
     def ch_clair3_uniform_in = ch_virasign_confident
-        .map { meta, bam, bai, ref, reads -> [ meta, bam, bai, ref ] }
+        .map { meta, bam, bai, ref, bed, reads -> [ meta, bam, bai, ref ] }
         .join(CLAIR3_VARIANTS.out.vcf_gz.join(CLAIR3_VARIANTS.out.vcf_tbi, by: 0), by: 0)
         .map { meta, bam, bai, ref, vcfgz, tbi -> [ meta, vcfgz, tbi, bam, bai, ref ] }
 
     CLAIR3_POSTPROCESSING( ch_clair3_uniform_in )
 
+    // Build consensus using bcftools + external depth mask.
     def ch_consensus_in = CLAIR3_POSTPROCESSING.out.vcf
-        .join(ch_virasign_confident.map { meta, bam, bai, ref, reads -> [ meta, ref ] }, by: 0)
+        .join(ch_virasign_confident.map { meta, bam, bai, ref, bed, reads -> [ meta, ref, bed ] }, by: 0)
+        .map { meta, uniform_vcf, ref, bed -> [ meta, uniform_vcf, ref, bed ] }
 
     CONSENSUS_BCFTOOLS( ch_consensus_in )
 
