@@ -21,23 +21,55 @@ process CLAIR3_VARIANTS {
     def prefix = task.ext.prefix ?: "${meta.id}.${meta.virus_slug}"
     def model_override = params.clair3_model ?: ''
     def min_mq = params.clair3_min_mq
-    def min_cov = params.depth
+    // Use a permissive coverage threshold for the caller itself.
+    // Clair3 requires --min_coverage >= 2.
+    // Depth cutoffs are enforced later during uniform post-processing and consensus.
+    def min_cov = 2
     def min_qual = params.quality
     def threads = task.cpus ?: 8
     """
     set -euo pipefail
 
-    # Copy reference locally so we can create a local .fai inside the task work dir.
-    # (Nextflow often stages inputs as symlinks; writing <ref>.fai next to the symlink target can fail in containers.)
+    # Stage inputs locally (Nextflow often uses symlinks).
+    # Convert contig names containing `|` to `_` for Clair3, in BOTH FASTA and BAM header (must match).
     cp -f ${ref_fasta} ref.fasta
-    samtools faidx ref.fasta
-    CTG_NAME=\$(cut -f1 ref.fasta.fai | head -n 1)
+    cp -f ${bam} in.bam
+    cp -f ${bai} in.bam.bai
+
+    awk '
+      BEGIN{OFS=""}
+      /^>/{
+        n=split(substr(\$0,2), a, " ")
+        gsub(/\\|/, "_", a[1])
+        printf ">%s", a[1]
+        for(i=2;i<=n;i++) printf " %s", a[i]
+        printf "\\n"
+        next
+      }
+      {print}
+    ' ref.fasta > ref.pipefix.fasta
+    samtools faidx ref.pipefix.fasta
+    CTG_NAME=\$(cut -f1 ref.pipefix.fasta.fai | head -n 1)
+
+    samtools view -H in.bam | awk '
+      BEGIN{OFS="\\t"}
+      /^@SQ/{
+        for(i=1;i<=NF;i++){
+          if(\$i ~ /^SN:/){
+            sub(/^SN:/,"",\$i); gsub(/\\|/,"_",\$i); \$i="SN:"\$i
+          }
+        }
+      }
+      {print}
+    ' > bam.header.pipefix.sam
+    samtools reheader bam.header.pipefix.sam in.bam > bam.pipefix.bam
+    samtools index bam.pipefix.bam
 
     # Autodetect Clair3 model from BAM header (Dorado/Guppy model tags) when possible.
     # If the BAM header doesn't contain basecaller/model tags, try the raw/fixed FASTQ used in the pipeline
     # (these headers typically retain the RG:Z:...r10.4.1_e8.2_400bps_hac@v5.0.0 tag). Prefer HAC.
-    DETECTED_HAC=\$(samtools view -H ${bam} | tr '\\t' '\\n' | grep -Eo 'r[0-9]+[^ ]*_hac_v[0-9]+' | head -n 1 || true)
-    DETECTED_SUP=\$(samtools view -H ${bam} | tr '\\t' '\\n' | grep -Eo 'r[0-9]+[^ ]*_sup_v[0-9]+' | head -n 1 || true)
+    DETECTED_HAC=\$(samtools view -H in.bam | tr '\\t' '\\n' | grep -Eo 'r[0-9]+[^ ]*_hac_v[0-9]+' | head -n 1 || true)
+    DETECTED_SUP=\$(samtools view -H in.bam | tr '\\t' '\\n' | grep -Eo 'r[0-9]+[^ ]*_sup_v[0-9]+' | head -n 1 || true)
     if [ -z "\${DETECTED_HAC}" ] && [ -z "\${DETECTED_SUP}" ] && [ -s "${raw_fastq_gz}" ]; then
         RAW_TAG=\$(zcat ${raw_fastq_gz} 2>/dev/null | head -n 40000 | grep -Eo 'r10\\.[0-9]+\\.[0-9]+_e[0-9]+\\.[0-9]+_400bps_(hac|sup)@v[0-9]+\\.[0-9]+\\.[0-9]+' | head -n 1 || true)
         if [ -n "\${RAW_TAG}" ]; then
@@ -63,8 +95,8 @@ process CLAIR3_VARIANTS {
     fi
 
     /opt/bin/run_clair3.sh \\
-      --bam_fn ${bam} \\
-      --ref_fn ref.fasta \\
+      --bam_fn bam.pipefix.bam \\
+      --ref_fn ref.pipefix.fasta \\
       --model_path "/opt/models/\${MODEL_NAME}" \\
       --threads ${threads} \\
       --platform ont \\
@@ -77,12 +109,22 @@ process CLAIR3_VARIANTS {
       --output ./
 
     # Clair3 outputs: merge_output.vcf.gz (+tbi) is the final merged callset.
+    if [ -s merge_output.vcf.gz ] && [ ! -s merge_output.vcf.gz.tbi ]; then
+        if command -v tabix >/dev/null 2>&1; then
+            tabix -f -p vcf merge_output.vcf.gz
+        elif command -v bcftools >/dev/null 2>&1; then
+            bcftools index -f -t merge_output.vcf.gz
+        else
+            echo "[clair3] ERROR: merge_output.vcf.gz.tbi missing and neither tabix nor bcftools is available to create it." >&2
+            exit 1
+        fi
+    fi
     cp -f merge_output.vcf.gz     ${prefix}.clair3.vcf.gz
     cp -f merge_output.vcf.gz.tbi ${prefix}.clair3.vcf.gz.tbi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        clair3: \$(/opt/bin/clair3 --version 2>/dev/null || true)
+        clair3: \$(python3 /opt/bin/clair3.py --version 2>/dev/null || true)
         samtools: \$(samtools --version 2>/dev/null | head -n1 | sed 's/samtools //')
     END_VERSIONS
     """

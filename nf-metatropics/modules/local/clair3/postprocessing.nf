@@ -24,11 +24,45 @@ process CLAIR3_POSTPROCESSING {
     """
     set -euo pipefail
 
+    # Clair3 VCF was generated using a pipe-fixed contig name (| -> _).
+    # Apply the same transformation to the BAM and reference FASTA so allele recount and context lookup match.
+    cp -f $ref_fasta ref.fasta
+    cp -f $bam in.bam
+    cp -f $bai in.bam.bai
+
+    awk '
+      BEGIN{OFS=""}
+      /^>/{
+        n=split(substr(\$0,2), a, " ")
+        gsub(/\\|/, "_", a[1])
+        printf ">%s", a[1]
+        for(i=2;i<=n;i++) printf " %s", a[i]
+        printf "\\n"
+        next
+      }
+      {print}
+    ' ref.fasta > ref.pipefix.fasta
+    samtools faidx ref.pipefix.fasta
+
+    samtools view -H in.bam | awk '
+      BEGIN{OFS="\\t"}
+      /^@SQ/{
+        for(i=1;i<=NF;i++){
+          if(\$i ~ /^SN:/){
+            sub(/^SN:/,"",\$i); gsub(/\\|/,"_",\$i); \$i="SN:"\$i
+          }
+        }
+      }
+      {print}
+    ' > bam.header.pipefix.sam
+    samtools reheader bam.header.pipefix.sam in.bam > bam.pipefix.bam
+    samtools index bam.pipefix.bam
+
     python ${projectDir}/bin/clair3.py \\
         --sample '${meta.id}' \\
         --virus '${meta.virus}' \\
-        --bam $bam \\
-        --ref-fasta $ref_fasta \\
+        --bam bam.pipefix.bam \\
+        --ref-fasta ref.pipefix.fasta \\
         --clair3-vcf $clair3_vcf_gz \\
         --out-prefix '${prefix}' \\
         --min-qual ${params.quality} \\

@@ -345,8 +345,26 @@ if cons_root.exists():
 
         bare_acc = slug_to_accession.get(virus_key, virus_key)
         total, called, n_bases, gap_bases, acgt = parse_fasta_counts(fasta)
-        breadth = safe_pct(called, total)
-        strict_breadth = safe_pct(acgt, total)
+
+        # Prefer reference-coordinate breadth computed during consensus building.
+        # This avoids >100% due to insertions and counts deletions as determined.
+        breadth = ""
+        metrics = fasta.with_suffix(".metrics.json")
+        if metrics.exists():
+            try:
+                m = json.loads(metrics.read_text(encoding="utf-8"))
+                v = m.get("consensus_breadth_pct")
+                if v is not None and str(v).strip() != "":
+                    breadth = f"{float(v):.2f}"
+            except Exception:
+                breadth = ""
+
+        # Fallback: estimate unambiguous breadth from the FASTA itself (A/C/G/T only).
+        # Note: this can be impacted by indels, so it is used only when metrics are missing.
+        if breadth == "":
+            denom = total - gap_bases
+            breadth = safe_pct(acgt, denom)
+        strict_breadth = breadth
         rec = {
             "sample": sample,
             "accession": bare_acc,
@@ -359,6 +377,7 @@ if cons_root.exists():
             by_pair[(sample, virus_key)] = rec
 
 qc_reads_by_sample = {}
+readlen_med_by_sample = {}
 
 # For the Metatropics Virasign report, "QC reads" should always mean:
 # the number of reads that were actually used as INPUT for Virasign
@@ -395,8 +414,55 @@ def count_fastq_gz_reads(path: Path) -> int:
             n += 1
     return n
 
+def median_from_counts(counts: dict) -> str:
+    # Exact median from a {length: count} histogram.
+    if not counts:
+        return ""
+    total = sum(int(v) for v in counts.values() if v)
+    if total <= 0:
+        return ""
+    # 0-based median indices in the sorted multiset
+    lo = (total - 1) // 2
+    hi = total // 2
+    seen = 0
+    lo_val = None
+    hi_val = None
+    for length in sorted(counts.keys()):
+        c = int(counts.get(length) or 0)
+        if c <= 0:
+            continue
+        nxt = seen + c
+        if lo_val is None and lo < nxt:
+            lo_val = length
+        if hi_val is None and hi < nxt:
+            hi_val = length
+        if lo_val is not None and hi_val is not None:
+            break
+        seen = nxt
+    if lo_val is None or hi_val is None:
+        return ""
+    return str(int(round((lo_val + hi_val) / 2.0)))
+
+def fastq_gz_length_counts(path: Path) -> dict:
+    # Exact scan over all reads; store only a histogram (length -> count).
+    counts = {}
+    with gzip.open(path, "rt", errors="replace") as fh:
+        while True:
+            h = fh.readline()
+            if not h:
+                break
+            seq = fh.readline()
+            if not seq:
+                break
+            fh.readline()
+            fh.readline()
+            L = len(seq.strip())
+            counts[L] = counts.get(L, 0) + 1
+    return counts
+
 def count_dir(directory: Path, pattern: re.Pattern) -> dict:
     out = {}
+    length_counts = {}
     if not directory.exists():
         return out
     for p in directory.iterdir():
@@ -406,6 +472,17 @@ def count_dir(directory: Path, pattern: re.Pattern) -> dict:
             continue
         sample = extract_sample_name(p.name)
         out[sample] = out.get(sample, 0) + count_fastq_gz_reads(p)
+        try:
+            c = fastq_gz_length_counts(p)
+            if c:
+                agg = length_counts.setdefault(sample, {})
+                for k, v in c.items():
+                    agg[k] = agg.get(k, 0) + int(v)
+        except Exception:
+            pass
+    # Store per-sample median read length.
+    for s, counts in length_counts.items():
+        readlen_med_by_sample[s] = median_from_counts(counts)
     return out
 
 reads_root = outdir / "Reads"
@@ -430,6 +507,7 @@ if not qc_reads_by_sample and readcount_csv.exists():
         qc_reads_by_sample = {}
 
 qc_map_json = json.dumps(qc_reads_by_sample, separators=(",", ":"))
+readlen_map_json = json.dumps(readlen_med_by_sample, separators=(",", ":"))
 
 if summary_csv.exists():
     with summary_csv.open("r", newline="", encoding="utf-8") as handle:
@@ -450,6 +528,7 @@ if summary_csv.exists():
             break
 
     qc_header = "QC reads"
+    readlen_header = "Read Length (Med)"
     consensus_header = "Consensus Breadth (%)"
     bg_used_header = "Background"
 
@@ -475,6 +554,15 @@ if summary_csv.exists():
     else:
         out_fields.append(qc_header)
 
+    # Insert median read length after Avg Identity (%) when present.
+    if readlen_header in out_fields:
+        out_fields.remove(readlen_header)
+    if "Avg Identity (%)" in out_fields:
+        idx = out_fields.index("Avg Identity (%)")
+        out_fields.insert(idx + 1, readlen_header)
+    else:
+        out_fields.append(readlen_header)
+
     # Add consensus column as the last column.
     if consensus_header in out_fields:
         out_fields.remove(consensus_header)
@@ -499,11 +587,13 @@ if summary_csv.exists():
                 # If Z-score is not used (disabled or unusable), make this explicit instead of leaving blank.
                 row[bg_used_header] = "no"
             row[qc_header] = qc_reads_by_sample.get(sample, "")
+            row[readlen_header] = readlen_med_by_sample.get(sample, "")
             row[consensus_header] = "" if hit is None else hit["consensus_breadth_pct"]
     else:
         for row in data:
             row[qc_header] = ""
             row[bg_used_header] = "no"
+            row[readlen_header] = ""
             row[consensus_header] = ""
 
     with summary_csv.open("w", newline="", encoding="utf-8") as handle:
@@ -577,6 +667,7 @@ if summary_html.exists():
 (function(){
   const consensusMap = __CONS_MAP_JSON__;
   const qcReadsMap = __QC_READS_MAP_JSON__;
+  const readLenMap = __READLEN_MAP_JSON__;
   const bgMap = __BG_MAP_JSON__;
 
   function getVal(sampleName, accession){
@@ -589,6 +680,12 @@ if summary_html.exists():
   function getQcReads(sampleName){
     if (!qcReadsMap) return '';
     const v = qcReadsMap[sampleName];
+    return (v === undefined || v === null) ? '' : String(v);
+  }
+
+  function getReadLenMed(sampleName){
+    if (!readLenMap) return '';
+    const v = readLenMap[sampleName];
     return (v === undefined || v === null) ? '' : String(v);
   }
 
@@ -838,20 +935,21 @@ if summary_html.exists():
 
   // (No Z-score background metadata injection: keep HTML clean.)
 
-  // Override downloadTableAsCSV so the downloaded CSV includes QC reads + consensus breadth.
+  // Override downloadTableAsCSV so the downloaded CSV includes QC reads + median read length + consensus breadth.
   const origDownloadTableAsCSV = window.downloadTableAsCSV;
   window.downloadTableAsCSV = function(sampleName) {
     const tbody = document.getElementById('tbody-' + sampleName);
     if (!tbody) return;
 
     const NL = String.fromCharCode(10);
-    let csv = 'Sample,Background,Accession,Organism,Viral Species,Nextclade Clade,Segment,QC reads,Mapped Reads (#),Identity (%),Coverage Depth (x),Coverage Breadth (%),NOGR (#/bases),Z-score,Consensus Breadth (%)' + NL;
+    let csv = 'Sample,Background,Accession,Organism,Viral Species,Nextclade Clade,Segment,QC reads,Mapped Reads (#),Identity (%),Read Length (Med),Coverage Depth (x),Coverage Breadth (%),NOGR (#/bases),Z-score,Consensus Breadth (%)' + NL;
     const rows = tbody.querySelectorAll('tr:not([style*="display: none"])');
 
     rows.forEach(row => {
       const cells = row.querySelectorAll('td');
       const accession = row.getAttribute('data-accession') || '';
       const qc = getQcReads(sampleName);
+      const rl = getReadLenMed(sampleName);
       const bg = getBackground(sampleName);
       const cons = getVal(sampleName, accession);
       const consTxt = (cons === null) ? '' : cons.toFixed(2);
@@ -873,6 +971,8 @@ if summary_html.exists():
       out.unshift(sampleName);
       out.splice(1, 0, bg);
       out.splice(7, 0, qc);
+      // After QC insertion, Identity (%) is at index 9 → insert read length at index 10.
+      out.splice(10, 0, rl);
       out.push(consTxt);
       csv += out.join(',') + NL;
     });
@@ -884,23 +984,24 @@ if summary_html.exists():
     link.click();
   };
 
-  // Override the all-samples CSV export to include Background + QC reads + consensus breadth.
+  // Override the all-samples CSV export to include Background + QC reads + median read length + consensus breadth.
   // This does not change what is shown in the HTML tables; it only affects the downloaded file.
   if (typeof window.downloadAllSamplesCSV === 'function') {
     const origDownloadAll = window.downloadAllSamplesCSV;
     window.downloadAllSamplesCSV = function() {
       const NL = String.fromCharCode(10);
-      let rows = [['Sample','Background','Accession','Organism','Viral Species','Nextclade Clade','Segment','QC reads','Mapped Reads (#)','Avg Identity (%)','Coverage Depth (x)','Coverage Breadth (%)','NOGR (#/bases)','Z-score','Consensus Breadth (%)']];
+      let rows = [['Sample','Background','Accession','Organism','Viral Species','Nextclade Clade','Segment','QC reads','Mapped Reads (#)','Avg Identity (%)','Read Length (Med)','Coverage Depth (x)','Coverage Breadth (%)','NOGR (#/bases)','Z-score','Consensus Breadth (%)']];
       if (typeof allSamples === 'undefined' || typeof samplesData === 'undefined') return origDownloadAll();
 
       allSamples.forEach(sname => {
         const sdata = samplesData[sname];
         const qc = getQcReads(sname);
+        const rl = getReadLenMed(sname);
         const bg = getBackground(sname);
-        if (!sdata) { rows.push([sname,bg,'','','','','',qc,'','','','','','','']); return; }
+        if (!sdata) { rows.push([sname,bg,'','','','','',qc,'','',rl,'','','','','']); return; }
         let refs = [];
         Object.keys(sdata).forEach(db => { if (sdata[db].references) refs = refs.concat(sdata[db].references); });
-        if (refs.length === 0) { rows.push([sname,bg,'','','','','',qc,'','','','','','','']); return; }
+        if (refs.length === 0) { rows.push([sname,bg,'','','','','',qc,'','',rl,'','','','','']); return; }
         refs.sort((a,b) => (b.coverage_breadth||0)-(a.coverage_breadth||0));
         refs.forEach(r => {
           const acc = r.accession||'';
@@ -916,6 +1017,7 @@ if summary_html.exists():
             qc,
             r.mapped_reads||0,
             (r.avg_identity||0).toFixed(2),
+            rl,
             (r.coverage_depth||0).toFixed(2),
             ((r.coverage_breadth||0)*100).toFixed(1),
             String((r.nogr_regions||r.non_overlapping_reads||0)) + '|' + String((r.nogr_bases||r.non_overlapping_bases||0)),
@@ -981,6 +1083,7 @@ if summary_html.exists():
 
     inj_script = inj_script.replace("__CONS_MAP_JSON__", cons_map_json)
     inj_script = inj_script.replace("__QC_READS_MAP_JSON__", qc_map_json)
+    inj_script = inj_script.replace("__READLEN_MAP_JSON__", readlen_map_json)
     inj_script = inj_script.replace("__BG_MAP_JSON__", bg_map_json)
 
     if 'data-col="consensus_breadth_pct"' not in text:
