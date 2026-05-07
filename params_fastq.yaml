@@ -2,8 +2,8 @@
 # Example samplesheet: nf-metatropics/assets/submission/fastq.csv
 
 # Required:
-input: /data/Daan/Projects/TWist_DCT/Input/samplesheet.csv
-outdir: /data/Daan/Projects/TWist_DCT/Output
+input: /data/Daan/Projects/Tiling_SISPA/Input/samplesheet.csv
+outdir: /data/Daan/Projects/Tiling_SISPA/Output
 
 # Optional:
 Host: human
