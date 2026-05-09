@@ -2,10 +2,11 @@
 # Example samplesheet: nf-metatropics/assets/submission/fastq.csv
 
 # Required:
-input: /data/Daan/Projects/Tiling_SISPA/Input/samplesheet.csv
-outdir: /data/Daan/Projects/Tiling_SISPA/Output
+
+input: /data/Daan/Projects/TWist_DCT/Input/22071812_samplesheet.csv
+outdir: /data/Daan/Projects/TWist_DCT/Output_22071812
 
 # Optional:
-Host: human
+#Host: human
 #virasign_ultrasensitive: true
-#virasign_database: RefSeq
+virasign_database: OQ249660.1

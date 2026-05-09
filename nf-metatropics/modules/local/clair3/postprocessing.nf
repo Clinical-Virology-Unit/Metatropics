@@ -3,8 +3,10 @@ process CLAIR3_POSTPROCESSING {
     label 'process_low'
 
     // Clair3 image already includes python+pysam+samtools, so we can run postprocessing there.
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'library://jansendaan94_v2/metatropics/clair3:v2.0.1':
+    // Use the Docker image for Singularity too (pulled via docker://) because the Sylabs library tag
+    // may not exist for all architectures.
+    container "${ workflow.containerEngine == 'singularity' || workflow.containerEngine == 'apptainer' ?
+        'docker://daanjansen94/clair3:v2.0.1' :
         'daanjansen94/clair3:v2.0.1' }"
 
     input:
@@ -24,7 +26,7 @@ process CLAIR3_POSTPROCESSING {
     """
     set -euo pipefail
 
-    # Clair3 VCF was generated using a pipe-fixed contig name (| -> _).
+    # Clair3 VCF was generated using a contig-name fix (| and : -> _).
     # Apply the same transformation to the BAM and reference FASTA so allele recount and context lookup match.
     cp -f $ref_fasta ref.fasta
     cp -f $bam in.bam
@@ -34,7 +36,7 @@ process CLAIR3_POSTPROCESSING {
       BEGIN{OFS=""}
       /^>/{
         n=split(substr(\$0,2), a, " ")
-        gsub(/\\|/, "_", a[1])
+        gsub(/[\\|:]/, "_", a[1])
         printf ">%s", a[1]
         for(i=2;i<=n;i++) printf " %s", a[i]
         printf "\\n"
@@ -49,7 +51,7 @@ process CLAIR3_POSTPROCESSING {
       /^@SQ/{
         for(i=1;i<=NF;i++){
           if(\$i ~ /^SN:/){
-            sub(/^SN:/,"",\$i); gsub(/\\|/,"_",\$i); \$i="SN:"\$i
+            sub(/^SN:/,"",\$i); gsub(/[\\|:]/,"_",\$i); \$i="SN:"\$i
           }
         }
       }

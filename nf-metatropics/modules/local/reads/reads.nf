@@ -28,14 +28,14 @@ process ReadCount {
 
     # Copy raw reads from Reads/raw when available
     if [ -d "${outdir}/Reads/raw" ]; then
-        find ${outdir}/Reads/raw -name "*.fastq.gz" -type f -exec cp {} read_count/ \\;
+        find ${outdir}/Reads/raw \\( -name "*.fastq.gz" -o -name "*.fq.gz" \\) -type f -exec cp {} read_count/ \\;
     else
         echo "Directory ${outdir}/Reads/raw does not exist, skipping raw read copy"
     fi
 
     # Copy trimmed reads from Reads/fastplong when available
     if [ -d "${outdir}/Reads/fastplong" ]; then
-        find ${outdir}/Reads/fastplong -name "*.fastq.gz" -type f -exec cp {} read_count/ \\;
+        find ${outdir}/Reads/fastplong \\( -name "*.fastq.gz" -o -name "*.fq.gz" \\) -type f -exec cp {} read_count/ \\;
     else
         echo "Directory ${outdir}/Reads/fastplong does not exist, skipping trimmed read copy"
     fi
@@ -43,7 +43,7 @@ process ReadCount {
     # Copy human-depleted reads (new or legacy naming).
     if [[ "\$HOST_STATUS" == "human_only" || "\$HOST_STATUS" == "both" ]]; then
         if [ -d "${outdir}/Reads/nohuman" ]; then
-            find ${outdir}/Reads/nohuman \\( -name '*_human_depleted.fastq.gz' -o -name '*_other.fastq.gz' \\) -type f -exec cp {} read_count/nohuman/ \\;
+            find ${outdir}/Reads/nohuman \\( -name '*_human_depleted.fastq.gz' -o -name '*_human_depleted.fq.gz' -o -name '*_other.fastq.gz' -o -name '*_other.fq.gz' \\) -type f -exec cp {} read_count/nohuman/ \\;
         else
             echo "Directory ${outdir}/Reads/nohuman does not exist, skipping human-depleted copy"
         fi
@@ -54,7 +54,7 @@ process ReadCount {
     # Copy host-depleted reads (new or legacy naming).
     if [[ "\$HOST_STATUS" == "other_only" || "\$HOST_STATUS" == "both" ]]; then
         if [ -d "${outdir}/Reads/nohost" ]; then
-            find ${outdir}/Reads/nohost \\( -name '*_host_depleted.fastq.gz' -o -name '*_other.fastq.gz' \\) -type f -exec cp {} read_count/nohost/ \\;
+            find ${outdir}/Reads/nohost \\( -name '*_host_depleted.fastq.gz' -o -name '*_host_depleted.fq.gz' -o -name '*_other.fastq.gz' -o -name '*_other.fq.gz' \\) -type f -exec cp {} read_count/nohost/ \\;
         else
             echo "Directory ${outdir}/Reads/nohost does not exist, skipping host-depleted copy"
         fi
@@ -71,6 +71,6 @@ process ReadCount {
       --workdir "."
 
     # Clean up staged FASTQs (counting only).
-    find read_count -type f -name '*.fastq.gz' -delete || true
+    find read_count -type f \\( -name '*.fastq.gz' -o -name '*.fq.gz' \\) -delete || true
     """
 }

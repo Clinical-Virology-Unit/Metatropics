@@ -47,6 +47,7 @@ process VIRASIGN_CLASSIFICATION {
     // If no confident hits, Virasign still writes the unfiltered JSON; treat that as a valid completion signal too.
     path "publish/**/*_unfiltered_all_references.json", emit: unfiltered_json, optional: true
     tuple val(meta), path("publish"),           emit: outdir
+    path "hits.tsv",                             emit: hits_tsv
     path "versions.yml",                       emit: versions
 
     when:
@@ -157,10 +158,19 @@ process VIRASIGN_CLASSIFICATION {
     fi
     ${cmd}
 
-    # Create per-virus depth mask BEDs alongside Virasign BAMs.
-    # These are later used to N-mask consensus sequences (depth < params.depth).
-    # Virasign's container includes samtools.
+    # Create per-virus mask BEDs alongside Virasign BAMs.
+    # These are later used to N-mask consensus sequences.
+    #
+    # IMPORTANT: We enforce:
+    # - minimum depth (`params.depth`, default 25)
+    # - minimum base quality and mapping quality matching Clair3 uniform recount
+    #   (`params.clair3_min_bq` / `params.clair3_min_mq`)
+    #
+    # This keeps site masking conceptually aligned with variant calling thresholds
+    # (Clair3 uses --qual / --min_mq during calling; we at least mirror base-Q here).
     MIN_DEPTH="${params.depth ?: 25}"
+    MIN_BQ="${params.clair3_min_bq ?: 15}"
+    MIN_MQ="${params.clair3_min_mq ?: 15}"
     if command -v samtools >/dev/null 2>&1; then
       while IFS= read -r -d '' bam; do
         bai="\${bam}.bai"
@@ -168,13 +178,72 @@ process VIRASIGN_CLASSIFICATION {
           bai="\${bam%.bam}.bam.bai"
         fi
         samtools index "\$bam" >/dev/null 2>&1 || true
-        samtools depth -aa -d 0 "\$bam" \
-          | awk -v min="\$MIN_DEPTH" 'BEGIN{OFS="\\t"} { if(\$3 < min) print \$1, \$2-1, \$2 }' \
-          > "\${bam%.bam}.depth_lt_min.bed"
+        # Compute depth after filtering low-quality bases:
+        # -Q MIN_BQ filters bases by Phred base quality
+        # mpileup depth is column 4 (coverage) in samtools output
+        ref="\${bam%.bam}.fasta"
+        if [ ! -e "\$ref" ]; then
+          # Fallback: keep old behaviour (depth-only) if reference isn't present for mpileup.
+          samtools depth -aa -d 0 "\$bam" \
+            | awk -v min="\$MIN_DEPTH" 'BEGIN{OFS="\\t"} { if(\$3 < min) print \$1, \$2-1, \$2 }' \
+            > "\${bam%.bam}.bed"
+        else
+          samtools mpileup -aa -d 0 -Q "\$MIN_BQ" -q "\$MIN_MQ" -f "\$ref" "\$bam" 2>/dev/null \
+            | awk -v min="\$MIN_DEPTH" 'BEGIN{OFS="\\t"} { if(\$4 < min) print \$1, \$2-1, \$2 }' \
+            > "\${bam%.bam}.bed"
+        fi
       done < <(find publish -type f -name '*.bam' -print0)
     else
       echo "WARNING: samtools not found in Virasign container; depth mask BEDs will not be generated." >&2
     fi
+
+    # One TSV row per confident hit (same folder layout as Virasign: publish/<sample>/<acc>/).
+    python3 <<PY
+    import json, os, re, sys
+
+    publish_dir = "publish"
+    sample_id = "${meta.id}"
+    sample_dir = os.path.join(publish_dir, sample_id)
+    candidates = []
+    if os.path.isdir(sample_dir):
+        candidates.append(os.path.join(sample_dir, "%s_final_selected_references.json" % sample_id))
+        for fn in os.listdir(sample_dir):
+            if fn.endswith("_final_selected_references.json"):
+                candidates.append(os.path.join(sample_dir, fn))
+    candidates = [c for c in candidates if os.path.exists(c)]
+    if not candidates:
+        open("hits.tsv", "w").close()
+        sys.exit(0)
+    final_json = candidates[0]
+
+    with open(final_json) as fh:
+        hits = json.load(fh)
+
+    def slug(s):
+        s = (s or "").strip()
+        if not s:
+            return ""
+        s = re.sub(r"[^A-Za-z0-9._-]+", "_", s)
+        s = s.lstrip("_").rstrip("_")
+        s = re.sub(r"_+", "_", s)
+        return s
+
+    out = open("hits.tsv", "w")
+    for hit in hits:
+        acc = str(hit.get("accession", "") or "").strip()
+        if not acc:
+            continue
+        raw_sp = (hit.get("organism") or hit.get("viral_species") or "").strip()
+        if (not raw_sp) and hit.get("description"):
+            raw_sp = str(hit["description"]).strip()[:120]
+        sp_slug = slug(raw_sp)
+        virus_slug = "%s_%s" % (acc, sp_slug) if sp_slug else acc
+        ref_fasta = os.path.join(os.path.dirname(final_json), acc, "%s.fasta" % acc)
+        if not os.path.exists(ref_fasta):
+            continue
+        out.write("\\t".join([sample_id, acc, virus_slug, sp_slug, os.path.realpath(ref_fasta)]) + "\\n")
+    out.close()
+    PY
 
     # Don't propagate per-run virasign log into shared results.
     rm -f publish/.virasign.log || true
@@ -190,9 +259,6 @@ process VIRASIGN_CLASSIFICATION {
           echo "[virasign] Copying \${bn} -> ${shared}/" >&2
           cp -aL "\$d" "${shared}/"
           [ -e "${shared}/\${bn}" ] || { echo "[virasign] ERROR: destination missing after copy: ${shared}/\${bn}" >&2; exit 1; }
-          # Do not keep internal mask artifacts in the published results tree.
-          # They are only needed downstream during the current workflow execution.
-          find "${shared}/\${bn}" -type f -name '*.depth_lt_min.bed' -delete 2>/dev/null || true
         done
       ) 9>"${shared}/.copy.lock"
     else
@@ -202,7 +268,6 @@ process VIRASIGN_CLASSIFICATION {
         echo "[virasign] Copying \${bn} -> ${shared}/" >&2
         cp -aL "\$d" "${shared}/"
         [ -e "${shared}/\${bn}" ] || { echo "[virasign] ERROR: destination missing after copy: ${shared}/\${bn}" >&2; exit 1; }
-        find "${shared}/\${bn}" -type f -name '*.depth_lt_min.bed' -delete 2>/dev/null || true
       done
     fi
 
