@@ -93,6 +93,8 @@ Metatropics reports, run-wide summaries, and provenance.
 | `Summary/metatropics` | Final Metatropics HTML report (`Metatropics_Summary_*.html`). |
 | `Summary/pipeline_info` | Nextflow trace/reports and software versions (`software_versions.yml`). |
 
-For a quick overview of viruses found, open the final HTML report **`Summary/metatropics/Metatropics_Summary_RVDB.html`**.
+For a quick overview of viruses found, open the final HTML report at **`Summary/metatropics/Metatropics_Summary_RVDB.html`**. Below is an example of what that report looks like.
 
-![Metatropics summary HTML report (example)](../logo/Metatropics_html_output.png)
+**Example**
+
+![Metatropics summary HTML report](../logo/Metatropics_html_output.png)
