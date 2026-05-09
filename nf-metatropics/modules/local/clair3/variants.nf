@@ -2,8 +2,10 @@ process CLAIR3_VARIANTS {
     tag "Clair3 variant calling"
     label 'process_medium'
 
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'library://jansendaan94_v2/metatropics/clair3:v2.0.1':
+    // Use the Docker image for Singularity too (pulled via docker://) because the Sylabs library tag
+    // may not exist for all architectures.
+    container "${ workflow.containerEngine == 'singularity' || workflow.containerEngine == 'apptainer' ?
+        'docker://daanjansen94/clair3:v2.0.1' :
         'daanjansen94/clair3:v2.0.1' }"
 
     input:
@@ -31,7 +33,8 @@ process CLAIR3_VARIANTS {
     set -euo pipefail
 
     # Stage inputs locally (Nextflow often uses symlinks).
-    # Convert contig names containing `|` to `_` for Clair3, in BOTH FASTA and BAM header (must match).
+    # Convert contig names containing `|` (and sometimes `:`) to `_` for Clair3/htslib,
+    # in BOTH FASTA and BAM header (must match).
     cp -f ${ref_fasta} ref.fasta
     cp -f ${bam} in.bam
     cp -f ${bai} in.bam.bai
@@ -40,7 +43,7 @@ process CLAIR3_VARIANTS {
       BEGIN{OFS=""}
       /^>/{
         n=split(substr(\$0,2), a, " ")
-        gsub(/\\|/, "_", a[1])
+        gsub(/[\\|:]/, "_", a[1])
         printf ">%s", a[1]
         for(i=2;i<=n;i++) printf " %s", a[i]
         printf "\\n"
@@ -56,7 +59,7 @@ process CLAIR3_VARIANTS {
       /^@SQ/{
         for(i=1;i<=NF;i++){
           if(\$i ~ /^SN:/){
-            sub(/^SN:/,"",\$i); gsub(/\\|/,"_",\$i); \$i="SN:"\$i
+            sub(/^SN:/,"",\$i); gsub(/[\\|:]/,"_",\$i); \$i="SN:"\$i
           }
         }
       }

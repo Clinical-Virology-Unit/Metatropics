@@ -35,6 +35,7 @@ process VIRASIGN_SUMMARY {
 
     input:
     val _virasign_final_json_count
+    path consensus_fastas
 
     output:
     path "Metatropics_Summary_*.html", emit: html
@@ -196,7 +197,9 @@ def _norm_sample_id(s: str) -> str:
         if s.endswith(suf):
             s = s[: -len(suf)]
             break
-    # NOTE: Use \\Z instead of an end-of-line anchor to avoid Groovy interpolation issues.
+    # Normalise common suffixes so background sample detection is robust to
+    # pipeline-added suffixes and FASTQ naming.
+    # NOTE: keep \\Z escapes so Groovy/Nextflow string parsing doesn't choke.
     s = re.sub(r"\\.fastp\\Z", "", s)
     s = re.sub(r"(_T\\d+_other_T\\d+|_other_T\\d+|_T\\d+_other|_T\\d+|_other)\\Z", "", s)
     return s
@@ -346,24 +349,11 @@ if cons_root.exists():
         bare_acc = slug_to_accession.get(virus_key, virus_key)
         total, called, n_bases, gap_bases, acgt = parse_fasta_counts(fasta)
 
-        # Prefer reference-coordinate breadth computed during consensus building.
-        # This avoids >100% due to insertions and counts deletions as determined.
-        breadth = ""
-        metrics = fasta.with_suffix(".metrics.json")
-        if metrics.exists():
-            try:
-                m = json.loads(metrics.read_text(encoding="utf-8"))
-                v = m.get("consensus_breadth_pct")
-                if v is not None and str(v).strip() != "":
-                    breadth = f"{float(v):.2f}"
-            except Exception:
-                breadth = ""
-
-        # Fallback: estimate unambiguous breadth from the FASTA itself (A/C/G/T only).
-        # Note: this can be impacted by indels, so it is used only when metrics are missing.
-        if breadth == "":
-            denom = total - gap_bases
-            breadth = safe_pct(acgt, denom)
+        # Consensus breadth (single definition):
+        # fraction of unambiguous bases (A/C/G/T) in the produced consensus sequence.
+        # This directly reflects all upstream filters (depth masking -> N, agreement/VAF, etc.).
+        denom = total - gap_bases
+        breadth = safe_pct(acgt, denom)
         strict_breadth = breadth
         rec = {
             "sample": sample,
@@ -384,7 +374,6 @@ readlen_med_by_sample = {}
 # (post-fastplong, and post any enabled host depletion).
 def strip_extensions(name: str) -> str:
     while True:
-        # NOTE: Use \\Z end-anchor to avoid Groovy interpolation inside Nextflow strings.
         new = re.sub(r"\\.(fastq|fq|fastp|gz|meta|csv)\\Z", "", name)
         if new == name:
             return name
@@ -394,7 +383,6 @@ def extract_sample_name(filename: str) -> str:
     name = strip_extensions(filename)
     name = re.sub(r"_(human_depleted|host_depleted)\\Z", "", name)
     name = re.sub(r"_(human|host)\\Z", "", name)
-    name = re.sub(r"_other\\Z", "", name)
     name = re.sub(r"_viral\\Z", "", name)
     name = re.sub(r"_classification_results\\Z", "", name)
     name = re.sub(r"_fixed\\Z", "", name)
@@ -487,11 +475,11 @@ def count_dir(directory: Path, pattern: re.Pattern) -> dict:
 
 reads_root = outdir / "Reads"
 # Prefer the most-depleted stage if present (this matches readsForViralClassification).
-qc_reads_by_sample = count_dir(reads_root / "nohost", re.compile(r"_(host_depleted|other)\\.fastq\\.gz\\Z"))
+qc_reads_by_sample = count_dir(reads_root / "nohost", re.compile(r"_(host_depleted|other)\\.(fastq|fq)\\.gz\\Z"))
 if not qc_reads_by_sample:
-    qc_reads_by_sample = count_dir(reads_root / "nohuman", re.compile(r"_(human_depleted|other)\\.fastq\\.gz\\Z"))
+    qc_reads_by_sample = count_dir(reads_root / "nohuman", re.compile(r"_(human_depleted|other)\\.(fastq|fq)\\.gz\\Z"))
 if not qc_reads_by_sample:
-    qc_reads_by_sample = count_dir(reads_root / "fastplong", re.compile(r"\\.fastp\\.fastq\\.gz\\Z"))
+    qc_reads_by_sample = count_dir(reads_root / "fastplong", re.compile(r"\\.fastp\\.(fastq|fq)\\.gz\\Z"))
 
 # As a last resort, fall back to whatever readcount produced (if available).
 if not qc_reads_by_sample and readcount_csv.exists():
@@ -526,7 +514,6 @@ if summary_csv.exists():
         if key in low:
             accession_col = low[key]
             break
-
     qc_header = "QC reads"
     readlen_header = "Read Length (Med)"
     consensus_header = "Consensus Breadth (%)"
@@ -573,6 +560,16 @@ if summary_csv.exists():
         by_sample = {}
         for rec in rows:
             by_sample.setdefault(rec["sample"], []).append(rec)
+        def _to_float(v):
+            if v is None:
+                return None
+            s = str(v).replace("📊", "").replace("%", "").strip()
+            if not s:
+                return None
+            try:
+                return float(s)
+            except Exception:
+                return None
         for row in data:
             sample = (row.get(sample_col) or "").strip()
             acc = (row.get(accession_col) or "").strip() if accession_col else ""
@@ -588,7 +585,14 @@ if summary_csv.exists():
                 row[bg_used_header] = "no"
             row[qc_header] = qc_reads_by_sample.get(sample, "")
             row[readlen_header] = readlen_med_by_sample.get(sample, "")
-            row[consensus_header] = "" if hit is None else hit["consensus_breadth_pct"]
+            cons = None if hit is None else _to_float(hit.get("consensus_breadth_pct"))
+            if cons is None:
+                row[consensus_header] = ""
+            else:
+                # Guardrail only: consensus breadth is a percentage and must not exceed 100.
+                if cons > 100.0:
+                    cons = 100.0
+                row[consensus_header] = f"{cons:.2f}"
     else:
         for row in data:
             row[qc_header] = ""
@@ -676,6 +680,7 @@ if summary_html.exists():
     if (v === undefined || v === null || v === '') return null;
     return Number(v);
   }
+  
 
   function getQcReads(sampleName){
     if (!qcReadsMap) return '';
@@ -907,7 +912,8 @@ if summary_html.exists():
 
     tbody.querySelectorAll('tr').forEach(row => {
       const accession = row.getAttribute('data-accession') || '';
-      const v = getVal(sampleName, accession);
+      let v = getVal(sampleName, accession);
+      if (v !== null && v > 100) v = 100;
       const txt = (v === null) ? '-' : (v.toFixed(2) + '%');
 
       let td = row.querySelector('td[data-col="consensus_breadth_pct"]');
@@ -951,7 +957,8 @@ if summary_html.exists():
       const qc = getQcReads(sampleName);
       const rl = getReadLenMed(sampleName);
       const bg = getBackground(sampleName);
-      const cons = getVal(sampleName, accession);
+      let cons = getVal(sampleName, accession);
+      if (cons !== null && cons > 100) cons = 100;
       const consTxt = (cons === null) ? '' : cons.toFixed(2);
 
       // Base table has 11 cells (up to Z-score). The injected consensus cell is appended at end

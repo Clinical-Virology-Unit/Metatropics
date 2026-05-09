@@ -160,26 +160,18 @@ workflow METATROPICS {
         virasign_db_ready = VIRASIGN_DB.out.ready
         VIRASIGN_CLASSIFICATION(virasign_db_ready, readsForViralClassification)
 
-        // Build per-(sample,accession) tuples directly from Virasign-produced JSONs.
-        // IMPORTANT: Do not glob the outdir with `checkIfExists: true` here, because the files
-        // only exist after VIRASIGN_CLASSIFICATION completes.
-        ch_virasign_confident = VIRASIGN_CLASSIFICATION.out.final_json.flatMap { jsonFile ->
-            def sampleDir = jsonFile.parent
-            def sampleLabel = sampleDir.getBaseName()
-            def sampleId = sampleLabel
-                .replaceFirst(/\\.fastp$/, '')
-                .replaceFirst(/(_T\\d+_other_T\\d+|_other_T\\d+|_T\\d+_other|_T\\d+|_other)$/, '')
-
-            def hits = (List) (new JsonSlurper().parse(jsonFile))
-            hits.collect { hit ->
-                def acc = hit.accession?.toString()
-                def rawSp = (hit.organism ?: hit.viral_species ?: '')?.toString()?.trim()
-                if ((!rawSp || rawSp.isEmpty()) && hit.description) {
-                    rawSp = hit.description.toString().trim().take(120)
-                }
-                def spSlug = (rawSp && !rawSp.isEmpty()) ? rawSp.replaceAll(/[^A-Za-z0-9._-]+/, '_').replaceAll(/^_+|_+$/, '').replaceAll(/_+/, '_') : ''
-                def virusSlug = (spSlug && !spSlug.isEmpty()) ? "${acc}_${spSlug}" : acc
-                def accDir = file("${sampleDir}/${acc}")
+        // hits.tsv is emitted by VIRASIGN_CLASSIFICATION: one row per hit with abs. path to Virasign's *.fasta.
+        // Alignments reuse Virasign's per-accession BAM/BAI/BED next to that FASTA (no second minimap pass).
+        ch_virasign_confident = VIRASIGN_CLASSIFICATION.out.hits_tsv
+            .splitText()
+            .filter { it && it.trim() }
+            .map { line ->
+                def parts = line.trim().split('\\t', -1)
+                def sampleId  = parts[0]
+                def acc       = parts[1]
+                def virusSlug = parts[2]
+                def spSlug    = parts[3]
+                def refPath   = parts[4]
                 def meta2 = [
                     id          : sampleId,
                     single_end : true,
@@ -187,23 +179,20 @@ workflow METATROPICS {
                     virus_slug  : virusSlug,
                     species_slug: spSlug,
                 ]
-                [
-                    meta2,
-                    file("${accDir}/${acc}.bam"),
-                    file("${accDir}/${acc}.bam.bai"),
-                    file("${accDir}/${acc}.fasta"),
-                    file("${accDir}/${acc}.depth_lt_min.bed"),
-                    file("${accDir}/mread.fastq.gz")
-                ]
+                def refFile = file(refPath)
+                def accDir = refFile.parent
+                def bam = file("${accDir}/${acc}.bam")
+                def bai = file("${accDir}/${acc}.bam.bai")
+                def bed = file("${accDir}/${acc}.bed")
+                tuple(meta2, bam, bai, refFile, bed)
             }
-        }
     }
 
     def ch_readcount_barrier
     if (params.run_virasign) {
-        ch_readcount_barrier = VIRASIGN_CLASSIFICATION.out.final_json
-            .mix(VIRASIGN_CLASSIFICATION.out.unfiltered_json)
-            .count()
+        // Use the always-emitted results tree as a completion barrier.
+        // This avoids consuming the optional JSON outputs multiple times (which can "split" the stream).
+        ch_readcount_barrier = VIRASIGN_CLASSIFICATION.out.results.count()
     } else {
         ch_readcount_barrier = readsForViralClassification.count()
     }
@@ -219,23 +208,26 @@ workflow METATROPICS {
     // autodetect the Dorado/Guppy model from the FASTQ header (when the BAM header lacks it).
     def ch_raw_reads_for_model = ch_fixed_reads.map { meta, fq -> [ meta.id, fq ] }
 
-    def ch_clair3_in = ch_virasign_confident
-        .map { meta, bam, bai, ref, bed, virasign_reads -> [ meta.id, meta, bam, bai, ref ] }
-        .join(ch_raw_reads_for_model, by: 0)
+    def ch_mapped_hits = ch_virasign_confident
+        .map { meta, bam, bai, ref, bed -> [ meta, bam, bai, ref ] }
+
+    def ch_clair3_in = ch_mapped_hits
+        .map { meta, bam, bai, ref -> [ meta.id, meta, bam, bai, ref ] }
+        // One raw FASTQ per sample must pair with ALL per-hit alignments.
+        .combine(ch_raw_reads_for_model, by: 0)
         .map { sample, meta, bam, bai, ref, raw_fq -> [ meta, bam, bai, ref, raw_fq ] }
 
     CLAIR3_VARIANTS( ch_clair3_in )
 
-    def ch_clair3_uniform_in = ch_virasign_confident
-        .map { meta, bam, bai, ref, bed, reads -> [ meta, bam, bai, ref ] }
+    def ch_clair3_uniform_in = ch_mapped_hits
         .join(CLAIR3_VARIANTS.out.vcf_gz.join(CLAIR3_VARIANTS.out.vcf_tbi, by: 0), by: 0)
         .map { meta, bam, bai, ref, vcfgz, tbi -> [ meta, vcfgz, tbi, bam, bai, ref ] }
 
     CLAIR3_POSTPROCESSING( ch_clair3_uniform_in )
 
-    // Build consensus using bcftools + external depth mask.
+    // Build consensus using bcftools + depth mask from Virasign workdir (generated in VIRASIGN_CLASSIFICATION).
     def ch_consensus_in = CLAIR3_POSTPROCESSING.out.vcf
-        .join(ch_virasign_confident.map { meta, bam, bai, ref, bed, reads -> [ meta, ref, bed ] }, by: 0)
+        .join(ch_virasign_confident.map { m, bam, bai, ref, bed -> [ m, ref, bed ] }, by: 0)
         .map { meta, uniform_vcf, ref, bed -> [ meta, uniform_vcf, ref, bed ] }
 
     CONSENSUS_BCFTOOLS( ch_consensus_in )
@@ -243,7 +235,10 @@ workflow METATROPICS {
     // Build final Metatropics summary only after draft consensuses are available.
     // (Consensus-derived breadth metrics are computed from these FASTAs.)
     METATROPICS_SUMMARY(
-        CONSENSUS_BCFTOOLS.out.fasta.count()
+        CONSENSUS_BCFTOOLS.out.fasta.count(),
+        CONSENSUS_BCFTOOLS.out.fasta
+            .map { meta, fasta -> fasta }
+            .collect()
     )
 
 

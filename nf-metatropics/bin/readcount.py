@@ -65,6 +65,20 @@ def extract_sample_name(filename: str) -> str:
     return name
 
 
+def canonical_readcount_id(filename_or_label: str) -> str:
+    """
+    One stable sample key for read_counts.csv / plots.
+
+    Some pipeline artifacts use both `Sample_T1` and `Sample_T1_other` (or `_OTHER`) as basenames.
+    `extract_sample_name` strips a single trailing `_other` (case-sensitive); repeat and fold case
+    so FASTQ-derived keys and Virasign JSON paths always merge into one row per logical sample.
+    """
+    base = extract_sample_name((filename_or_label or "").strip())
+    while re.search(r"(?i)_other$", base):
+        base = re.sub(r"(?i)_other$", "", base)
+    return base
+
+
 def read_samplesheet_order(outdir: Path) -> List[str]:
     """
     Return sample names in the same order as the (validated) submission samplesheet.
@@ -92,7 +106,7 @@ def read_samplesheet_order(outdir: Path) -> List[str]:
                     continue
                 # Normalize to the same "logical sample" key used elsewhere in this script.
                 # This keeps ordering stable even if input names include legacy suffixes.
-                order.append(extract_sample_name(raw))
+                order.append(canonical_readcount_id(raw))
     except Exception:
         return []
 
@@ -134,7 +148,7 @@ def count_dir(pattern: re.Pattern[str], directory: Path) -> Dict[str, int]:
             continue
         if not pattern.search(p.name):
             continue
-        sample = extract_sample_name(p.name)
+        sample = canonical_readcount_id(p.name)
         out[sample] = out.get(sample, 0) + count_fastq_gz_reads(p)
     return out
 
@@ -165,7 +179,7 @@ def parse_viral_species_by_sample(outdir: Path) -> Dict[str, List[Tuple[str, int
     acc: Dict[str, Dict[str, int]] = {}
     for f in sorted(files):
         raw_name = f.name.replace("_final_selected_references.json", "")
-        sample = extract_sample_name(raw_name)
+        sample = canonical_readcount_id(raw_name)
         try:
             data = json.loads(f.read_text())
         except Exception:
@@ -211,7 +225,7 @@ def parse_viral_reads_from_virasign(outdir: Path) -> Dict[str, int]:
                         total += int(v)
                     except Exception:
                         pass
-        key = extract_sample_name(sample)
+        key = canonical_readcount_id(sample)
         out[key] = out.get(key, 0) + total
     return out
 
@@ -237,22 +251,22 @@ def compute_rows(
 ) -> Tuple[List[Row], bool, bool]:
     # Raw reads can be named either `*_fixed.fastq.gz` (older convention) or `*.fastq.gz`.
     # Exclude fastp outputs which are counted separately.
-    raw = count_dir(re.compile(r"(?<!\.fastp)(?:_fixed)?\.fastq\.gz$"), read_count_dir)
-    trimmed = count_dir(re.compile(r"\.fastp\.fastq\.gz$"), read_count_dir)
-    human_dep = count_dir(re.compile(r"\.fastq\.gz$"), read_count_dir / "nohuman")
-    host_dep = count_dir(re.compile(r"\.fastq\.gz$"), read_count_dir / "nohost")
+    raw = count_dir(re.compile(r"(?<!\.fastp)(?:_fixed)?\.(fastq|fq)\.gz$"), read_count_dir)
+    trimmed = count_dir(re.compile(r"\.fastp\.(fastq|fq)\.gz$"), read_count_dir)
+    human_dep = count_dir(re.compile(r"\.(fastq|fq)\.gz$"), read_count_dir / "nohuman")
+    host_dep = count_dir(re.compile(r"\.(fastq|fq)\.gz$"), read_count_dir / "nohost")
     viral = parse_viral_reads_from_virasign(outdir)
 
     # If the staging folder is empty (common when manually testing), fall back to counting
     # directly from the pipeline outdir's Reads/* structure.
     if not raw and not trimmed:
         reads_root = outdir / "Reads"
-        raw = count_dir(re.compile(r"(?<!\.fastp)(?:_fixed)?\.fastq\.gz$"), reads_root / "fix")
-        trimmed = count_dir(re.compile(r"\.fastp\.fastq\.gz$"), reads_root / "fastplong")
+        raw = count_dir(re.compile(r"(?<!\.fastp)(?:_fixed)?\.(fastq|fq)\.gz$"), reads_root / "fix")
+        trimmed = count_dir(re.compile(r"\.fastp\.(fastq|fq)\.gz$"), reads_root / "fastplong")
         # Depletion folders now publish *_human_depleted.fastq.gz / *_host_depleted.fastq.gz.
         # Keep the legacy *_other.fastq.gz pattern so older outdirs still count correctly.
-        human_dep = count_dir(re.compile(r"_(human_depleted|other)\.fastq\.gz$"), reads_root / "nohuman")
-        host_dep = count_dir(re.compile(r"_(host_depleted|other)\.fastq\.gz$"), reads_root / "nohost")
+        human_dep = count_dir(re.compile(r"_(human_depleted|other)\.(fastq|fq)\.gz$"), reads_root / "nohuman")
+        host_dep = count_dir(re.compile(r"_(host_depleted|other)\.(fastq|fq)\.gz$"), reads_root / "nohost")
 
     present = {*raw.keys(), *trimmed.keys(), *human_dep.keys(), *host_dep.keys(), *viral.keys()}
     order = read_samplesheet_order(outdir)

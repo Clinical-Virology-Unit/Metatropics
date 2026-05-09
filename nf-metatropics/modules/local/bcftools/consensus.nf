@@ -2,8 +2,9 @@ process CONSENSUS_BCFTOOLS {
     tag "Consensus (bcftools, major tier)"
     label 'process_medium'
 
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'library://daanjansen94/metatropics/bcftools:1.23.1' :
+    // Use Docker image URI for Singularity/Apptainer pulls (Sylabs library tag may not exist for amd64).
+    container "${ workflow.containerEngine == 'singularity' || workflow.containerEngine == 'apptainer' ?
+        'docker://daanjansen94/bcftools:1.23.1' :
         'daanjansen94/bcftools:1.23.1' }"
 
     input:
@@ -28,13 +29,14 @@ process CONSENSUS_BCFTOOLS {
     """
     set -euo pipefail
 
-    # Virasign references/BAMs can contain `|` in contig names. Clair3 normalises these to `_`.
+    # Virasign references/BAMs can contain `|` (and sometimes `:`) in contig names.
+    # htslib/bcftools treats ':' as special (region syntax), so normalise BOTH to '_' everywhere.
     # Pipe-fix reference and mask so bcftools consensus sees the same contig names as the VCF.
     awk '
       BEGIN{OFS=""}
       /^>/{
         n=split(substr(\$0,2), a, " ")
-        gsub(/\\|/, "_", a[1])
+        gsub(/[\\|:]/, "_", a[1])
         printf ">%s", a[1]
         for(i=2;i<=n;i++) printf " %s", a[i]
         printf "\\n"
@@ -43,7 +45,7 @@ process CONSENSUS_BCFTOOLS {
       {print}
     ' $ref_fasta > ref.pipefix.fasta
 
-    awk 'BEGIN{OFS="\\t"} { gsub(/\\|/, "_", \$1); print }' $depth_mask_bed > mask.pipefix.bed
+    awk 'BEGIN{OFS="\\t"} { gsub(/[\\|:]/, "_", \$1); print }' $depth_mask_bed > mask.pipefix.bed
 
     # Keep only "major" variants, but enforce a stricter VAF threshold for consensus assembly.
     # The tiered VCF (uniform_vcf) can keep a permissive major tier (e.g. 0.2),
