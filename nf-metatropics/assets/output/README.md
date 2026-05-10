@@ -93,26 +93,21 @@ Metatropics reports, run-wide summaries, and provenance.
 | `Summary/metatropics` | Final Metatropics HTML report (`Metatropics_Summary_*.html`). |
 | `Summary/pipeline_info` | Nextflow trace/reports and software versions (`software_versions.yml`). |
 
-For a quick overview of viruses found, open the final HTML report at **`Summary/metatropics/Metatropics_Summary_RVDB.html`**. 
+Open the final HTML report at **`Summary/metatropics/Metatropics_Summary_RVDB.html`** for fast interpretation of whether a virus is likely truly present: scan the table for the strongest signals, then click through to coverage/classification outputs for any hit you want to confirm.
 
 <small>
 
-One row = one virus hit in one sample. Combine columns: strength (mapped reads, depth), how much genome is seen (coverage breadth, consensus breadth), pile-up vs spread (NOGR), background (Z-score if present). Sort/filter and use links to open coverage or classification files.
-
-Heuristics only (vary by virus, genome, protocol):
+How to interpret the table (vary by virus, genome, protocol). Start by combining mapped reads, coverage depth, and consensus breadth: when all three are high, the hit is usually strong. When consensus breadth is low, NOGR helps judge whether evidence is spread across the genome or concentrated in a short pile-up, but you should also inspect the coverage plot (example below) to catch patterns like amplicon contamination. Z-score (when present) helps flag hits consistent with negative-control background / carryover. For more detail, see [`NOGR.md`](./NOGR.md) and [`Z_SCORE.md`](./Z_SCORE.md).
 
 | Indicator | Typical / rule of thumb | Notes |
 |---|---|---|
 | Mapped reads | ≥100–1000+ | More reads → stronger support. |
-| Coverage depth | ~1–10× common | Higher better; very low → check breadth + NOGR. |
-| Coverage breadth | ≥~20% vs &lt;~20–30% | ≥~20% ≈ decent patch; lower → brittle: lean on NOGR (+ Z-score). |
+| Coverage depth | ~1–10× common | Higher better; very low → rely more on consensus breadth + NOGR. |
 | Consensus breadth | e.g. ≥80–90% | Near-complete → usually strong on its own. |
-| NOGR (#/bases) | ≥3 regions if breadth low | More regions → spread-out; 1–2 → pile-up risk. |
-| Z-score | ≥~3 vs controls | Down-rank background-like; best for low reads / low breadth. |
+| NOGR (#/bases) | ≥3 regions if consensus breadth low | More regions → spread-out; 1–2 → pile-up risk. |
+| Z-score | ≥~3 vs controls | Use to spot negative-control-like background / carryover; best for low reads / low breadth. |
 
 </small>
-
-The same table is exported as **`Summary/metatropics/Metatropics_Summary_RVDB.csv`** for downstream use.
 
 **Example**
 
