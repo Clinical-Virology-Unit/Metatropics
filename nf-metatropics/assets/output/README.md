@@ -97,7 +97,9 @@ Open the final HTML report at **`Summary/metatropics/Metatropics_Summary_RVDB.ht
 
 <small>
 
-How to interpret the table (vary by virus, genome, protocol). Start by combining mapped reads, coverage depth, and consensus breadth: when all three are high, the hit is usually strong. When consensus breadth is low, NOGR helps judge whether evidence is spread across the genome or concentrated in a short pile-up, but you should also inspect the coverage plot (example below) to catch patterns like amplicon contamination. Z-score (when present) helps flag hits consistent with negative-control background / carryover. For more detail, see [`NOGR.md`](./NOGR.md) and [`Z_SCORE.md`](./Z_SCORE.md).
+**How to interpret the summary table** (vary by virus, genome, protocol)
+
+Start by combining mapped reads, coverage depth, and consensus breadth: when all three are high, the hit is usually strong. When consensus breadth is low, NOGR helps judge whether evidence is spread across the genome or concentrated in a short pile-up, but you should also inspect the coverage plot (example below) to catch patterns like amplicon contamination. Z-score (when present) helps flag hits consistent with negative-control background / carryover. For more detail, see [`NOGR.md`](./NOGR.md) and [`Z_SCORE.md`](./Z_SCORE.md).
 
 | Indicator | Typical / rule of thumb | Notes |
 |---|---|---|
