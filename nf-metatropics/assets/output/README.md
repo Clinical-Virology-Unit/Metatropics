@@ -97,7 +97,7 @@ Open the final HTML report at **`Summary/metatropics/Metatropics_Summary_RVDB.ht
 
 ## `Interpretation`
 
-**How to interpret the summary HTML/CSV** (vary by virus, genome, protocol)
+As a rough guide, hits that match the patterns below are more in favour of true positives.
 
 | Indicator | Typical / rule of thumb | Notes |
 |---|---|---|
