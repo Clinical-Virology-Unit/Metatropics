@@ -71,6 +71,10 @@ For each candidate virus, **[Clair3](https://github.com/HKU-BAL/Clair3)** perfor
 |------|----------|
 | `Variant_calling/clair3` | Variant calls and report (`*.variants.filtered.vcf`, `*.variants.unfiltered.vcf`, `*.variants.html`). |
 
+**Example**
+
+![Metatropics variant calls example](../logo/Metatropics_variant_calls_ex.png)
+
 ---
 
 ## `Consensus/`
