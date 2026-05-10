@@ -10,6 +10,15 @@
 
 **Metatropics** is an abbreviation of **Metagenomics for Tropical Fevers**, and reflects how the project began, with an emphasis on finding human viral pathogens in patients presenting with tropical fevers. The same pipeline has since been validated and applied outside that first setting, including for other febrile syndromes, for genomic surveillance, and for research and diagnostic questions around viral pathogens relevant to human health.
 
+## Why Metatropics?
+
+- **High sensitivity across viral diversity**: maps against large reference databases (beyond small sets like RefSeq), improving read mapping/quantification and sensitivity for highly diverse human viruses (e.g., arenaviruses such as Lassa virus) and validated in field use.
+- **High specificity / low false positives**: uses [Virasign](https://github.com/DaanJansen94/virasign) viral classification (two-step design) and additional evidence metrics (consensus breadth, NOGR, Z-score) to reduce background-like calls that are commonly present in mNGS data.
+- **High-accuracy variant calling and consensus**: uses **Clair3** for ONT variant calling; benchmarks show ONT+Clair3 can match or exceed Illumina short-read calling accuracy (i.e., by better resolving repetitive regions), producing the highest quality viral consensus genomes (eLife [`98300`](https://elifesciences.org/articles/98300)).
+- **Fast interpretation and visual confirmation**: an interactive, easily shareable HTML report makes it straightforward to confirm true viral hits versus false positives (e.g. amplicon contamination).
+
+For details on outputs and how to read the report, see [`nf-metatropics/assets/output/README.md`](./nf-metatropics/assets/output/README.md) (and the metric notes in [`NOGR.md`](./nf-metatropics/assets/output/NOGR.md) and [`Z_SCORE.md`](./nf-metatropics/assets/output/Z_SCORE.md)).
+
 ---
 
 ## Pipeline summary
