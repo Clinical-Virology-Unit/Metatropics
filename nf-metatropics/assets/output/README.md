@@ -107,7 +107,7 @@ Open the final HTML report at **`Summary/metatropics/Metatropics_Summary_RVDB.ht
 | NOGR (#/bases) | ≥3 regions if consensus breadth &lt;20% | If consensus breadth is &lt;20% and NOGR is 1–2, treat as high contamination/carryover risk (confirm with Z-score and the coverage plot). See [`NOGR.md`](./NOGR.md). |
 | Z-score | ~2–3+ vs controls | Helps flag negative-control-like background / carryover. See [`Z_SCORE.md`](./Z_SCORE.md). |
 
-Note: **Coverage breadth (%)** is the fraction of reference positions covered by ≥1 read, while **Consensus breadth (%)** is the fraction of positions with a called (non-`N`) consensus base after consensus building. See [`../submission/all_options.md`](../submission/all_options.md)).
+Note: Coverage breadth (%) is the fraction of reference positions covered by ≥1 read, while Consensus breadth (%) is the fraction of positions with a called (non-`N`) consensus base after consensus building. See [`../submission/all_options.md`](../submission/all_options.md)).
 
 **Example**
 
