@@ -3,15 +3,14 @@ requires = ["setuptools>=45", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "virasign"
-version = "0.0.6"
-description = "Virasign: Viral Read ASSIGNment from nanopore sequencing"
+name = "metatropics-samplesheet"
+version = "0.0.9"
+description = "Metatropics samplesheet helper (build FASTQ samplesheet CSV)"
 readme = "README.md"
 license = { text = "GPL-3.0-or-later" }
 requires-python = ">=3.7,<3.14"
 
 [project.scripts]
-virasign = "virasign.virasign:main"
 metatropics_samplesheet = "metatropics_samplesheet.samplesheet:main"
 metatropics-samplesheet = "metatropics_samplesheet.samplesheet:main"
 
