@@ -102,8 +102,8 @@ Open the final HTML report at **`Summary/metatropics/Metatropics_Summary_RVDB.ht
 | Indicator | Typical / rule of thumb | Notes |
 |---|---|---|
 | Mapped reads | ≥100–1000+ | More reads → stronger support. |
-| Coverage depth | ~1–10× common | Higher better; very low → rely more on consensus breadth + NOGR. |
-| Consensus breadth | e.g. ≥80–90% | Near-complete → usually strong on its own. |
+| Coverage depth | ~1–10× | Higher better; very low → rely more on consensus breadth + NOGR. |
+| Consensus breadth | &gt;20–30% vs low | &gt;20–30% is often already a decent hit; when lower, lean more on NOGR (and the coverage plot) to interpret. |
 | NOGR (#/bases) | ≥3 regions if consensus breadth low | More regions → spread-out; 1–2 → pile-up risk. |
 | Z-score | ≥~3 vs controls | Use to spot negative-control-like background / carryover; best for low reads / low breadth. |
 
