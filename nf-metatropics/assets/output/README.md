@@ -95,6 +95,25 @@ Metatropics reports, run-wide summaries, and provenance.
 
 For a quick overview of viruses found, open the final HTML report at **`Summary/metatropics/Metatropics_Summary_RVDB.html`**. 
 
+<small>
+
+One row = one virus hit in one sample. Combine columns: strength (mapped reads, depth), how much genome is seen (coverage breadth, consensus breadth), pile-up vs spread (NOGR), background (Z-score if present). Sort/filter and use links to open coverage or classification files.
+
+Heuristics only (vary by virus, genome, protocol):
+
+| Indicator | Typical / rule of thumb | Notes |
+|---|---|---|
+| Mapped reads | ≥100–1000+ | More reads → stronger support. |
+| Coverage depth | ~1–10× common | Higher better; very low → check breadth + NOGR. |
+| Coverage breadth | ≥~20% vs &lt;~20–30% | ≥~20% ≈ decent patch; lower → brittle: lean on NOGR (+ Z-score). |
+| Consensus breadth | e.g. ≥80–90% | Near-complete → usually strong on its own. |
+| NOGR (#/bases) | ≥3 regions if breadth low | More regions → spread-out; 1–2 → pile-up risk. |
+| Z-score | ≥~3 vs controls | Down-rank background-like; best for low reads / low breadth. |
+
+</small>
+
+The same table is exported as **`Summary/metatropics/Metatropics_Summary_RVDB.csv`** for downstream use.
+
 **Example**
 
 ![Metatropics summary HTML report](../logo/Metatropics_html_output.png)
