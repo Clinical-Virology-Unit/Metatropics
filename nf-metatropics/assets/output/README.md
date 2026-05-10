@@ -103,7 +103,7 @@ Open the final HTML report at **`Summary/metatropics/Metatropics_Summary_RVDB.ht
 |---|---|---|
 | Mapped reads | ≥100–1000+ | More reads → stronger support, but do not interpret mapped reads alone. |
 | Coverage depth | ~1–10× | Higher better; when ~1-5×, rely more on consensus breadth + NOGR. |
-| Consensus breadth | ≥20–30% | ≥20–30% is often already a decent hit; below that, lean more on NOGR (and the coverage plot) to interpret. |
+| Consensus breadth | ≥20–30% | ≥20–30% is often already a decent hit; below that, lean more on NOGR (and the coverage plots) to interpret. |
 | NOGR (#/bases) | ≥3 regions if consensus breadth &lt;20% | If consensus breadth is &lt;20% and NOGR is 1–2, treat as high contamination/carryover risk (confirm with Z-score and the coverage plot). |
 | Z-score | ~2–3+ vs controls | Helps flag negative-control-like background / carryover. |
 
