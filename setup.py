@@ -6,10 +6,10 @@ with readme_path.open("r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
-    name="virasign",
-    version="0.0.6",
-    author="Virasign Team",
-    description="Virasign: Viral Read ASSIGNment from nanopore sequencing",
+    name="metatropics-samplesheet",
+    version="0.0.9",
+    author="Metatropics Team",
+    description="Metatropics samplesheet helper (build FASTQ samplesheet CSV)",
     long_description=long_description,
     long_description_content_type="text/markdown",
     packages=find_packages(where="nf-metatropics/assets/submission"),
@@ -18,7 +18,6 @@ setup(
     install_requires=[],
     entry_points={
         "console_scripts": [
-            "virasign=virasign.virasign:main",
             "metatropics_samplesheet=metatropics_samplesheet.samplesheet:main",
             "metatropics-samplesheet=metatropics_samplesheet.samplesheet:main",
         ],
