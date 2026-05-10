@@ -1,6 +1,6 @@
 # Z-score background correction
 
-Virasign can compute a background-corrected Z-score per reported virus using water controls (e.g. negative controls). This mirrors a common idea in metagenomic reporting: quantify whether a signal is unusually high compared to background contamination.
+Metatropics runs viral classification with Virasign. A background-corrected Z-score per virus is computed in that Virasign step from your negative controls (for example water or extraction blanks), then incorporated into the Metatropics summary report (HTML and CSV) next to each detection. This mirrors a common idea in metagenomic reporting: quantify whether a signal is unusually high compared to background contamination.
 
 ---
 
@@ -11,35 +11,29 @@ Some taxa show up at low levels in many runs due to:
 - index hopping / low-level carryover
 - laboratory environment background
 
-By comparing each virus to your water controls in the same run, the Z-score answers:
+By comparing each virus to your negative controls in the same run, the Z-score answers:
 
-> “Is this virus higher than what we typically see in water controls?”
+> “Is this virus higher than what we typically see in negative controls?”
 
 ---
 
-## When Virasign computes it
+## When it is computed in a Metatropics run
 
-- Z-scores are computed only when ≥2 water controls are available.
-- Water controls are auto-detected when the sample name contains `water`, `h2o`, or `h20` (case-insensitive).
-- You can override auto-detection with exact input FASTQ paths:
+In a Metatropics run, Z-scores are only produced when at least two negative controls are present; with fewer than two, no Z-score is computed. That matches how the score is defined: it expresses how far a sample lies from the mean of the controls in units of the controls’ standard deviation (see [Formula](#formula)). A single control fixes a reference level but does not define a spread across the background, so the “standard deviation units” part of the Z-score is not meaningful until there are at least two negative controls.
 
-```bash
-virasign -i input_dir --zscore-controls /path/to/water1.fastq.gz,/path/to/water2.fastq.gz
-```
-
-When `--zscore-controls` is provided, Virasign does not use auto-detection (so you can exclude some “H2O_*” samples intentionally).
+When the minimum of two negative controls is met, auto-detection is the default: those controls are inferred from sample names that contain `water`, `h2o`, or `h20` (case-insensitive), reflecting common naming for blanks. How to configure this in a run is listed with the other pipeline options in [`../submission/all_options.md`](../submission/all_options.md).
 
 ---
 
 ## What signal is used
 
-Virasign computes the Z-score using the per-hit remapped `mapped_reads` (the same value reported in the final per-sample JSON).
+The Z-score is computed from the mapped read count for each virus: how many reads from the sample align to that virus’s reference. That is the same mapped-read count shown for that detection in the Metatropics summary report.
 
 ---
 
 ## Formula
 
-Virasign computes, for each virus, a Z-score as the number of standard deviations that the sample’s log-transformed mapped_reads signal is above/below the mean of the log-transformed mapped_reads values in the selected water controls.
+For each virus, the Z-score is the number of standard deviations that the sample’s log-transformed mapped_reads lies above or below the mean of the log-transformed mapped_reads in the selected negative controls.
 
 This follows the same background-correction idea used by CZ ID / IDseq background models. For more information, see:
 
@@ -62,14 +56,12 @@ Z-scores are “standard deviation units” above/below background. Practical in
 | 3 | 3 SD above mean | Strongly above background |
 | 10 | 10 SD above mean | Strongly above background |
 | 50 | Extreme outlier | Strongly above background |
-| 100 | Extreme outlier | typically only in non-water samples
+| 100 | Extreme outlier | Only in samples that are not negative controls
 
 ---
 
-## Where it appears in outputs
+## Where it appears in Metatropics outputs
 
-- Per-hit fields in `*_final_selected_references.json`:
-  - `zscore`: the computed value
-  - `zscore_controls`: list of water samples used for the background model
-- `results_summary_*.html` and `results_summary_*.csv` include a Z-score column.
+Under `Summary/metatropics/` (for example `Metatropics_Summary_RVDB.html` and `Metatropics_Summary_RVDB.csv`), the metric appears as a column titled **Z-score** in both the HTML report and the CSV export—not only in one of them. Each detection row carries a value in that column. Only in the CSV do you also get the **Sample** and **Background** columns: Background is `yes` on negative-control samples used for the Z-score background.
 
+For Virasign-only details or running the classifier outside Metatropics, see [`DaanJansen94/virasign`](https://github.com/DaanJansen94/virasign).
