@@ -104,10 +104,10 @@ Open the final HTML report at **`Summary/metatropics/Metatropics_Summary_RVDB.ht
 | Mapped reads | ≥100–1000+ | More reads → stronger support, but do not interpret mapped reads alone. |
 | Coverage depth | ~1–10× | Higher better; when ~1-5×, rely more on consensus breadth + NOGR. |
 | Consensus breadth | ≥20–30% | ≥20–30% is often already a decent hit; below that, lean more on NOGR (and the coverage plots) to interpret. |
-| NOGR (#/bases) | ≥3 regions if consensus breadth &lt;20% | If consensus breadth is &lt;20% and NOGR is 1–2, treat as high contamination/carryover risk (confirm with Z-score and the coverage plot). |
-| Z-score | ~2–3+ vs controls | Helps flag negative-control-like background / carryover. |
+| NOGR (#/bases) | ≥3 regions if consensus breadth &lt;20% | If consensus breadth is &lt;20% and NOGR is 1–2, treat as high contamination/carryover risk (confirm with Z-score and the coverage plot). See [`NOGR.md`](./NOGR.md). |
+| Z-score | ~2–3+ vs controls | Helps flag negative-control-like background / carryover. See [`Z_SCORE.md`](./Z_SCORE.md). |
 
-Start by combining mapped reads, coverage depth, and consensus breadth: when all three are high, the hit is usually strong. When consensus breadth is low, NOGR helps judge whether evidence is spread across the genome or concentrated in a short pile-up, but you should also inspect the coverage plot (example below) to catch patterns like amplicon contamination. Z-score (when present) helps flag hits consistent with negative-control background / carryover. For more detail, see [`NOGR.md`](./NOGR.md) and [`Z_SCORE.md`](./Z_SCORE.md).
+Note: **Coverage breadth (%)** is the fraction of reference positions covered by ≥1 read, while **Consensus breadth (%)** is the fraction of positions with a called (non-`N`) consensus base after consensus building (so it also depends on consensus thresholds such as minimum depth and `--agreement`; see [`../submission/all_options.md`](../submission/all_options.md)).
 
 **Example**
 
