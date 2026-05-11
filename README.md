@@ -13,7 +13,7 @@
 ## Why Metatropics?
 
 - **High sensitivity across viral diversity**: maps against large reference databases (beyond small sets like RefSeq), improving read mapping/quantification and sensitivity for highly diverse human viruses (e.g., arenaviruses such as Lassa virus) and validated in field use.
-- **High specificity / low false positives**: uses [Virasign](https://github.com/DaanJansen94/virasign) viral classification (two-step design) and additional evidence metrics (consensus breadth, [NOGR](./nf-metatropics/assets/output/NOGR.md), [Z-score](./nf-metatropics/assets/output/Z_SCORE.md)) to reduce background-like calls that are commonly present in mNGS data.
+- **High specificity / low false positives**: uses [Virasign](https://github.com/DaanJansen94/virasign) viral classification (two-step design that filters background-like calls and improves specificity; see Virasign for details) plus additional evidence metrics (consensus breadth, [NOGR](./nf-metatropics/assets/output/NOGR.md), [Z-score](./nf-metatropics/assets/output/Z_SCORE.md)).
 - **High-accuracy variant calling and consensus**: uses Clair3 for ONT variant calling; benchmarks show ONT+Clair3 can match or exceed Illumina short-read calling accuracy (see eLife [`98300`](https://elifesciences.org/articles/98300)), producing the highest quality viral consensus genomes.
 - **Fast interpretation and visual confirmation**: an interactive, easily shareable HTML report makes it straightforward to confirm true viral hits versus false positives (e.g. amplicon contamination).
 
