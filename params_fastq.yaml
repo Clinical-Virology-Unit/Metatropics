@@ -3,10 +3,10 @@
 
 # Required:
 
-input: /data/Daan/Projects/TWist_DCT/Input/22071812_samplesheet.csv
-outdir: /data/Daan/Projects/TWist_DCT/Output_22071812
+input: /data/Daan/Projects/Lassa/Input/samplesheet.csv
+outdir: /data/Daan/Projects/Lassa/Output
 
 # Optional:
-#Host: human
+Host: human
 #virasign_ultrasensitive: true
 #virasign_database: OQ249660.1
