@@ -1,0 +1,12 @@
+# Metatropics — POD5 + Dorado basecalling (GPU)
+# Example samplesheet: nf-metatropics/assets/submission/POD5.csv
+
+# Required
+input: /data/Daan/Projects/dorado_test/Input/samplesheet.csv
+input_dir: /data/Daan/Projects/dorado_test/Input/pod5
+outdir: /data/Daan/Projects/dorado_test/Output
+kit_name: TWIST-96A-UDI
+
+# Optional:
+# Host: human,pan
+# virasign_ultrasensitive: true

@@ -1,8 +1,22 @@
-# Nextflow runtime / temporary artifacts (repo root)
+Databases/
+Databases1/
+host/
+
+## Nextflow run artefacts
 .nextflow/
 .nextflow.log*
 work/
+trace*
+timeline*
+report*
+dag*
 
-# Local pulled databases (large, reproducible)
-Databases/
+## Common OS / editor noise
+.DS_Store
+Thumbs.db
 
+## Python packaging artefacts
+*.egg-info/
+
+## Nextflow config evaluation artefacts (should not be created)
+_nf_config_*

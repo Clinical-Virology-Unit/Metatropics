@@ -1,5 +1,5 @@
 process SAMTOOLS_SORT {
-    tag "$meta.id"
+    tag "Sort mapping BAM"
     label 'process_medium'
 
     conda "bioconda::samtools=1.17"

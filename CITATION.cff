@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+authors:
+  - family-names: Jansen
+    given-names: Daan
+    orcid: https://orcid.org/0000-0003-4612-6891
+  - family-names: De Souza Novaes
+    given-names: Ane
+    orcid: https://orcid.org/0000-0003-3089-2102
+  - family-names: de Block
+    given-names: Tessa
+    orcid: https://orcid.org/0000-0003-3294-0147
+  - family-names: Rezende
+    given-names: Antonio Mauro
+    orcid: https://orcid.org/0000-0003-4775-1779
+  - family-names: Vercauteren
+    given-names: Koen
+    orcid: https://orcid.org/0000-0003-1472-9938
+
+title: "Metatropics: Human viral pathogen identification and consensus genome calling from nanopore metagenomic sequencing data."
+abstract: >-
+  Metatropics is a Nextflow pipeline for Oxford Nanopore metagenomic reads, focused on detecting human viral pathogens
+  and creating viral consensus genomes. Workflows start from raw POD5 (with optional GPU basecalling) or pre-basecalled
+  FASTQ, then proceed with read quality control, alignment, host depletion, and taxonomic profiling, followed by
+  consensus genome building—polishing, refinement, and consensus calling. One container image per process keeps
+  runs portable and reproducible under Docker, Singularity/Apptainer, and typical HPC setups.
+version: 0.0.9
+date-released: 2026-03-31
+url: https://github.com/DaanJansen94/Metatropics
+repository-code: https://github.com/DaanJansen94/Metatropics
+license: MIT

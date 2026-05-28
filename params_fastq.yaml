@@ -1,0 +1,12 @@
+# Metatropics — FASTQ input (no POD5 basecalling).
+# Example samplesheet: nf-metatropics/assets/submission/fastq.csv
+
+# Required:
+
+input: /data/Daan/Projects/Lassa/Input/samplesheet.csv
+outdir: /data/Daan/Projects/Lassa/Output
+
+# Optional:
+Host: human
+#virasign_ultrasensitive: true
+#virasign_database: OQ249660.1

@@ -11,7 +11,7 @@ import yaml
 
 
 def _make_versions_html(versions):
-    """Generate a tabular HTML output of all versions for MultiQC."""
+    """Generate a tabular HTML output of all software versions."""
     html = [
         dedent(
             """\\
