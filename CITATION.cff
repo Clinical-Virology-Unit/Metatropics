@@ -17,7 +17,7 @@ authors:
   - family-names: Vercauteren
     given-names: Koen
     orcid: https://orcid.org/0000-0003-1472-9938
-
+doi: "10.5281/zenodo.20430616"
 title: "Metatropics: Human viral pathogen identification and consensus genome calling from nanopore metagenomic sequencing data."
 abstract: >-
   Metatropics is a Nextflow pipeline for Oxford Nanopore metagenomic reads, focused on detecting human viral pathogens
@@ -25,8 +25,7 @@ abstract: >-
   FASTQ, then proceed with read quality control, alignment, host depletion, and taxonomic profiling, followed by
   consensus genome building—polishing, refinement, and consensus calling. One container image per process keeps
   runs portable and reproducible under Docker, Singularity/Apptainer, and typical HPC setups.
-version: 0.0.9
+version: 0.1.0
 date-released: 2026-03-31
-url: https://github.com/DaanJansen94/Metatropics
-repository-code: https://github.com/DaanJansen94/Metatropics
+url: https://github.com/Clinical-Virology-Unit/Metatropics
 license: MIT
