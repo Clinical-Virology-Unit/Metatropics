@@ -7,6 +7,7 @@
 import argparse
 import csv
 import logging
+import re
 import sys
 from collections import Counter
 from pathlib import Path
@@ -24,11 +25,9 @@ class RowChecker:
 
     """
 
-    VALID_FORMATS = (
-        ".fq.gz",
-        ".fastq.gz",
-        "barcode[0-9]+",
-    )
+    # FASTQ paths in samplesheet (POD5/basecalling uses barcodeNN instead of a path).
+    FASTQ_PATH_SUFFIXES = (".fastq.gz", ".fq.gz", ".fastq", ".fq")
+    POD5_BARCODE_PATTERN = re.compile(r"^barcode\d+$", re.IGNORECASE)
 
     """
     def __init__(
@@ -81,11 +80,14 @@ class RowChecker:
 
         """
         self._validate_sample(row)
+        self._validate_barcode(row)
         #self._validate_first(row)
         #self._validate_second(row)
         #self._validate_pair(row)
         #self._seen.add((row[self._sample_col], row[self._first_col])) ##Antonio replaced by the one below
         self._seen.add((row[self._sample_col], row[self._second_col]))
+        # Nanopore pipeline: reads are always single-end; ignore any user-supplied column.
+        row["single_end"] = "True"
         self.modified.append(row)
 
     def _validate_sample(self, row):
@@ -117,12 +119,29 @@ class RowChecker:
     #    else:
     #        row[self._single_col] = True
 
+    def _validate_barcode(self, row):
+        """Barcode column: POD5 label (barcode01) or a FASTQ path ending in .fastq / .fastq.gz / .fq / .fq.gz."""
+        value = (row.get(self._second_col) or "").strip()
+        if not value:
+            raise AssertionError("The barcode column is required (FASTQ path or POD5 barcode label).")
+        if self.POD5_BARCODE_PATTERN.fullmatch(value):
+            return
+        lowered = value.lower()
+        if any(lowered.endswith(suf) for suf in self.FASTQ_PATH_SUFFIXES):
+            return
+        raise AssertionError(
+            f"Unrecognized barcode/path: {value!r}. "
+            f"Use a POD5 label like barcode01, or a FASTQ path ending in one of: "
+            f"{', '.join(self.FASTQ_PATH_SUFFIXES)}."
+        )
+
     def _validate_fastq_format(self, filename):
         """Assert that a given filename has one of the expected FASTQ extensions."""
-        if not any(filename.endswith(extension) for extension in self.VALID_FORMATS):
+        lowered = filename.lower()
+        if not any(lowered.endswith(extension) for extension in self.FASTQ_PATH_SUFFIXES):
             raise AssertionError(
                 f"The FASTQ file has an unrecognized extension: {filename}\n"
-                f"It should be one of: {', '.join(self.VALID_FORMATS)}"
+                f"It should be one of: {', '.join(self.FASTQ_PATH_SUFFIXES)}"
             )
 
     def validate_unique_samples(self):
@@ -135,11 +154,14 @@ class RowChecker:
         """
         if len(self._seen) != len(self.modified):
             raise AssertionError("The pair of sample name and FASTQ must be unique.")
+        # Only append _Tn when a sample name occurs multiple times.
+        counts = Counter(row[self._sample_col] for row in self.modified)
         seen = Counter()
         for row in self.modified:
             sample = row[self._sample_col]
-            seen[sample] += 1
-            row[self._sample_col] = f"{sample}_T{seen[sample]}"
+            if counts[sample] > 1:
+                seen[sample] += 1
+                row[self._sample_col] = f"{sample}_T{seen[sample]}"
 
 
 def read_head(handle, num_lines=10):
@@ -170,9 +192,6 @@ def sniff_format(handle):
     peek = read_head(handle)
     handle.seek(0)
     sniffer = csv.Sniffer()
-    if not sniffer.has_header(peek):
-        logger.critical("The given sample sheet does not appear to contain a header.")
-        sys.exit(1)
     dialect = sniffer.sniff(peek)
     return dialect
 
@@ -203,7 +222,7 @@ def check_samplesheet(file_in, file_out):
         https://raw.githubusercontent.com/nf-core/test-datasets/viralrecon/samplesheet/samplesheet_test_illumina_amplicon.csv
 
     """
-    required_columns = {"sample", "single_end", "barcode"}
+    required_columns = {"sample", "barcode"}
     # See https://docs.python.org/3.9/library/csv.html#id3 to read up on `newline=""`.
     with file_in.open(newline="") as in_handle:
         reader = csv.DictReader(in_handle, dialect=sniff_format(in_handle))
@@ -221,8 +240,8 @@ def check_samplesheet(file_in, file_out):
                 logger.critical(f"{str(error)} On line {i + 2}.")
                 sys.exit(1)
         checker.validate_unique_samples()
-    header = list(reader.fieldnames)
-    header.insert(1, "single_end")
+    # Normalised header: single_end is always True (nanopore); omit from user CSV if you prefer.
+    header = ["sample", "single_end", "barcode"]
     # See https://docs.python.org/3.9/library/csv.html#id3 to read up on `newline=""`.
     with file_out.open(mode="w", newline="") as out_handle:
         writer = csv.DictWriter(out_handle, header, delimiter=",")
