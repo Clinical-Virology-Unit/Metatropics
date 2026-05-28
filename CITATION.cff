@@ -2,21 +2,22 @@ cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 type: software
 authors:
-  - family-names: De Souza Novaes
-    given-names: Ane
-    orcid: https://orcid.org/0000-0003-3089-2102
   - family-names: Jansen
     given-names: Daan
     orcid: https://orcid.org/0000-0003-4612-6891
+  - family-names: De Souza Novaes
+    given-names: Ane
+    orcid: https://orcid.org/0000-0003-3089-2102
   - family-names: de Block
     given-names: Tessa
     orcid: https://orcid.org/0000-0003-3294-0147
-  - family-names: Vercauteren
-    given-names: Koen
-    orcid: https://orcid.org/0000-0003-1472-9938
   - family-names: Rezende
     given-names: Antonio Mauro
     orcid: https://orcid.org/0000-0003-4775-1779
+  - family-names: Vercauteren
+    given-names: Koen
+    orcid: https://orcid.org/0000-0003-1472-9938
+
 title: "Metatropics: Human viral pathogen identification and consensus genome calling from nanopore metagenomic sequencing data."
 abstract: >-
   Metatropics is a Nextflow pipeline for Oxford Nanopore metagenomic reads, focused on detecting human viral pathogens
