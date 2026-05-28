@@ -1,5 +1,6 @@
 process DORADO_ONT {
-    label 'process_high'
+    tag "Basecalling"
+    label 'process_gpu'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'library://daanjansen94/metatropics/dorado:0.9.0' :
@@ -46,4 +47,5 @@ process DORADO_ONT {
         dorado: \$VERSION
     END_VERSIONS
     """
-    }
+}
+

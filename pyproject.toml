@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "metatropics-samplesheet"
+version = "0.0.9"
+description = "Metatropics samplesheet helper (build FASTQ samplesheet CSV)"
+readme = "README.md"
+license = { text = "GPL-3.0-or-later" }
+requires-python = ">=3.7,<3.14"
+
+[project.scripts]
+metatropics_samplesheet = "metatropics_samplesheet.samplesheet:main"
+metatropics-samplesheet = "metatropics_samplesheet.samplesheet:main"
+
+[tool.setuptools]
+package-dir = {"" = "nf-metatropics/assets/submission"}
+
+[tool.setuptools.packages.find]
+where = ["nf-metatropics/assets/submission"]

@@ -1,5 +1,5 @@
 process MINIMAP2_ALIGN {
-    tag "$meta.id"
+    tag "Map reads to reference"
     label 'process_medium'
 
     // Note: the versions here need to match the versions used in the mulled container below and minimap2/index
