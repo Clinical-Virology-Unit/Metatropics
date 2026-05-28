@@ -1,0 +1,24 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://raw.githubusercontent.com/nf-core/metatropics/master/assets/samplesheet_schema/schema_input.json",
+    "title": "nf-core/metatropics samplesheet (params.input)",
+    "description": "Rows for each sample; must match bin/check_samplesheet_metatropics.py (required headers: sample, barcode). Nanopore is always single-end; single_end is injected as True in the validated CSV.",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+            "sample": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Sample name (the checker replaces spaces with underscores)."
+            },
+            "barcode": {
+                "type": "string",
+                "minLength": 1,
+                "description": "FASTQ path (.fastq, .fq, .fastq.gz, .fq.gz) or barcode label (e.g. barcode01) for POD5/basecalling runs."
+            }
+        },
+        "required": ["sample", "barcode"]
+    }
+}

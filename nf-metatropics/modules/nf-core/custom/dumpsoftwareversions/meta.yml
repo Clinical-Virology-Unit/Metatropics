@@ -22,7 +22,7 @@ output:
       pattern: "software_versions.yml"
   - mqc_yml:
       type: file
-      description: MultiQC custom content YML file containing software versions
+      description: YAML file containing software versions in HTML-friendly form for reporting
       pattern: "software_versions_mqc.yml"
   - versions:
       type: file

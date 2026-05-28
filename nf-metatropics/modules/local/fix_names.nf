@@ -5,7 +5,7 @@ process FIX_NAMES {
         'library://daanjansen94/metatropics/bbmap:38.86':
         'daanjansen94/bbmap:38.86' }"
 
-    tag{sample}
+    tag "Evaluate/fix format of raw reads"
 
     input:
     tuple val(meta), val(sample), path(reads)
@@ -14,8 +14,8 @@ process FIX_NAMES {
     tuple val(sample), path("*.fastq.gz"), emit : fqreads
 
     script:
+    // reformat.sh reads gzip or plain FASTQ from path (avoid cat, which breaks .fastq.gz)
     """
-    cat $reads > ${sample}_fixed.fastq
-    reformat.sh in=${sample}_fixed.fastq out=${sample}_fixed.fastq.gz qin=33 ignorebadquality
+    reformat.sh in=$reads out=${sample}_fixed.fastq.gz qin=33 ignorebadquality overwrite=t
     """
 }

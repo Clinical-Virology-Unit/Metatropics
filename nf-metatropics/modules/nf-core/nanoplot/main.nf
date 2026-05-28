@@ -1,5 +1,5 @@
 process NANOPLOT {
-    tag "$meta.id"
+    tag "Read QC (NanoPlot)"
     label 'process_single'
 
     conda "bioconda::nanoplot=1.41.0"
@@ -23,10 +23,16 @@ process NANOPLOT {
 
     script:
     def args = task.ext.args ?: ''
-    def input_file = ("$ontfile".endsWith(".fastq.gz")) ? "--fastq ${ontfile}" :
-        ("$ontfile".endsWith(".txt")) ? "--summary ${ontfile}" : ''
+    def ont = ontfile.toString()
+    def input_file = (ont.endsWith('.fastq.gz') || ont.endsWith('.fq.gz')) ? "--fastq ${ontfile}" :
+        (ont.endsWith('.fastq') || ont.endsWith('.fq')) ? "--fastq ${ontfile}" :
+        (ont.endsWith('.txt')) ? "--summary ${ontfile}" : ''
     """
-    zcat $ontfile| wc -l | awk '{x=\$1/4; print x}' > ${meta.id}_classification_results.total_reads
+    if gzip -t $ontfile 2>/dev/null; then
+        gzip -cd -- $ontfile | wc -l | awk '{x=\$1/4; print x}' > ${meta.id}_classification_results.total_reads
+    else
+        wc -l < $ontfile | awk '{x=\$1/4; print x}' > ${meta.id}_classification_results.total_reads
+    fi
     NanoPlot \\
         $args \\
         -t $task.cpus \\

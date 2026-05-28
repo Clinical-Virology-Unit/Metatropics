@@ -15,14 +15,14 @@ class WorkflowMain {
             "* The nf-core framework\n" +
             "  https://doi.org/10.1038/s41587-020-0439-x\n\n" +
             "* Software dependencies\n" +
-            "  https://github.com/${workflow.manifest.name}/blob/master/CITATIONS.md"
+            "  https://github.com/${workflow.manifest.name}/blob/main/nf-metatropics/assets/citing/CITATIONS.md"
     }
 
     //
     // Generate help string
     //
     public static String help(workflow, params, log) {
-        def command = "nextflow run ${workflow.manifest.name} --input samplesheet.csv --genome GRCh37 -profile docker"
+        def command = "nextflow run nf-metatropics/ -profile docker -params-file params_fastq.yaml -resume"
         def help_string = ''
         help_string += NfcoreTemplate.logo(workflow, params.monochrome_logs)
         help_string += NfcoreSchema.paramsHelp(workflow, params, command)
