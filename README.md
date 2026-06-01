@@ -132,7 +132,7 @@ You can run Metatropics on a high-performance cluster instead of a local worksta
 If you use Metatropics in your research, please cite:
 
 ```
-Jansen, D., De Souza Novaes, A., de Block, T., Rezende, A. M., & Vercauteren, K. (2026). Metatropics: Human viral pathogen identification and consensus genome calling from nanopore metagenomic sequencing data. (Version 0.1.0) [Computer software]. https://doi.org/10.5281/zenodo.20430616
+Jansen, D., De Souza Novaes, A., de Block, T., Rezende, A. M., & Vercauteren, K. (2026). Metatropics: Human viral pathogen identification and consensus genome calling from nanopore metagenomic sequencing data. (v0.1.0). Zenodo. https://doi.org/10.5281/zenodo.20430617
 ```
 
 Also cite the nf-core framework, and other tools you rely on; see [`nf-metatropics/assets/citing/CITATIONS.md`](nf-metatropics/assets/citing/CITATIONS.md).
