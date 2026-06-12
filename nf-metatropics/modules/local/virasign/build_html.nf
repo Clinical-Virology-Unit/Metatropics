@@ -34,7 +34,8 @@ process VIRASIGN_SUMMARY {
     }
 
     input:
-    val _virasign_final_json_count
+    val _consensus_count
+    val _virasign_results_count
     path consensus_fastas
 
     output:
@@ -71,20 +72,18 @@ process VIRASIGN_SUMMARY {
 
     """
     OUT='${outroot}'
-    # Short wait for slow FS after the last classification merge.
-    SEC=0
-    while [ "\$SEC" -lt 60 ]; do
-      if [ -d "\$OUT" ] && find "\$OUT" -name '*_final_selected_references.json' \\( -type f -o -type l \\) 2>/dev/null | head -n1 | grep -q .; then
-        break
-      fi
-      sleep 2
-      SEC=\$((SEC + 2))
-    done
+
+    # Detect confident hits. Do NOT use find|head|grep: with pipefail, find exits 141 (SIGPIPE)
+    # once head closes the pipe, which falsely looks like "no hits" on large sample sets.
+    _has_confident_hits() {
+      find "\$1" -name '*_final_selected_references.json' \\( -type f -o -type l \\) -print -quit 2>/dev/null | grep -q .
+    }
+
     if [ ! -d "\$OUT" ]; then
       echo "ERROR: Virasign results root missing: \$OUT" >&2
       exit 1
     fi
-    if ! find "\$OUT" -name '*_final_selected_references.json' \\( -type f -o -type l \\) 2>/dev/null | head -n1 | grep -q .; then
+    if ! _has_confident_hits "\$OUT"; then
       # No confident hits in any sample: don't fail the pipeline; emit a small placeholder summary.
       csv="${outCsv}"
       html="${outHtml}"
@@ -109,6 +108,9 @@ EOF
 END_VERSIONS
       exit 0
     fi
+
+    # virasign --build-html always opens OUT/.virasign.log for writing; remove stale/root-owned log first.
+    rm -f "\${OUT}/.virasign.log" || true
 
     ${cmd}
     cp -f "${outroot}"/results_summary_*.html ./__results_summary.html

@@ -3,10 +3,12 @@
 
 # Required:
 
-input: /data/Daan/Projects/Lassa/Input/samplesheet.csv
-outdir: /data/Daan/Projects/Lassa/Output
+input:  /data/Daan/Projects/SRA_rarefaction/Input/samplesheet.csv
+outdir: /data/Daan/Projects/SRA_rarefaction/Output
 
 # Optional:
 Host: human
-#virasign_ultrasensitive: true
-#virasign_database: OQ249660.1
+virasign_ultrasensitive: true
+quality: 7
+#virasign_database: KC545393.1
+rarefaction: false

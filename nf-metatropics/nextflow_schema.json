@@ -132,7 +132,7 @@
             "fa_icon": "fas fa-compress",
             "description": "Optional subsampling by target bases per sample.",
             "properties": {
-                "perform_rarefaction": {
+                "rarefaction": {
                     "type": "boolean",
                     "default": true,
                     "description": "Rarefy each sample to number of bases.",

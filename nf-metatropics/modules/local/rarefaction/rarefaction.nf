@@ -8,7 +8,7 @@ process RAREFACTION {
 
     input:
     tuple val(meta), path(reads)
-    val(perform_rarefaction)
+    val(rarefaction)
     val(target_bases)
 
     output:
@@ -16,7 +16,7 @@ process RAREFACTION {
     path "versions.yml", emit: versions
 
     when:
-    perform_rarefaction
+    rarefaction
 
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
