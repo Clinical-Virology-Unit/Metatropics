@@ -34,7 +34,7 @@ To autogenerate a `samplesheet.csv` from a reads folder, run `pip install .` onc
 
 | Option | Description |
 |--------|-------------|
-| `--perform_rarefaction` | Rarefy each sample to a target number of bases. Default: true. |
+| `--rarefaction` | Rarefy each sample to a target number of bases. Default: true. |
 | `--target_bases` | Target bases per sample when rarefying (e.g. ~1M reads × 500 bp). Default: 5e8 bases. |
 
 ## Host depletion option

@@ -93,10 +93,10 @@ workflow METATROPICS {
 
    // Conditional execution of RAREFACTION
    def ch_reads_for_fastp
-   if (params.perform_rarefaction) {
+   if (params.rarefaction) {
     RAREFACTION(
         ch_fixed_reads,
-        params.perform_rarefaction,
+        params.rarefaction,
         params.target_bases
     )
         ch_reads_for_fastp = RAREFACTION.out.rarefied_reads
@@ -232,10 +232,13 @@ workflow METATROPICS {
 
     CONSENSUS_BCFTOOLS( ch_consensus_in )
 
-    // Build final Metatropics summary only after draft consensuses are available.
-    // (Consensus-derived breadth metrics are computed from these FASTAs.)
+    // Build final Metatropics summary only after all Virasign jobs finished copying results
+    // and draft consensuses are available (consensus-derived breadth in summary CSV).
+    def ch_virasign_done = VIRASIGN_CLASSIFICATION.out.results.count()
+
     METATROPICS_SUMMARY(
-        CONSENSUS_BCFTOOLS.out.fasta.count(),
+        CONSENSUS_BCFTOOLS.out.fasta.count().combine(ch_virasign_done).map { row -> row[0] },
+        ch_virasign_done,
         CONSENSUS_BCFTOOLS.out.fasta
             .map { meta, fasta -> fasta }
             .collect()
