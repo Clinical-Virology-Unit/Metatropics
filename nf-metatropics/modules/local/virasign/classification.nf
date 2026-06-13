@@ -6,8 +6,7 @@ process VIRASIGN_CLASSIFICATION {
         'library://jansendaan94_v2/metatropics/virasign:latest':
         'daanjansen94/virasign:latest' }"
 
-    // Bind outdir/db_dir so results persist outside the container.
-    def outAbs = file(params.outdir).toAbsolutePath().toString()
+    // Bind db_dir and optional control files; virasign outputs reach outdir via publishDir (host-side copy).
     def pipelineRoot = new File("${projectDir}").parentFile.absolutePath
     def db_dir = params.virasign_db_dir ?: "${pipelineRoot}/Databases"
     def dbAbs = file(db_dir).toAbsolutePath().toString()
@@ -29,11 +28,11 @@ process VIRASIGN_CLASSIFICATION {
 
     if (workflow.containerEngine == 'docker' || workflow.containerEngine == 'podman') {
         def extra = extraBindDirs.collect { " -v ${it}:${it}" }.join('')
-        containerOptions "-v ${outAbs}:${outAbs} -v ${dbAbs}:${dbAbs}${extra}"
+        containerOptions "-v ${dbAbs}:${dbAbs}${extra}"
     }
     if (workflow.containerEngine == 'singularity' || workflow.containerEngine == 'apptainer') {
         def extra = extraBindDirs.collect { " --bind ${it}:${it}" }.join('')
-        containerOptions "--bind ${outAbs}:${outAbs} --bind ${dbAbs}:${dbAbs}${extra}"
+        containerOptions "--bind ${dbAbs}:${dbAbs}${extra}"
     }
 
     input:
@@ -100,7 +99,6 @@ process VIRASIGN_CLASSIFICATION {
 
     def tail = task.ext.args?.toString()?.trim()
     def cmd = (['virasign', '-i', 'virasign_in', '-o', 'publish', "--db-dir", "${db_dir}", '-t', "${threads}"] + opt + (tail ? [tail] : [])).join(' ')
-    def shared = file("${params.outdir}/Classification/virasign/${virasignDbLabel}").toAbsolutePath().toString()
     """
     # Barrier input from DB prep (ensures DB is prepared once).
     test -f "${db_ready}"
@@ -247,29 +245,6 @@ process VIRASIGN_CLASSIFICATION {
 
     # Don't propagate per-run virasign log into shared results.
     rm -f publish/.virasign.log || true
-
-    # Copy publish/ into the shared results dir (parallel-safe with flock if available).
-    mkdir -p "${shared}"
-    if command -v flock >/dev/null 2>&1; then
-      (
-        flock -x 9
-        for d in "\${PWD}/publish/"*; do
-          [ -e "\$d" ] || continue
-          bn="\$(basename \"\$d\")"
-          echo "[virasign] Copying \${bn} -> ${shared}/" >&2
-          cp -aL "\$d" "${shared}/"
-          [ -e "${shared}/\${bn}" ] || { echo "[virasign] ERROR: destination missing after copy: ${shared}/\${bn}" >&2; exit 1; }
-        done
-      ) 9>"${shared}/.copy.lock"
-    else
-      for d in "\${PWD}/publish/"*; do
-        [ -e "\$d" ] || continue
-        bn="\$(basename \"\$d\")"
-        echo "[virasign] Copying \${bn} -> ${shared}/" >&2
-        cp -aL "\$d" "${shared}/"
-        [ -e "${shared}/\${bn}" ] || { echo "[virasign] ERROR: destination missing after copy: ${shared}/\${bn}" >&2; exit 1; }
-      done
-    fi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

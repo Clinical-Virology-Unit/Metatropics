@@ -156,7 +156,7 @@ workflow METATROPICS {
         // Prepare DB once (prevents parallel workers from double-downloading).
         VIRASIGN_DB()
 
-        // Per-sample Virasign (-o publish in work/), then merge into outdir; HTML pass reads that same tree.
+        // Per-sample Virasign (-o publish in work/); Nextflow publishDir copies to outdir on the host.
         virasign_db_ready = VIRASIGN_DB.out.ready
         VIRASIGN_CLASSIFICATION(virasign_db_ready, readsForViralClassification)
 
@@ -232,8 +232,7 @@ workflow METATROPICS {
 
     CONSENSUS_BCFTOOLS( ch_consensus_in )
 
-    // Build final Metatropics summary only after all Virasign jobs finished copying results
-    // and draft consensuses are available (consensus-derived breadth in summary CSV).
+    // Build final Metatropics summary only after all Virasign jobs finished and results are in outdir.
     def ch_virasign_done = VIRASIGN_CLASSIFICATION.out.results.count()
 
     METATROPICS_SUMMARY(
