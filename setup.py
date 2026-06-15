@@ -7,7 +7,7 @@ with readme_path.open("r", encoding="utf-8") as fh:
 
 setup(
     name="metatropics-samplesheet",
-    version="0.0.9",
+    version="0.1.1",
     author="Metatropics Team",
     description="Metatropics samplesheet helper (FASTQ and POD5/fastq_pass CSV)",
     long_description=long_description,

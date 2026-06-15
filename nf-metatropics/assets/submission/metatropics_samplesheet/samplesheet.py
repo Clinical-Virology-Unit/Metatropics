@@ -19,6 +19,7 @@ import re
 import sys
 from pathlib import Path
 
+from . import __version__
 from .twist import TWIST_KITS, mock_twist_run_rows, twist_run_to_pod5_rows
 
 # Longest suffix first so e.g. .fastq.gz is not parsed as .fastq
@@ -31,6 +32,14 @@ GENERIC_POD5_ROWS: list[tuple[str, str]] = [
 ]
 
 HELP_FLAGS = frozenset({"-h", "--help", "-help", "-?"})
+
+
+def add_version_arg(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"%(prog)s {__version__}",
+    )
 
 
 def wants_top_level_help(argv: list[str]) -> bool:
@@ -257,6 +266,7 @@ def build_fastq_parser(subparsers: argparse._SubParsersAction) -> argparse.Argum
         default_help="Directory of demultiplexed FASTQ files (default: current directory).",
         output_help="Output CSV (default: DIR/samplesheet.csv).",
     )
+    add_version_arg(parser)
     return parser
 
 
@@ -290,6 +300,7 @@ def build_twist_pod5_parser() -> argparse.ArgumentParser:
         metavar="FILE",
         help="Output file (default: run.txt or POD5.csv).",
     )
+    add_version_arg(parser)
     return parser
 
 
@@ -310,6 +321,7 @@ def build_pod5_parser(subparsers: argparse._SubParsersAction) -> argparse.Argume
         default_help="POD5 or fastq_pass directory (default: current directory).",
         output_help="Output CSV (default: DIR/POD5.csv).",
     )
+    add_version_arg(parser)
     return parser
 
 
@@ -325,6 +337,7 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers = parser.add_subparsers(dest="command", help=argparse.SUPPRESS)
     build_fastq_parser(subparsers)
     build_pod5_parser(subparsers)
+    add_version_arg(parser)
     return parser
 
 
@@ -340,6 +353,11 @@ def dispatch(mode: str, args: argparse.Namespace) -> None:
 
 def main(argv: list[str] | None = None) -> None:
     argv = list(sys.argv[1:] if argv is None else argv)
+
+    if argv == ["--version"]:
+        print(f"metatropics-samplesheet {__version__}")
+        return
+
     parser = build_parser()
 
     # Top-level help lists both modes and examples (-help is treated like --help).
