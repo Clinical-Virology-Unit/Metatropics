@@ -29,7 +29,7 @@ For details on outputs and how to read the report, see [`nf-metatropics/assets/o
 
 ## 1. Clone the repository
 ```bash
-git clone https://github.com/DaanJansen94/Metatropics.git
+git clone https://github.com/Clinical-Virology-Unit/Metatropics.git
 cd Metatropics
 ```
 
