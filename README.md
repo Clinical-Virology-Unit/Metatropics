@@ -90,15 +90,33 @@ Use **[`params_POD5.yaml`](params_POD5.yaml)**.
 | `Host` | Optional: host depletion (e.g., `human,pan`). |
 | `virasign_ultrasensitive` | Optional: enable ultrasensitive viral identification mode. |
 
+To autogenerate a [`POD5.csv`](nf-metatropics/assets/submission/POD5.csv) template, run **`pip install .`** once at the repo root, then **`metatropics-samplesheet pod5 -i .`** from your POD5 directory.
+
+### fastq_pass start (on-device basecalled, demultiplex inside the pipeline)
+
+Use **[`params_fastq_pass.yaml`](params_fastq_pass.yaml)**.
+
+| Setting | Purpose |
+|-----|-------------------|
+| `input` | Copy **[`POD5.csv`](nf-metatropics/assets/submission/POD5.csv)** (same barcode mapping as POD5 mode), edit it, then set `input` to that file’s absolute path. |
+| `input_dir` | Directory with combined basecalled reads (e.g. `fastq_pass`). |
+| `outdir` | Where results are written. |
+| `basecall` | Must be `false` so the pipeline skips Dorado basecalling and only demultiplexes. |
+| `kit_name` | Dorado `--kit-name` (default: `TWIST-96A-UDI`). |
+| `Host` | Optional: host depletion (e.g., `human,pan`). |
+| `virasign_ultrasensitive` | Optional: enable ultrasensitive viral identification mode. |
+
+Use the same **`metatropics-samplesheet pod5 -i .`** command from your `fastq_pass` folder to create a `POD5.csv` template there.
+
 Additional options: **[`nf-metatropics/assets/submission/all_options.md`](nf-metatropics/assets/submission/all_options.md)**.
 
 ---
 
 ## 5. Running Metatropics
 
-With your `params_fastq.yaml` or `params_POD5.yaml` in place, run from the repository root (swap `-profile docker` for e.g. `-profile singularity`, if needed):
+With your params file in place, run from the repository root (swap `-profile docker` for e.g. `-profile singularity`, if needed):
 
-```
+```bash
 nextflow run nf-metatropics/ -profile docker -params-file params_fastq.yaml -resume
 ```
 

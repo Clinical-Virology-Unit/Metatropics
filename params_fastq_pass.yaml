@@ -1,12 +1,15 @@
-# Metatropics — POD5 + Dorado basecalling (GPU)
+# Metatropics — on-device basecalled reads (demultiplex only, no pipeline basecalling)
 # Example samplesheet: nf-metatropics/assets/submission/POD5.csv
+# Point input_dir at the fastq_pass folder (basecalled on the instrument, not demultiplexed).
 
 # Required
 input: /data/Daan/Projects/Ebola_Run10/Input/POD5.csv
 input_dir: /data/Daan/Projects/Ebola_Run10/Input/fastq_pass
+basecall: false
 outdir: /data/Daan/Projects/Ebola_Run10/Output_pod5
 kit_name: TWIST-96A-UDI
 
 # Optional:
 Host: human
 # virasign_ultrasensitive: true
+virasign_database: KC545393.1

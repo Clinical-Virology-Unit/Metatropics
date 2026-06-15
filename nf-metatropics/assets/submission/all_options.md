@@ -9,7 +9,9 @@
 | `--input` | Path to the samplesheet CSV (example: [`fastq.csv`](./fastq.csv)) |
 | `--outdir` | Output directory for results. |
 
-To autogenerate a `samplesheet.csv` from a reads folder, run `pip install .` once at the repo root, then `metatropics-samplesheet -i .` from your FASTQ directory.
+To autogenerate a `samplesheet.csv` from a folder of demultiplexed FASTQ files, run `pip install .` once at the repo root, then `metatropics-samplesheet -i .` from your FASTQ directory.
+
+To autogenerate a `POD5.csv` template for raw POD5 or fastq_pass runs, run `metatropics-samplesheet pod5 -i .` from your data directory (edit sample names and barcodes before running the pipeline).
 
 ### POD5 start (basecalling inside the pipeline)
 
@@ -19,7 +21,23 @@ To autogenerate a `samplesheet.csv` from a reads folder, run `pip install .` onc
 | `--input_dir` | Input directory with POD5. Default: None. |
 | `--outdir` | Output directory for results. Use absolute paths on cloud storage. |
 | `--model` | Dorado model (`fast`, `hac`, or `sup`). Default: `hac`. |
-| `--kit_name` | Dorado `--kit-name`. Allowed: `EXP-NBD103`, `EXP-NBD104`, `EXP-NBD114`, `EXP-NBD114-24`, `EXP-NBD196`, `EXP-PBC001`, `EXP-PBC096`, `SQK-16S024`, `SQK-16S114-24`, `SQK-LWB001`, `SQK-MLK111-96-XL`, `SQK-MLK114-96-XL`, `SQK-NBD111-24`, `SQK-NBD111-96`, `SQK-NBD114-24`, `SQK-NBD114-96`, `SQK-PBK004`, `SQK-PCB109`, `SQK-PCB110`, `SQK-PCB111-24`, `SQK-PCB114-24`, `SQK-RAB201`, `SQK-RAB204`, `SQK-RBK001`, `SQK-RBK004`, `SQK-RBK110-96`, `SQK-RBK111-24`, `SQK-RBK111-96`, `SQK-RBK114-24`, `SQK-RBK114-96`, `SQK-RLB001`, `SQK-RPB004`, `SQK-RPB114-24`, `TWIST-16-UDI`, `TWIST-96A-UDI`, `VSK-PTC001`, `VSK-VMK001`, `VSK-VMK004`, `VSK-VPS001`. Default: `TWIST-96A-UDI`. |
+| `--kit_name` | Dorado `--kit-name`. Allowed: `EXP-NBD103`,`EXP-NBD104`,`EXP-NBD114`,`EXP-NBD114-24`,`EXP-NBD196`,`EXP-PBC001`,`EXP-PBC096`,`SQK-16S024`,`SQK-16S114-24`,`SQK-LWB001`,`SQK-MLK111-96-XL`,`SQK-MLK114-96-XL`,`SQK-NBD111-24`,`SQK-NBD111-96`,`SQK-NBD114-24`,`SQK-NBD114-96`,`SQK-PBK004`,`SQK-PCB109`,`SQK-PCB110`,`SQK-PCB111-24`,`SQK-PCB114-24`,`SQK-RAB201`,`SQK-RAB204`,`SQK-RBK001`,`SQK-RBK004`,`SQK-RBK110-96`,`SQK-RBK111-24`,`SQK-RBK111-96`,`SQK-RBK114-24`,`SQK-RBK114-96`,`SQK-RLB001`,`SQK-RPB004`,`SQK-RPB114-24`,`TWIST-16-UDI`,`TWIST-96A-UDI`,`TWIST-96B-UDI`,`TWIST-96C-UDI`,`TWIST-96D-UDI`,`VSK-PTC001`,`VSK-VMK001`,`VSK-VMK004`,`VSK-VPS001`. Default: `TWIST-96A-UDI`. |
+
+To autogenerate a `POD5.csv` template, run `metatropics-samplesheet pod5 -i .` from your POD5 directory. For TWIST UDI plates, run `metatropics-samplesheet pod5 TWIST-96A-UDI` to create `run.txt`, edit sample names and wells, then `metatropics-samplesheet pod5 TWIST-96A-UDI run.txt` to build `POD5.csv`.
+
+### fastq_pass start (on-device basecalled, demultiplex inside the pipeline)
+
+| Option | Description |
+|--------|-------------|
+| `--input` | Path to the samplesheet CSV (example: [`POD5.csv`](./POD5.csv)). |
+| `--input_dir` | Path to the `fastq_pass` folder with basecalled reads (not yet demultiplexed). |
+| `--basecall` | Must be `false` to skip pipeline basecalling and run demultiplexing only. |
+| `--outdir` | Output directory for results. |
+| `--kit_name` | Dorado `--kit-name` (e.g. `TWIST-96C-UDI`). Pipeline container: Dorado 2.0. Default: `TWIST-96A-UDI`. |
+
+Use `metatropics-samplesheet pod5 -i .` from your `fastq_pass` folder to create a `POD5.csv` template there. For TWIST UDI plates, run `metatropics-samplesheet pod5 TWIST-96A-UDI` to create `run.txt`, edit sample names and wells, then `metatropics-samplesheet pod5 TWIST-96A-UDI run.txt` to build `POD5.csv`.
+
+Basecalling on the instrument should keep barcodes intact (Dorado `--no-trim`); otherwise demultiplexing may classify most reads as unclassified.
 
 ## Read processing options
 

@@ -9,7 +9,7 @@ setup(
     name="metatropics-samplesheet",
     version="0.0.9",
     author="Metatropics Team",
-    description="Metatropics samplesheet helper (build FASTQ samplesheet CSV)",
+    description="Metatropics samplesheet helper (FASTQ and POD5/fastq_pass CSV)",
     long_description=long_description,
     long_description_content_type="text/markdown",
     packages=find_packages(where="nf-metatropics/assets/submission"),

@@ -44,7 +44,11 @@ workflow METATROPICS {
     def ch_fixed_reads
 
     // Auto-detect mode without mutating `params` (Nextflow may ignore re-assignments).
-    def doBasecall = (params.basecall != null) ? (params.basecall as boolean) : (params.input_dir != null)
+    // POD5: input_dir + basecall unset/true → basecall then demux.
+    // fastq_pass: input_dir + basecall false → demux only (on-device basecalled, not demultiplexed).
+    // FASTQ: no input_dir → pre-demultiplexed FASTQ paths in the samplesheet.
+    def doDemuxOnly = (params.input_dir != null) && (params.basecall == false)
+    def doBasecall  = (params.basecall != null) ? (params.basecall as boolean) : (params.input_dir != null)
 
     // Validate input parameters (must run after -params-file is loaded)
     WorkflowMetatropics.initialise(params, log)
@@ -54,12 +58,11 @@ workflow METATROPICS {
         //ch_input2
     }
 
+    def ch_for_demux = null
+
     if (doBasecall) {
         if (params.input_dir==null) { exit 1, 'POD5 input dir not specified!'}
         if (params.input==null) { exit 1, 'Sample sheet not specified!'}
-        
-        ch_sample = INPUT_CHECK_METATROPICS.out.reads.map{tuple(it[1],it[0])}
-        ch_sample_sheet = Channel.fromPath(params.input, checkIfExists: true)
 
         inPOD5 = channel.fromPath(params.input_dir)
 
@@ -67,20 +70,14 @@ workflow METATROPICS {
             inPOD5
         )
 
-        DORADO_DEMULTIPLEXING(
-            DORADO_ONT.out.basecalling_ch
-        )
-        
-        ch_barcode = DORADO_DEMULTIPLEXING.out.demultiplexed_fastq.flatten().map{file -> tuple(file.simpleName, file)}
-        ch_sample_barcode = ch_sample.join(ch_barcode)
-
-        FIX(
-            ch_sample_barcode
-        )
-        ch_fixed_reads = FIX.out.reads
-
+        ch_for_demux = DORADO_ONT.out.basecalling_ch
         ch_versions = ch_versions.mix(DORADO_ONT.out.versions)
-        ch_versions = ch_versions.mix(DORADO_DEMULTIPLEXING.out.versions)
+    }
+    else if (doDemuxOnly) {
+        if (params.input_dir==null) { exit 1, 'Basecalled input dir not specified!'}
+        if (params.input==null) { exit 1, 'Sample sheet not specified!'}
+
+        ch_for_demux = channel.fromPath(params.input_dir)
     }
     else {
         ch_sample = INPUT_CHECK_METATROPICS.out.reads.map{tuple(it[1].replaceFirst(/\/.+\//,""),it[0],it[1])}
@@ -89,6 +86,24 @@ workflow METATROPICS {
             ch_sample
         )
         ch_fixed_reads = FIX.out.reads
+    }
+
+    if (doBasecall || doDemuxOnly) {
+        ch_sample = INPUT_CHECK_METATROPICS.out.reads.map{tuple(it[1],it[0])}
+
+        DORADO_DEMULTIPLEXING(
+            ch_for_demux
+        )
+
+        ch_barcode = DORADO_DEMULTIPLEXING.out.demultiplexed_fastq.flatten().map{file -> tuple(file.simpleName, file)}
+        ch_sample_barcode = ch_sample.join(ch_barcode)
+
+        FIX(
+            ch_sample_barcode
+        )
+        ch_fixed_reads = FIX.out.reads
+
+        ch_versions = ch_versions.mix(DORADO_DEMULTIPLEXING.out.versions)
     }
 
    // Conditional execution of RAREFACTION

@@ -3,12 +3,10 @@
 
 # Required:
 
-input:  /data/Daan/Projects/SRA_rarefaction/Input/samplesheet.csv
-outdir: /data/Daan/Projects/SRA_rarefaction/Output
+input: /data/Daan/Projects/test/Input/samplesheet.csv
+outdir: /data/Daan/Projects/test/Output
 
 # Optional:
 Host: human
-virasign_ultrasensitive: true
-quality: 7
-#virasign_database: KC545393.1
-rarefaction: false
+#virasign_ultrasensitive: true
+virasign_database: KC545393.1

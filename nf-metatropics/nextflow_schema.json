@@ -77,7 +77,8 @@
                         "SQK-RBK004","SQK-RBK110-96","SQK-RBK111-24","SQK-RBK111-96",
                         "SQK-RBK114-24","SQK-RBK114-96","SQK-RLB001","SQK-RPB004",
                         "SQK-RPB114-24","TWIST-16-UDI","TWIST-96A-UDI","VSK-PTC001",
-                        "VSK-VMK001","VSK-VMK004","VSK-VPS001"
+                        "VSK-VMK001","VSK-VMK004","VSK-VPS001","TWIST-96B-UDI","TWIST-96C-UDI",
+                        "TWIST-96D-UDI"
                     ]
                 }
             }
@@ -345,6 +346,46 @@
                     "fa_icon": "fas fa-arrows-alt-h"
                 }
             }
+        },
+        "fastq_pass_options": {
+            "title": "fastq_pass start (on-device basecalled, demultiplex inside the pipeline)",
+            "type": "object",
+            "fa_icon": "fas fa-dna",
+            "description": "Use when basecalling was done on the sequencer or in the lab and reads are not yet demultiplexed.",
+            "properties": {
+                "input": {
+                    "type": "string",
+                    "format": "file-path",
+                    "mimetype": "text/csv",
+                    "pattern": "^\\S+\\.csv$",
+                    "schema": "assets/samplesheet_schema/schema_input.json",
+                    "description": "Path to the samplesheet CSV (example: `POD5.csv`).",
+                    "fa_icon": "fas fa-file-csv"
+                },
+                "input_dir": {
+                    "type": "string",
+                    "description": "Path to the fastq_pass folder with combined basecalled reads (not yet demultiplexed).",
+                    "fa_icon": "fas fa-folder-open"
+                },
+                "basecall": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Must be false to skip pipeline basecalling and demultiplex only.",
+                    "fa_icon": "fas fa-toggle-off"
+                },
+                "outdir": {
+                    "type": "string",
+                    "format": "directory-path",
+                    "description": "Output directory for results.",
+                    "fa_icon": "fas fa-folder-open"
+                },
+                "kit_name": {
+                    "type": "string",
+                    "default": "TWIST-96A-UDI",
+                    "description": "Dorado `--kit-name`.",
+                    "fa_icon": "fas fa-barcode"
+                }
+            }
         }
     },
     "allOf": [
@@ -353,6 +394,9 @@
         },
         {
             "$ref": "#/definitions/basecalling_options"
+        },
+        {
+            "$ref": "#/definitions/fastq_pass_options"
         },
         {
             "$ref": "#/definitions/read_processing_options"
