@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "metatropics-samplesheet"
 version = "0.0.9"
-description = "Metatropics samplesheet helper (build FASTQ samplesheet CSV)"
+description = "Metatropics samplesheet helper (FASTQ and POD5/fastq_pass CSV)"
 readme = "README.md"
 license = { text = "GPL-3.0-or-later" }
 requires-python = ">=3.7,<3.14"

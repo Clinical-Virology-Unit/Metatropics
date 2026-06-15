@@ -3,8 +3,8 @@ process DORADO_DEMULTIPLEXING {
     label 'process_gpu'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'library://daanjansen94/metatropics/dorado:0.9.0' :
-        'nanoporetech/dorado:sha4644018526d3644d92a9e680ab8f2d1eeff2e272' }"
+        'docker://nanoporetech/dorado:latest' :
+        'nanoporetech/dorado:latest' }"
 
     // Set container options for Docker and Singularity
     containerOptions {
@@ -33,17 +33,28 @@ process DORADO_DEMULTIPLEXING {
     """
     dorado demux --kit-name ${params.kit_name} --emit-fastq --barcode-both-ends --output-dir demultiplexed $reads
 
-    # Collect barcode outputs.
-    ls demultiplexed/*_barcode*.fastq > list.txt
+    # Collect barcode FASTQs (Dorado 0.x flat layout and 2.x nested fastq_pass layout).
+    find demultiplexed -type f \\( -path '*/fastq_pass/barcode*/*.fastq' -o -name '*_barcode*.fastq' \\) ! -path '*/unclassified/*' | sort -u > list.txt
+
+    if [[ ! -s list.txt ]]; then
+        echo "ERROR: No demultiplexed barcode FASTQ files found under demultiplexed/" >&2
+        find demultiplexed -type f | head -20 >&2 || true
+        exit 1
+    fi
 
     # Rename by barcode.
-    while read file; do
-        barcode=\$(echo \$file | grep -o 'barcode[0-9]*')
-        mv "\$file" "\${barcode}.fastq"
+    while IFS= read -r file; do
+        barcode=\$(echo "\$file" | grep -oE 'barcode[0-9]+' | head -1)
+        if [[ -n "\$barcode" ]]; then
+            mv "\$file" "\${barcode}.fastq"
+        fi
     done < list.txt
 
-    # Rename unclassified.
-    mv demultiplexed/*_unclassified.fastq unclassified.fastq
+    # Rename unclassified (if present).
+    unclassified=\$(find demultiplexed -type f \\( -path '*/fastq_pass/unclassified/*.fastq' -o -name '*_unclassified.fastq' \\) | head -1 || true)
+    if [[ -n "\$unclassified" ]]; then
+        mv "\$unclassified" unclassified.fastq
+    fi
 
     # Version.
     VERSION=\$(dorado --version 2>&1 | tail -n 1)

@@ -41,11 +41,6 @@ process VIRASIGN_CLASSIFICATION {
 
     output:
     path "publish/**",                          emit: results
-    // One path per sample; used as a light barrier for METATROPICS_SUMMARY (avoid collect() on all publish/**).
-     path "publish/**/*_final_selected_references.json", emit: final_json, optional: true
-    // If no confident hits, Virasign still writes the unfiltered JSON; treat that as a valid completion signal too.
-    path "publish/**/*_unfiltered_all_references.json", emit: unfiltered_json, optional: true
-    tuple val(meta), path("publish"),           emit: outdir
     path "hits.tsv",                             emit: hits_tsv
     path "versions.yml",                       emit: versions
 
