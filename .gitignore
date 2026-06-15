@@ -17,6 +17,10 @@ Thumbs.db
 
 ## Python packaging artefacts
 *.egg-info/
+build/
+dist/
+__pycache__/
+*.py[cod]
 
 ## Nextflow config evaluation artefacts (should not be created)
 _nf_config_*
