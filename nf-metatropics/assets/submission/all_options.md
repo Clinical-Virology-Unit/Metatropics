@@ -11,8 +11,6 @@
 
 To autogenerate a `samplesheet.csv` from a folder of demultiplexed FASTQ files, run `pip install .` once at the repo root, then `metatropics-samplesheet -i .` from your FASTQ directory.
 
-To autogenerate a `POD5.csv` template for raw POD5 or fastq_pass runs, run `metatropics-samplesheet pod5 -i .` from your data directory (edit sample names and barcodes before running the pipeline).
-
 ### POD5 start (basecalling inside the pipeline)
 
 | Option | Description |
