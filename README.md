@@ -64,19 +64,6 @@ docker run --rm hello-world
 
 At the repository root, choose the params file to match how you start and edit it using absolute paths.
 
-### FASTQ start (basecalled reads)
-
-Use **[`params_fastq.yaml`](params_fastq.yaml)**.
-
-| Setting | Purpose |
-|-----|-------------------|
-| `input` | Copy **[`fastq.csv`](nf-metatropics/assets/submission/fastq.csv)** from [`nf-metatropics/assets/submission/`](nf-metatropics/assets/submission/), edit it, then set `input` to that file’s absolute path. |
-| `outdir` | Where results are written. |
-| `Host` | Optional: host depletion (e.g., `human,pan`). |
-| `virasign_ultrasensitive` | Optional: enable ultrasensitive viral identification mode. |
-
-To autogenerate a [`fastq.csv`](nf-metatropics/assets/submission/fastq.csv) from a reads folder, run **`pip install .`** once at the repo root, then **`metatropics-samplesheet -i .`** from your FASTQ directory.
-
 ### POD5 start (basecalling inside the pipeline)
 
 Use **[`params_POD5.yaml`](params_POD5.yaml)**.
@@ -107,6 +94,19 @@ Use **[`params_fastq_pass.yaml`](params_fastq_pass.yaml)**.
 | `virasign_ultrasensitive` | Optional: enable ultrasensitive viral identification mode. |
 
 Use the same **`metatropics-samplesheet pod5 -i .`** command from your `fastq_pass` folder to create a `POD5.csv` template there.
+
+### FASTQ start (basecalled reads)
+
+Use **[`params_fastq.yaml`](params_fastq.yaml)**.
+
+| Setting | Purpose |
+|-----|-------------------|
+| `input` | Copy **[`fastq.csv`](nf-metatropics/assets/submission/fastq.csv)** from [`nf-metatropics/assets/submission/`](nf-metatropics/assets/submission/), edit it, then set `input` to that file’s absolute path. |
+| `outdir` | Where results are written. |
+| `Host` | Optional: host depletion (e.g., `human,pan`). |
+| `virasign_ultrasensitive` | Optional: enable ultrasensitive viral identification mode. |
+
+To autogenerate a [`fastq.csv`](nf-metatropics/assets/submission/fastq.csv) from a reads folder, run **`pip install .`** once at the repo root, then **`metatropics-samplesheet -i .`** from your FASTQ directory.
 
 Additional options: **[`nf-metatropics/assets/submission/all_options.md`](nf-metatropics/assets/submission/all_options.md)**.
 
