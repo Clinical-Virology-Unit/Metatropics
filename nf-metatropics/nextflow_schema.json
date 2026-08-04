@@ -255,7 +255,7 @@
                 "virasign_zscore_controls": {
                     "type": "string",
                     "description": "Override auto-detected Z-score controls with sample names and/or FASTQ paths (>=2). Comma-separated or a text file (one entry per line).",
-                    "help_text": "Examples: H20_1,H20_2,BG_1,BG_2 (names from samplesheet.csv / POD5.csv) OR /path/water1.fastq.gz,/path/water2.fastq.gz OR a file with one name/path per line. When set, replaces auto-detect. Works for FASTQ, fastq_pass, and POD5. Control samples show '-' for Z-score.",
+                    "help_text": "Works for FASTQ, fastq_pass, and POD5. Use sample names from samplesheet.csv / POD5.csv and/or FASTQ paths. Examples: H20_1,H20_2,BG_1,BG_2 OR /path/to/H20_1.fastq.gz,/path/to/H20_2.fastq.gz OR a file with one name/path per line. When set, replaces auto-detect. Control samples show '-' for Z-score.",
                     "fa_icon": "fas fa-file"
                 },
                 "virasign_threads": {

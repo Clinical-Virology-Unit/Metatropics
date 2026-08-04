@@ -84,7 +84,7 @@ Basecalling on the instrument should keep barcodes intact (Dorado `--no-trim`); 
 | `--virasign_coverage_breadth` | Min breadth (fraction) for coverage filtering (optional). |
 | `--virasign_min_nogr` | Min number of non-overlapping genomic regions (NoGR) required (optional). |
 | `--virasign_zscore` | Enable/disable Z-score background correction (optional; **default: enabled / `true`**). Set to `false` to disable. |
-| `--virasign_zscore_controls` | Override auto-detected Z-score controls with **sample names and/or FASTQ paths** (≥2). Comma-separated or a text file (one entry per line). |
+| `--virasign_zscore_controls` | Override auto-detected Z-score controls with **sample names and/or FASTQ paths** (≥2). Comma-separated or a text file (one entry per line). When set, replaces auto-detect. Works for **FASTQ**, **fastq_pass**, and **POD5** (use the `sample` names from `samplesheet.csv` / `POD5.csv`). Examples: names `H20_1,H20_2,BG_1,BG_2`; paths `/path/to/H20_1.fastq.gz,/path/to/H20_2.fastq.gz`; or a file with one name/path per line. Control samples show `-` for Z-score. |
 | `--virasign_threads` | Threads for Virasign (optional; defaults to the task CPUs). |
 | `--virasign_ram_gb` | Minimap2 RAM/GB hint (`-I`) for Virasign (optional). |
 | `--virasign_enable_clustering` | Enable clustering of references in database prep. Default: false. |
