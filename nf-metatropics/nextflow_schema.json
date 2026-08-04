@@ -247,8 +247,9 @@
                 },
                 "virasign_zscore": {
                     "type": "string",
-                    "description": "Enable/disable z-score filtering (optional).",
-                    "help_text": "",
+                    "default": "true",
+                    "description": "Enable/disable Z-score background correction (optional; default: true / enabled).",
+                    "help_text": "Default is enabled. Set to false/0/no/off to disable. When enabled, needs >=2 water/negative controls (auto-detected by name, or set via virasign_zscore_controls).",
                     "fa_icon": "fas fa-chart-line"
                 },
                 "virasign_zscore_controls": {
