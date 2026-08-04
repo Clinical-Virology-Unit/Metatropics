@@ -253,8 +253,8 @@
                 },
                 "virasign_zscore_controls": {
                     "type": "string",
-                    "description": "Path negative-control FASTQs for z-score (optional).",
-                    "help_text": "",
+                    "description": "Negative controls for Z-score: samplesheet sample IDs and/or FASTQ paths (comma-separated or file). Replaces auto-detect. Needs >=2 controls.",
+                    "help_text": "Example: H20_1,H20_2,BG_1,BG_2 (names from samplesheet.csv / POD5.csv). Works for FASTQ, fastq_pass, and POD5 modes.",
                     "fa_icon": "fas fa-file"
                 },
                 "virasign_threads": {

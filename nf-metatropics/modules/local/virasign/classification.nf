@@ -4,7 +4,7 @@ process VIRASIGN_CLASSIFICATION {
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'library://jansendaan94_v2/metatropics/virasign:latest':
-        'daanjansen94/virasign:latest' }"
+        'daanjansen94/virasign:0.0.8' }"
 
     // Bind db_dir and optional control files; virasign outputs reach outdir via publishDir (host-side copy).
     def pipelineRoot = new File("${projectDir}").parentFile.absolutePath
@@ -21,7 +21,11 @@ process VIRASIGN_CLASSIFICATION {
     }
     def zc = params.virasign_zscore_controls?.toString()?.trim()
     if (zc) {
-        zc.split(',').collect { it.trim() }.findAll { it }.each { addBindDir(it) }
+        // Bind only real paths; sample IDs (e.g. BG_1,H20_1) need no bind.
+        zc.split(',').collect { it.trim() }.findAll { it }.each { tok ->
+            def fp = file(tok)
+            if (fp.exists()) addBindDir(tok)
+        }
     }
     addBindDir(params.virasign_blind?.toString()?.trim())
     extraBindDirs = extraBindDirs.unique()

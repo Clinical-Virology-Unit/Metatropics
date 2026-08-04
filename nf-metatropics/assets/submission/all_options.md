@@ -84,7 +84,7 @@ Basecalling on the instrument should keep barcodes intact (Dorado `--no-trim`); 
 | `--virasign_coverage_breadth` | Min breadth (fraction) for coverage filtering (optional). |
 | `--virasign_min_nogr` | Min number of non-overlapping genomic regions (NoGR) required (optional). |
 | `--virasign_zscore` | Enable/disable z-score filtering (optional). |
-| `--virasign_zscore_controls` | Path to negative-control FASTQs for z-score (optional). |
+| `--virasign_zscore_controls` | Negative controls for Z-score: samplesheet sample IDs and/or FASTQ paths (comma-separated or one-per-line file). Replaces auto-detect; needs ≥2. Example: `H20_1,H20_2,BG_1,BG_2`. Works for FASTQ, fastq_pass, and POD5. |
 | `--virasign_threads` | Threads for Virasign (optional; defaults to the task CPUs). |
 | `--virasign_ram_gb` | Minimap2 RAM/GB hint (`-I`) for Virasign (optional). |
 | `--virasign_enable_clustering` | Enable clustering of references in database prep. Default: false. |

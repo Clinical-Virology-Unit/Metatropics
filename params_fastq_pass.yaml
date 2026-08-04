@@ -13,3 +13,4 @@ kit_name: TWIST-96A-UDI
 Host: human
 # virasign_ultrasensitive: true
 virasign_database: KC545393.1
+# virasign_zscore_controls: H20_1,H20_2,BG_1,BG_2

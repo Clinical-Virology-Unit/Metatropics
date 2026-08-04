@@ -4,7 +4,7 @@ process VIRASIGN_DB {
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'library://jansendaan94_v2/metatropics/virasign:latest':
-        'daanjansen94/virasign:latest' }"
+        'daanjansen94/virasign:0.0.8' }"
 
     // Bind DB dir into the container.
     def pipelineRoot = new File("${projectDir}").parentFile.absolutePath

@@ -4,7 +4,7 @@ process VIRASIGN_SUMMARY {
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'library://jansendaan94_v2/metatropics/virasign:latest':
-        'daanjansen94/virasign:latest' }"
+        'daanjansen94/virasign:0.0.8' }"
 
     // Bind outdir and read results via params.
     def outAbs = file(params.outdir).toAbsolutePath().toString()
@@ -19,7 +19,11 @@ process VIRASIGN_SUMMARY {
     }
     def zc = params.virasign_zscore_controls?.toString()?.trim()
     if (zc) {
-        zc.split(',').collect { it.trim() }.findAll { it }.each { addBindDir(it) }
+        // Bind only real paths; sample IDs (e.g. BG_1,H20_1) need no bind.
+        zc.split(',').collect { it.trim() }.findAll { it }.each { tok ->
+            def fp = file(tok)
+            if (fp.exists()) addBindDir(tok)
+        }
     }
     addBindDir(params.virasign_blind?.toString()?.trim())
     extraBindDirs = extraBindDirs.unique()
@@ -230,7 +234,7 @@ def is_background_sample(sample: str) -> bool:
     # Heuristic fallback: be strict and only match typical water/blank controls.
     # Do NOT match generic substrings like "neg" because many studies encode that in sample names
     # (e.g. LASVnegRUN1_...) and it would incorrectly flag all samples as background.
-    return any(k in s for k in ("h2o", "water", "blank"))
+    return any(k in s for k in ("h2o", "h20", "water", "blank"))
 
 # For auto-detection mode, show exact Virasign log lines where available.
 # This can include explicit control files selected or "none/insufficient controls".
@@ -516,6 +520,11 @@ if summary_csv.exists():
         if key in low:
             accession_col = low[key]
             break
+    zscore_col = None
+    for key in ("z-score", "zscore", "z_score"):
+        if key in low:
+            zscore_col = low[key]
+            break
     qc_header = "QC reads"
     readlen_header = "Read Length (Med)"
     consensus_header = "Consensus Breadth (%)"
@@ -582,6 +591,9 @@ if summary_csv.exists():
                     hit = sample_hits[0]
             if zscore_enabled and zscore_has_values:
                 row[bg_used_header] = "yes" if is_background_sample(sample) else "no"
+                # Controls are background only — never report a numeric Z-score on them.
+                if is_background_sample(sample) and zscore_col:
+                    row[zscore_col] = "-"
             else:
                 # If Z-score is not used (disabled or unusable), make this explicit instead of leaving blank.
                 row[bg_used_header] = "no"
