@@ -98,10 +98,10 @@ process VIRASIGN_SUMMARY {
   <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>Virasign summary</title>
+    <title>Metatropics Results Summary</title>
   </head>
   <body>
-    <h1>Virasign summary</h1>
+    <h1>Metatropics Results Summary</h1>
     <p>No confident hits were found (no <code>*_final_selected_references.json</code> files present).</p>
   </body>
 </html>
@@ -624,6 +624,13 @@ if summary_html.exists():
 
     text = summary_html.read_text(encoding="utf-8")
 
+    # Branding: Metatropics report header (keep database suffix, e.g. " - RVDB").
+    text = text.replace("Virasign Results Summary", "Metatropics Results Summary")
+    text = text.replace(
+        "Viral Read ASSIGNment from nanopore sequencing",
+        "Human viral pathogen identification from nanopore metagenomic sequencing",
+    )
+
     # If the pipeline is re-run, remove any previously injected consensus panel.
     # Use plain string operations (avoid regex backslash parsing issues).
     section_start = text.find('<section id="consensus-breadth"')
@@ -680,6 +687,61 @@ if summary_html.exists():
         bg_map = {}
     bg_map_json = json.dumps(bg_map, separators=(",", ":"))
 
+    # Resolve which water/background samples were actually used for Z-score.
+    # Prefer names embedded by Virasign in samplesData.zscore_controls (truth of the run).
+    zscore_controls_used = []
+    try:
+        m_sd = re.search(r"const samplesData\\s*=\\s*", text)
+        if m_sd:
+            samples_obj, _ = json.JSONDecoder().raw_decode(text, m_sd.end())
+            seen = []
+            for _sname, dbs in (samples_obj or {}).items():
+                for _db, payload in (dbs or {}).items():
+                    for ref in (payload or {}).get("references") or []:
+                        for c in ref.get("zscore_controls") or []:
+                            c = str(c).strip()
+                            if c and c not in seen:
+                                seen.append(c)
+            zscore_controls_used = seen
+    except Exception:
+        zscore_controls_used = []
+
+    if not zscore_controls_used and controls_norm:
+        zscore_controls_used = sorted(controls_norm)
+    if not zscore_controls_used:
+        zscore_controls_used = sorted(s for s, v in bg_map.items() if str(v).strip().lower() == "yes")
+
+    if not zscore_enabled:
+        zscore_mode = "disabled"
+        zscore_mode_label = "disabled"
+        zscore_water_msg = f"Z-score disabled (--zscore={zscore_enabled_raw})."
+    elif zscore_controls_text:
+        zscore_mode = "manual"
+        zscore_mode_label = "manually selected"
+        names = ", ".join(zscore_controls_used) if zscore_controls_used else zscore_controls_text
+        if zscore_has_values:
+            zscore_water_msg = f"Water controls (manually selected): {names}"
+        else:
+            zscore_water_msg = (
+                f"Water controls provided, but none were usable/available for Z-score computation. "
+                f"Provided: {names}"
+            )
+    elif zscore_controls_used and zscore_has_values:
+        zscore_mode = "auto"
+        zscore_mode_label = "auto-detected"
+        zscore_water_msg = f"Water controls (auto-detected): {', '.join(zscore_controls_used)}"
+    else:
+        zscore_mode = "none"
+        zscore_mode_label = "none available"
+        zscore_water_msg = (
+            "Water controls: none usable/available (Z-score not computed)."
+        )
+
+    zscore_controls_json = json.dumps(zscore_controls_used, separators=(",", ":"))
+    zscore_mode_json = json.dumps(zscore_mode, separators=(",", ":"))
+    zscore_mode_label_json = json.dumps(zscore_mode_label, separators=(",", ":"))
+    zscore_water_msg_json = json.dumps(zscore_water_msg, separators=(",", ":"))
+
     inj_script = '''
 <script>
 (function(){
@@ -687,6 +749,10 @@ if summary_html.exists():
   const qcReadsMap = __QC_READS_MAP_JSON__;
   const readLenMap = __READLEN_MAP_JSON__;
   const bgMap = __BG_MAP_JSON__;
+  const zscoreControls = __ZSCORE_CONTROLS_JSON__;
+  const zscoreMode = __ZSCORE_MODE_JSON__;
+  const zscoreModeLabel = __ZSCORE_MODE_LABEL_JSON__;
+  const zscoreWaterMsg = __ZSCORE_WATER_MSG_JSON__;
 
   function getVal(sampleName, accession){
     if (!consensusMap || !consensusMap[sampleName]) return null;
@@ -945,6 +1011,62 @@ if summary_html.exists():
     setConsensusColumnVisibility(sampleName, false);
   }
 
+  // Inject Z-score water-control info into the Summary banner and Pipeline Configuration.
+  function zscoreControlsDisplay(){
+    if (Array.isArray(zscoreControls) && zscoreControls.length) {
+      return zscoreControls.join(', ');
+    }
+    return zscoreWaterMsg || 'none';
+  }
+
+  function injectZscoreControlsBanner(){
+    const summary = document.querySelector('.summary');
+    if (!summary || document.getElementById('zscore-controls-banner')) return;
+    const div = document.createElement('div');
+    div.id = 'zscore-controls-banner';
+    div.style.margin = '1rem 0 0';
+    div.style.padding = '0.85rem 1rem';
+    div.style.background = '#f0f7ff';
+    div.style.border = '1px solid #c5daf5';
+    div.style.borderRadius = '8px';
+    div.style.color = '#1a365d';
+    div.style.fontSize = '0.95em';
+    const modeTxt = zscoreModeLabel ? (' (' + zscoreModeLabel + ')') : '';
+    div.innerHTML =
+      '<strong>Z-score water controls</strong>' +
+      '<span style="opacity:0.75">' + modeTxt + '</span>: ' +
+      '<span>' + zscoreControlsDisplay() + '</span>';
+    summary.appendChild(div);
+  }
+
+  function appendZscoreMetadata(sampleName){
+    const container = document.getElementById('metadata-' + sampleName);
+    if (!container || container.querySelector('[data-role="zscore-controls"]')) return;
+    const item = document.createElement('div');
+    item.className = 'metadata-item';
+    item.setAttribute('data-role', 'zscore-controls');
+    const label = document.createElement('div');
+    label.className = 'label';
+    label.textContent = 'Z-score water controls' + (zscoreModeLabel ? ' (' + zscoreModeLabel + ')' : '');
+    const value = document.createElement('div');
+    value.className = 'value';
+    value.textContent = zscoreControlsDisplay();
+    value.style.wordBreak = 'break-word';
+    item.appendChild(label);
+    item.appendChild(value);
+    container.appendChild(item);
+  }
+
+  injectZscoreControlsBanner();
+
+  const origPopulateMetadata = window.populateMetadata;
+  if (typeof origPopulateMetadata === 'function'){
+    window.populateMetadata = function(sampleName){
+      origPopulateMetadata(sampleName);
+      appendZscoreMetadata(sampleName);
+    };
+  }
+
   const origPopulateTable = window.populateTable;
   if (typeof origPopulateTable === 'function'){
     window.populateTable = function(sampleName){
@@ -953,10 +1075,7 @@ if summary_html.exists():
     };
   }
 
-  // (No Z-score background metadata injection: keep HTML clean.)
-
-  // Override downloadTableAsCSV so the downloaded CSV includes QC reads + median read length + consensus breadth.
-  const origDownloadTableAsCSV = window.downloadTableAsCSV;
+  // Override downloadTableAsCSV so the downloaded CSV includes QC reads + median read length + consensus breadth.  const origDownloadTableAsCSV = window.downloadTableAsCSV;
   window.downloadTableAsCSV = function(sampleName) {
     const tbody = document.getElementById('tbody-' + sampleName);
     if (!tbody) return;
@@ -1096,6 +1215,7 @@ if summary_html.exists():
     if (active && active.id && active.id.startsWith('sample-')){
       const sn = active.id.slice('sample-'.length);
       injectForSample(sn);
+      appendZscoreMetadata(sn);
     }
   } catch (e) {}
 })();
@@ -1106,6 +1226,10 @@ if summary_html.exists():
     inj_script = inj_script.replace("__QC_READS_MAP_JSON__", qc_map_json)
     inj_script = inj_script.replace("__READLEN_MAP_JSON__", readlen_map_json)
     inj_script = inj_script.replace("__BG_MAP_JSON__", bg_map_json)
+    inj_script = inj_script.replace("__ZSCORE_CONTROLS_JSON__", zscore_controls_json)
+    inj_script = inj_script.replace("__ZSCORE_MODE_JSON__", zscore_mode_json)
+    inj_script = inj_script.replace("__ZSCORE_MODE_LABEL_JSON__", zscore_mode_label_json)
+    inj_script = inj_script.replace("__ZSCORE_WATER_MSG_JSON__", zscore_water_msg_json)
 
     if 'data-col="consensus_breadth_pct"' not in text:
         if "</body>" in text:

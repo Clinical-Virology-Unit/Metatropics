@@ -13,4 +13,4 @@ Host: human
 
 # Z-score controls: samplesheet sample names (works for FASTQ / fastq_pass / POD5).
 # When set, replaces auto-detect
-#virasign_zscore_controls: H20_1,H20_2,BG_1,BG_2
+virasign_zscore_controls: H20_1,H20_2,BG_1,BG_2
