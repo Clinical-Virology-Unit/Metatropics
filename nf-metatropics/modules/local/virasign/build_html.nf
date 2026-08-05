@@ -503,6 +503,106 @@ if not qc_reads_by_sample and readcount_csv.exists():
 qc_map_json = json.dumps(qc_reads_by_sample, separators=(",", ":"))
 readlen_map_json = json.dumps(readlen_med_by_sample, separators=(",", ":"))
 
+def mean_read_length_fastq_gz(path: Path):
+    # Mean sequence length across all reads in a gzipped FASTQ.
+    n = 0
+    total = 0
+    with gzip.open(path, "rt", errors="replace") as fh:
+        while True:
+            h = fh.readline()
+            if not h:
+                break
+            seq = fh.readline()
+            if not seq:
+                break
+            fh.readline()
+            fh.readline()
+            total += len(seq.strip())
+            n += 1
+    if n <= 0:
+        return None
+    return float(total) / float(n)
+
+def estimate_avg_len_from_hit_json(path: Path):
+    # Fallback: depth * ref_len / mapped_reads from per-hit Virasign JSON.
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    hit = payload.get("hit") if isinstance(payload, dict) else None
+    if not isinstance(hit, dict):
+        hit = payload if isinstance(payload, dict) else None
+    if not isinstance(hit, dict):
+        return None
+    try:
+        mapped = float(hit.get("mapped_reads") or 0)
+        depth = float(hit.get("coverage_depth") or 0)
+        ref_len = None
+        cov = hit.get("coverage_profile") or {}
+        if isinstance(cov, dict) and cov.get("ref_len"):
+            ref_len = float(cov.get("ref_len"))
+        if mapped <= 0 or depth <= 0 or not ref_len:
+            return None
+        return (depth * ref_len) / mapped
+    except Exception:
+        return None
+
+# Per viral hit: average length of reads mapped to that reference (mread.fastq.gz).
+# Layout: Classification/virasign/<DB>/<sample>/<accession>/mread.fastq.gz
+avg_readlen_by_pair = {}
+if vsign_parent.is_dir():
+    for fq in sorted(vsign_parent.rglob("mread.fastq.gz")):
+        try:
+            acc = fq.parent.name
+            sample = fq.parent.parent.name
+        except Exception:
+            continue
+        try:
+            mean_len = mean_read_length_fastq_gz(fq)
+        except Exception:
+            mean_len = None
+        if mean_len is None:
+            jp = fq.parent / f"{acc}.json"
+            if jp.is_file():
+                mean_len = estimate_avg_len_from_hit_json(jp)
+        if mean_len is None:
+            continue
+        avg_readlen_by_pair[(sample, acc)] = round(mean_len, 1)
+    # Also accept alternate mapped-reads FASTQ names when mread is absent.
+    for fq in sorted(vsign_parent.rglob("*_mapped_reads.fastq.gz")):
+        try:
+            acc = fq.parent.name
+            sample = fq.parent.parent.name
+        except Exception:
+            continue
+        if (sample, acc) in avg_readlen_by_pair:
+            continue
+        try:
+            mean_len = mean_read_length_fastq_gz(fq)
+        except Exception:
+            mean_len = None
+        if mean_len is None:
+            continue
+        avg_readlen_by_pair[(sample, acc)] = round(mean_len, 1)
+    # Fallback estimate from per-hit JSON when no mapped FASTQ is present.
+    # Per-accession files live at <DB>/<sample>/<accession>/<accession>.json
+    for jp in sorted(vsign_parent.rglob("*.json")):
+        if jp.stem != jp.parent.name:
+            continue
+        acc = jp.stem
+        sample = jp.parent.parent.name
+        if (sample, acc) in avg_readlen_by_pair:
+            continue
+        mean_len = estimate_avg_len_from_hit_json(jp)
+        if mean_len is None:
+            continue
+        avg_readlen_by_pair[(sample, acc)] = round(mean_len, 1)
+
+avg_readlen_map = {}
+for (sample, acc), v in avg_readlen_by_pair.items():
+    avg_readlen_map.setdefault(sample, {})[acc] = v
+avg_readlen_map_json = json.dumps(avg_readlen_map, separators=(",", ":"))
+
 if summary_csv.exists():
     with summary_csv.open("r", newline="", encoding="utf-8") as handle:
         reader = csv.DictReader(handle)
@@ -526,7 +626,9 @@ if summary_csv.exists():
             zscore_col = low[key]
             break
     qc_header = "QC reads"
-    readlen_header = "Read Length (Med)"
+    # Per-hit average mapped-read length (replaces older sample-level median column name).
+    readlen_header = "Avg Read Length"
+    old_readlen_headers = {"Read Length (Med)", "Avg Read Length", "Read Length (Avg)"}
     consensus_header = "Consensus Breadth (%)"
     bg_used_header = "Background"
 
@@ -535,6 +637,7 @@ if summary_csv.exists():
     # Remove any old technical consensus header so we can re-add consistently.
     out_fields = [f for f in out_fields if f != "consensus_breadth_pct"]
     out_fields = [f for f in out_fields if f != bg_used_header]
+    out_fields = [f for f in out_fields if f not in old_readlen_headers]
 
     # Place Background after Sample when Sample column exists, otherwise keep first.
     if sample_col and sample_col in out_fields:
@@ -552,11 +655,9 @@ if summary_csv.exists():
     else:
         out_fields.append(qc_header)
 
-    # Insert median read length after Avg Identity (%) when present.
-    if readlen_header in out_fields:
-        out_fields.remove(readlen_header)
-    if "Avg Identity (%)" in out_fields:
-        idx = out_fields.index("Avg Identity (%)")
+    # Insert per-hit average read length after Mapped Reads (#) when present.
+    if "Mapped Reads (#)" in out_fields:
+        idx = out_fields.index("Mapped Reads (#)")
         out_fields.insert(idx + 1, readlen_header)
     else:
         out_fields.append(readlen_header)
@@ -598,7 +699,8 @@ if summary_csv.exists():
                 # If Z-score is not used (disabled or unusable), make this explicit instead of leaving blank.
                 row[bg_used_header] = "no"
             row[qc_header] = qc_reads_by_sample.get(sample, "")
-            row[readlen_header] = readlen_med_by_sample.get(sample, "")
+            avg_rl = avg_readlen_by_pair.get((sample, acc))
+            row[readlen_header] = "" if avg_rl is None else f"{avg_rl:.1f}"
             cons = None if hit is None else _to_float(hit.get("consensus_breadth_pct"))
             if cons is None:
                 row[consensus_header] = ""
@@ -748,6 +850,7 @@ if summary_html.exists():
   const consensusMap = __CONS_MAP_JSON__;
   const qcReadsMap = __QC_READS_MAP_JSON__;
   const readLenMap = __READLEN_MAP_JSON__;
+  const avgReadLenMap = __AVG_READLEN_MAP_JSON__;
   const bgMap = __BG_MAP_JSON__;
   const zscoreControls = __ZSCORE_CONTROLS_JSON__;
   const zscoreMode = __ZSCORE_MODE_JSON__;
@@ -774,19 +877,85 @@ if summary_html.exists():
     return (v === undefined || v === null) ? '' : String(v);
   }
 
+  function getAvgReadLen(sampleName, accession){
+    if (!avgReadLenMap || !avgReadLenMap[sampleName]) return '';
+    const v = avgReadLenMap[sampleName][accession];
+    return (v === undefined || v === null || v === '') ? '' : String(v);
+  }
+
   function getBackground(sampleName){
     if (!bgMap) return '';
     const v = bgMap[sampleName];
     return (v === undefined || v === null) ? '' : String(v);
   }
 
-  function ensureHeader(table){
+  function ensureHeader(table, sampleName){
     if (!table) return;
     const headerRows = table.querySelectorAll('thead tr');
     if (headerRows.length < 2) return;
     const filterRow = headerRows[0];
     const mainRow = headerRows[1];
     const colgroup = table.querySelector('colgroup');
+
+    // Avg mapped read length (visible) — place after Mapped Reads (#).
+    function insertAfterMappedReads(parent, el, findMapped) {
+      const mapped = findMapped(parent);
+      if (mapped) {
+        mapped.after(el);
+      } else {
+        parent.appendChild(el);
+      }
+    }
+
+    if (colgroup && !colgroup.querySelector('col[data-col="avg_read_length"]')) {
+      const col = document.createElement('col');
+      col.setAttribute('data-col', 'avg_read_length');
+      col.style.width = '110px';
+      const cols = Array.from(colgroup.querySelectorAll('col'));
+      // Base colgroup has 11 cols; Mapped Reads is index 5.
+      if (cols.length > 5) {
+        cols[5].after(col);
+      } else {
+        colgroup.appendChild(col);
+      }
+    }
+    if (filterRow && !filterRow.querySelector('th[data-col="avg_read_length"]')) {
+      const filterTh = document.createElement('th');
+      filterTh.setAttribute('data-col', 'avg_read_length');
+      const inp = document.createElement('input');
+      inp.type = 'text';
+      inp.placeholder = 'Min Len';
+      inp.addEventListener('keyup', function () {
+        if (typeof window.applyAllFilters === 'function') window.applyAllFilters(sampleName);
+      });
+      inp.style.width = '100%';
+      inp.style.padding = '5px 6px';
+      inp.style.border = '1px solid #ddd';
+      inp.style.borderRadius = '4px';
+      inp.style.fontSize = '0.9em';
+      inp.style.boxSizing = 'border-box';
+      filterTh.appendChild(inp);
+      insertAfterMappedReads(filterRow, filterTh, function(row){
+        const inputs = row.querySelectorAll('input[type="text"]');
+        for (let i = 0; i < inputs.length; i++) {
+          if ((inputs[i].getAttribute('placeholder') || '') === 'Min Reads') {
+            return inputs[i].closest('th');
+          }
+        }
+        return null;
+      });
+    }
+    if (mainRow && !mainRow.querySelector('th[data-col="avg_read_length"]')) {
+      const th = document.createElement('th');
+      th.textContent = 'Avg Read Length';
+      th.setAttribute('data-col', 'avg_read_length');
+      th.className = 'stats sortable';
+      th.setAttribute('data-sort', 'avg_read_length');
+      th.title = 'Average length of reads mapped to this viral reference';
+      insertAfterMappedReads(mainRow, th, function(row){
+        return row.querySelector('th[data-sort="mapped_reads"]');
+      });
+    }
 
     if (colgroup && !colgroup.querySelector('col[data-col="consensus_breadth_pct"]')) {
       const col = document.createElement('col');
@@ -820,15 +989,15 @@ if summary_html.exists():
       filterRow.appendChild(filterTh);
     }
 
-    if (mainRow.querySelector('th[data-col="consensus_breadth_pct"]')) return;
-
-    const th = document.createElement('th');
-    th.textContent = 'Consensus Breadth (%)';
-    th.setAttribute('data-col', 'consensus_breadth_pct');
-    th.className = 'stats sortable';
-    th.setAttribute('data-sort', 'consensus_breadth_pct');
-    th.style.display = 'none';
-    mainRow.appendChild(th);
+    if (!mainRow.querySelector('th[data-col="consensus_breadth_pct"]')) {
+      const th = document.createElement('th');
+      th.textContent = 'Consensus Breadth (%)';
+      th.setAttribute('data-col', 'consensus_breadth_pct');
+      th.className = 'stats sortable';
+      th.setAttribute('data-sort', 'consensus_breadth_pct');
+      th.style.display = 'none';
+      mainRow.appendChild(th);
+    }
   }
 
   function ensureToggleButton(sampleName){
@@ -913,9 +1082,11 @@ if summary_html.exists():
           const dataSort = th.getAttribute('data-sort');
           const show =
             (dataCol === 'consensus_breadth_pct') ||
+            (dataCol === 'avg_read_length') ||
             (dataSort === 'breadth') ||
             (dataSort === 'nogr_regions') ||
             (dataSort === 'zscore') ||
+            (dataSort === 'avg_read_length') ||
             (!dataSort); // base columns have no data-sort
           cols[i].style.display = show ? '' : 'none';
         }
@@ -948,20 +1119,25 @@ if summary_html.exists():
 
     if (tbody) {
       tbody.querySelectorAll('tr').forEach(row => {
-        const tds = row.querySelectorAll('td');
-        // Expected base columns (0-based):
+        const tds = Array.from(row.querySelectorAll('td')).filter(td => {
+          const col = td.getAttribute('data-col') || '';
+          return col !== 'avg_read_length' && col !== 'consensus_breadth_pct';
+        });
+        // Expected base columns (0-based), excluding injected cols:
         // 0 Accession, 1 Organism, 2 Viral Species, 3 Clade, 4 Segment,
-        // 5 Mapped Reads, 6 Identity, 7 Depth, 8 Breadth,
-        // 9 NOGR, 10 Z-score, 11 Consensus Breadth (appended by this script)
-        if (tds.length > 10) {
-          // Hide columns for compact view (visible=true)
+        // 5 Mapped Reads, 6 Identity, 7 Depth, 8 Breadth, 9 NOGR, 10 Z-score
+        // Hide for compact view: Mapped Reads, Identity, Depth.
+        // Avg Read Length stays visible (injected after Mapped Reads).
+        if (tds.length > 7) {
           tds[5].style.display = visible ? 'none' : '';
           tds[6].style.display = visible ? 'none' : '';
           tds[7].style.display = visible ? 'none' : '';
-          // Keep NOGR and Z-score visible
-          tds[9].style.display = '';
-          tds[10].style.display = '';
         }
+        const tdLen = row.querySelector('td[data-col="avg_read_length"]');
+        if (tdLen) tdLen.style.display = '';
+        if (tds[8]) tds[8].style.display = '';
+        if (tds[9]) tds[9].style.display = '';
+        if (tds[10]) tds[10].style.display = '';
       });
     }
 
@@ -987,7 +1163,7 @@ if summary_html.exists():
     const tbody = document.getElementById('tbody-' + sampleName);
     if (!table || !tbody) return;
 
-    ensureHeader(table);
+    ensureHeader(table, sampleName);
     ensureToggleButton(sampleName);
 
     tbody.querySelectorAll('tr').forEach(row => {
@@ -995,6 +1171,27 @@ if summary_html.exists():
       let v = getVal(sampleName, accession);
       if (v !== null && v > 100) v = 100;
       const txt = (v === null) ? '-' : (v.toFixed(2) + '%');
+
+      // Per-hit average mapped read length — insert after Mapped Reads (#).
+      const avgRlRaw = getAvgReadLen(sampleName, accession);
+      const avgRlNum = avgRlRaw === '' ? null : Number(avgRlRaw);
+      let tdLen = row.querySelector('td[data-col="avg_read_length"]');
+      if (!tdLen){
+        tdLen = document.createElement('td');
+        tdLen.setAttribute('data-col','avg_read_length');
+        tdLen.className = 'stats';
+      }
+      row.setAttribute('data-avg-read-length', avgRlNum === null || isNaN(avgRlNum) ? '' : String(avgRlNum));
+      tdLen.textContent = (avgRlNum === null || isNaN(avgRlNum)) ? '-' : avgRlNum.toFixed(1);
+      const baseTds = Array.from(row.querySelectorAll('td')).filter(td => {
+        const col = td.getAttribute('data-col') || '';
+        return col !== 'avg_read_length' && col !== 'consensus_breadth_pct';
+      });
+      if (baseTds.length > 5) {
+        baseTds[5].after(tdLen);
+      } else if (!tdLen.parentNode) {
+        row.appendChild(tdLen);
+      }
 
       let td = row.querySelector('td[data-col="consensus_breadth_pct"]');
       if (!td){
@@ -1039,33 +1236,7 @@ if summary_html.exists():
     summary.appendChild(div);
   }
 
-  function appendZscoreMetadata(sampleName){
-    const container = document.getElementById('metadata-' + sampleName);
-    if (!container || container.querySelector('[data-role="zscore-controls"]')) return;
-    const item = document.createElement('div');
-    item.className = 'metadata-item';
-    item.setAttribute('data-role', 'zscore-controls');
-    const label = document.createElement('div');
-    label.className = 'label';
-    label.textContent = 'Z-score water controls' + (zscoreModeLabel ? ' (' + zscoreModeLabel + ')' : '');
-    const value = document.createElement('div');
-    value.className = 'value';
-    value.textContent = zscoreControlsDisplay();
-    value.style.wordBreak = 'break-word';
-    item.appendChild(label);
-    item.appendChild(value);
-    container.appendChild(item);
-  }
-
   injectZscoreControlsBanner();
-
-  const origPopulateMetadata = window.populateMetadata;
-  if (typeof origPopulateMetadata === 'function'){
-    window.populateMetadata = function(sampleName){
-      origPopulateMetadata(sampleName);
-      appendZscoreMetadata(sampleName);
-    };
-  }
 
   const origPopulateTable = window.populateTable;
   if (typeof origPopulateTable === 'function'){
@@ -1075,44 +1246,44 @@ if summary_html.exists():
     };
   }
 
-  // Override downloadTableAsCSV so the downloaded CSV includes QC reads + median read length + consensus breadth.  const origDownloadTableAsCSV = window.downloadTableAsCSV;
+  // Override downloadTableAsCSV so the downloaded CSV includes QC reads + per-hit avg read length + consensus breadth.
+  const origDownloadTableAsCSV = window.downloadTableAsCSV;
   window.downloadTableAsCSV = function(sampleName) {
     const tbody = document.getElementById('tbody-' + sampleName);
     if (!tbody) return;
 
     const NL = String.fromCharCode(10);
-    let csv = 'Sample,Background,Accession,Organism,Viral Species,Nextclade Clade,Segment,QC reads,Mapped Reads (#),Identity (%),Read Length (Med),Coverage Depth (x),Coverage Breadth (%),NOGR (#/bases),Z-score,Consensus Breadth (%)' + NL;
+    let csv = 'Sample,Background,Accession,Organism,Viral Species,Nextclade Clade,Segment,QC reads,Mapped Reads (#),Avg Read Length,Identity (%),Coverage Depth (x),Coverage Breadth (%),NOGR (#/bases),Z-score,Consensus Breadth (%)' + NL;
     const rows = tbody.querySelectorAll('tr:not([style*="display: none"])');
 
     rows.forEach(row => {
-      const cells = row.querySelectorAll('td');
       const accession = row.getAttribute('data-accession') || '';
       const qc = getQcReads(sampleName);
-      const rl = getReadLenMed(sampleName);
+      const rl = getAvgReadLen(sampleName, accession);
       const bg = getBackground(sampleName);
       let cons = getVal(sampleName, accession);
       if (cons !== null && cons > 100) cons = 100;
       const consTxt = (cons === null) ? '' : cons.toFixed(2);
 
-      // Base table has 11 cells (up to Z-score). The injected consensus cell is appended at end
-      // but may be hidden; we always compute it from consensusMap to keep download consistent.
+      // Collect base Virasign cells only (skip injected Avg Read Length / Consensus).
       const out = [];
-      for (let i = 0; i < Math.min(cells.length, 11); i++) {
-        let text = cells[i].textContent.trim();
-        // strip the chart icon used in breadth column
+      row.querySelectorAll('td').forEach(td => {
+        const col = td.getAttribute('data-col') || '';
+        if (col === 'avg_read_length' || col === 'consensus_breadth_pct') return;
+        let text = td.textContent.trim();
         text = text.replace(/📊/g, '').trim();
         if (text.includes(',') || text.includes('\"')) {
           text = '\"' + text.replace(/\"/g, '\"\"') + '\"';
         }
         out.push(text);
-      }
+      });
 
-      // Prepend Sample + Background, insert QC reads after Segment, append Consensus Breadth.
+      // Prepend Sample + Background, insert QC after Segment, Avg Read Length after Mapped Reads.
       out.unshift(sampleName);
       out.splice(1, 0, bg);
       out.splice(7, 0, qc);
-      // After QC insertion, Identity (%) is at index 9 → insert read length at index 10.
-      out.splice(10, 0, rl);
+      // After QC: Mapped Reads is at index 8 → insert avg length at index 9.
+      out.splice(9, 0, rl);
       out.push(consTxt);
       csv += out.join(',') + NL;
     });
@@ -1124,28 +1295,28 @@ if summary_html.exists():
     link.click();
   };
 
-  // Override the all-samples CSV export to include Background + QC reads + median read length + consensus breadth.
+  // Override the all-samples CSV export to include Background + QC reads + per-hit avg read length + consensus breadth.
   // This does not change what is shown in the HTML tables; it only affects the downloaded file.
   if (typeof window.downloadAllSamplesCSV === 'function') {
     const origDownloadAll = window.downloadAllSamplesCSV;
     window.downloadAllSamplesCSV = function() {
       const NL = String.fromCharCode(10);
-      let rows = [['Sample','Background','Accession','Organism','Viral Species','Nextclade Clade','Segment','QC reads','Mapped Reads (#)','Avg Identity (%)','Read Length (Med)','Coverage Depth (x)','Coverage Breadth (%)','NOGR (#/bases)','Z-score','Consensus Breadth (%)']];
+      let rows = [['Sample','Background','Accession','Organism','Viral Species','Nextclade Clade','Segment','QC reads','Mapped Reads (#)','Avg Read Length','Avg Identity (%)','Coverage Depth (x)','Coverage Breadth (%)','NOGR (#/bases)','Z-score','Consensus Breadth (%)']];
       if (typeof allSamples === 'undefined' || typeof samplesData === 'undefined') return origDownloadAll();
 
       allSamples.forEach(sname => {
         const sdata = samplesData[sname];
         const qc = getQcReads(sname);
-        const rl = getReadLenMed(sname);
         const bg = getBackground(sname);
-        if (!sdata) { rows.push([sname,bg,'','','','','',qc,'','',rl,'','','','','']); return; }
+        if (!sdata) { rows.push([sname,bg,'','','','','',qc,'','','','','','','','']); return; }
         let refs = [];
         Object.keys(sdata).forEach(db => { if (sdata[db].references) refs = refs.concat(sdata[db].references); });
-        if (refs.length === 0) { rows.push([sname,bg,'','','','','',qc,'','',rl,'','','','','']); return; }
+        if (refs.length === 0) { rows.push([sname,bg,'','','','','',qc,'','','','','','','','']); return; }
         refs.sort((a,b) => (b.coverage_breadth||0)-(a.coverage_breadth||0));
         refs.forEach(r => {
           const acc = r.accession||'';
           const cons = getVal(sname, acc);
+          const rl = getAvgReadLen(sname, acc);
           rows.push([
             sname,
             bg,
@@ -1156,8 +1327,8 @@ if summary_html.exists():
             r.segment||'',
             qc,
             r.mapped_reads||0,
-            (r.avg_identity||0).toFixed(2),
             rl,
+            (r.avg_identity||0).toFixed(2),
             (r.coverage_depth||0).toFixed(2),
             ((r.coverage_breadth||0)*100).toFixed(1),
             String((r.nogr_regions||r.non_overlapping_reads||0)) + '|' + String((r.nogr_bases||r.non_overlapping_bases||0)),
@@ -1177,8 +1348,7 @@ if summary_html.exists():
     };
   }
 
-  // Extend filtering with an additional consensus-breadth rule, but only when
-  // the consensus column + its filter input are visible.
+  // Extend filtering with consensus-breadth and avg-read-length rules when their filters are visible.
   const origApplyAllFilters = window.applyAllFilters;
   if (typeof origApplyAllFilters === 'function'){
     window.applyAllFilters = function(sampleName){
@@ -1186,25 +1356,42 @@ if summary_html.exists():
       try {
         const table = document.getElementById('table-' + sampleName);
         if (!table) return;
-        const th = table.querySelector('th[data-col="consensus_breadth_pct"]');
-        if (!th || th.style.display === 'none') return;
-        const input = th.querySelector('input[type="text"]');
-        if (!input) return;
-        const raw = (input.value || '').trim();
-        if (raw === '') return;
-        const minVal = parseFloat(raw);
-        if (isNaN(minVal)) return;
-
         const tbody = document.getElementById('tbody-' + sampleName);
         if (!tbody) return;
 
-        tbody.querySelectorAll('tr').forEach(row => {
-          // If some other filter already hid the row, don't re-show it here.
-          if (row.style.display === 'none') return;
-          const vRaw = row.getAttribute('data-consensus-breadth') || '';
-          const v = parseFloat(vRaw);
-          if (isNaN(v) || v < minVal) row.style.display = 'none';
-        });
+        const consTh = table.querySelector('th[data-col="consensus_breadth_pct"]');
+        if (consTh && consTh.style.display !== 'none') {
+          const input = consTh.querySelector('input[type="text"]');
+          const raw = input ? (input.value || '').trim() : '';
+          if (raw !== '') {
+            const minVal = parseFloat(raw);
+            if (!isNaN(minVal)) {
+              tbody.querySelectorAll('tr').forEach(row => {
+                if (row.style.display === 'none') return;
+                const vRaw = row.getAttribute('data-consensus-breadth') || '';
+                const v = parseFloat(vRaw);
+                if (isNaN(v) || v < minVal) row.style.display = 'none';
+              });
+            }
+          }
+        }
+
+        const lenTh = table.querySelector('th[data-col="avg_read_length"]');
+        if (lenTh) {
+          const input = lenTh.querySelector('input[type="text"]');
+          const raw = input ? (input.value || '').trim() : '';
+          if (raw !== '') {
+            const minVal = parseFloat(raw);
+            if (!isNaN(minVal)) {
+              tbody.querySelectorAll('tr').forEach(row => {
+                if (row.style.display === 'none') return;
+                const vRaw = row.getAttribute('data-avg-read-length') || '';
+                const v = parseFloat(vRaw);
+                if (isNaN(v) || v < minVal) row.style.display = 'none';
+              });
+            }
+          }
+        }
       } catch (e) {}
     };
   }
@@ -1215,7 +1402,6 @@ if summary_html.exists():
     if (active && active.id && active.id.startsWith('sample-')){
       const sn = active.id.slice('sample-'.length);
       injectForSample(sn);
-      appendZscoreMetadata(sn);
     }
   } catch (e) {}
 })();
@@ -1225,6 +1411,7 @@ if summary_html.exists():
     inj_script = inj_script.replace("__CONS_MAP_JSON__", cons_map_json)
     inj_script = inj_script.replace("__QC_READS_MAP_JSON__", qc_map_json)
     inj_script = inj_script.replace("__READLEN_MAP_JSON__", readlen_map_json)
+    inj_script = inj_script.replace("__AVG_READLEN_MAP_JSON__", avg_readlen_map_json)
     inj_script = inj_script.replace("__BG_MAP_JSON__", bg_map_json)
     inj_script = inj_script.replace("__ZSCORE_CONTROLS_JSON__", zscore_controls_json)
     inj_script = inj_script.replace("__ZSCORE_MODE_JSON__", zscore_mode_json)

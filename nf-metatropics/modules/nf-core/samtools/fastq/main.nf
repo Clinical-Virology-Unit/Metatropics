@@ -1,5 +1,5 @@
 process SAMTOOLS_hFASTQ {
-    tag "Human depletion (split mapped vs depleted FASTQ)"
+    tag "Human depletion (keep depleted FASTQ only)"
     label 'process_low'
 
     conda "bioconda::samtools=1.17"
@@ -12,6 +12,7 @@ process SAMTOOLS_hFASTQ {
     val(interleave)
 
     output:
+    // Mapped human reads are intentionally NOT written (privacy).
     tuple val(meta), path("*_{1,2}.fastq.gz")      , optional:true, emit: fastq
     tuple val(meta), path("*_interleaved.fastq.gz"), optional:true, emit: interleaved
     tuple val(meta), path("*_singleton.fastq.gz")  , optional:true, emit: singleton
@@ -31,59 +32,34 @@ process SAMTOOLS_hFASTQ {
     """
     set -euo pipefail
 
-    # Depletion: emit mapped reads + depleted reads.
+    # Human depletion: emit ONLY unmapped (depleted) reads.
+    # Do not extract mapped human reads to FASTQ (private / PHI risk).
 
     if ${meta.single_end}; then
-        # Mapped reads (primary alignments only).
-        samtools fastq ${args} --threads ${threads} -F 0x904 \\
-            -0 ${prefix}_mapped_1.fastq.gz \\
-            -s /dev/null \\
-            ${input}
-
-        # Depleted reads (unmapped; drop secondary/supplementary).
         samtools fastq ${args} --threads ${threads} -f 4 -F 0x900 \\
-            -0 ${prefix}_unmapped_1.fastq.gz \\
+            -0 ${prefix}_other.fastq.gz \\
             -s /dev/null \\
             ${input}
 
-        mv ${prefix}_mapped_1.fastq.gz ${prefix}_1.fastq.gz
-        mv ${prefix}_unmapped_1.fastq.gz ${prefix}_other.fastq.gz
-        # Drop empty gz placeholders.
-        for f in ${prefix}_1.fastq.gz ${prefix}_other.fastq.gz; do
-            if [ -f "\$f" ]; then
-                perl -e 'exit((stat(shift))[7] <= 28 ? 0 : 1)' "\$f" && rm -f "\$f" || true
-            fi
-        done
+        if [ -f "${prefix}_other.fastq.gz" ]; then
+            perl -e 'exit((stat(shift))[7] <= 28 ? 0 : 1)' "${prefix}_other.fastq.gz" && rm -f "${prefix}_other.fastq.gz" || true
+        fi
     else
         if ${interleave}; then
             echo "ERROR: interleaved output is not supported for depletion mode" >&2
             exit 1
         fi
 
-        samtools fastq ${args} --threads ${threads} -F 0x904 \\
-            -1 ${prefix}_mapped_1.fastq.gz \\
-            -2 ${prefix}_mapped_2.fastq.gz \\
-            -s /dev/null \\
-            -0 /dev/null \\
-            ${input}
-
         samtools fastq ${args} --threads ${threads} -f 4 -F 0x900 \\
-            -1 ${prefix}_unmapped_1.fastq.gz \\
-            -2 ${prefix}_unmapped_2.fastq.gz \\
+            -1 ${prefix}_other.fastq.gz \\
+            -2 /dev/null \\
             -s /dev/null \\
             -0 /dev/null \\
             ${input}
 
-        mv ${prefix}_mapped_1.fastq.gz ${prefix}_1.fastq.gz
-        mv ${prefix}_mapped_2.fastq.gz ${prefix}_2.fastq.gz
-        # Paired-end: publish depleted R1 only.
-        mv ${prefix}_unmapped_1.fastq.gz ${prefix}_other.fastq.gz
-        rm -f ${prefix}_unmapped_2.fastq.gz || true
-        for f in ${prefix}_1.fastq.gz ${prefix}_2.fastq.gz ${prefix}_other.fastq.gz; do
-            if [ -f "\$f" ]; then
-                perl -e 'exit((stat(shift))[7] <= 28 ? 0 : 1)' "\$f" && rm -f "\$f" || true
-            fi
-        done
+        if [ -f "${prefix}_other.fastq.gz" ]; then
+            perl -e 'exit((stat(shift))[7] <= 28 ? 0 : 1)' "${prefix}_other.fastq.gz" && rm -f "${prefix}_other.fastq.gz" || true
+        fi
     fi
 
     cat <<-END_VERSIONS > versions.yml

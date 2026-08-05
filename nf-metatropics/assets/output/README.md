@@ -36,7 +36,7 @@ This stage optionally performs rarefaction, then removes low-quality reads, shor
 | `Reads/rarefaction` | Optional: Per-sample FASTQ after optional rarefaction subsampling. |
 | `Reads/nanoplot` | Read-length and quality summaries (NanoPlot) on the raw reads. |
 | `Reads/fastplong` | Trimmed, length-filtered reads (`*.fastp.fastq.gz`). |
-| `Reads/nohuman` | Human-depleted reads (`*_human_depleted.fastq.gz`); mapped reads (`*_human.fastq.gz`). |
+| `Reads/nohuman` | Human-depleted reads only (`*_human_depleted.fastq.gz`). Mapped human reads are not written, to avoid storing identifiable human genetic data (privacy / GDPR — genetic data is special-category personal data under [EU Regulation 2016/679](https://eur-lex.europa.eu/eli/reg/2016/679/oj)). |
 | `Reads/nohost` | Host-depleted reads (`*_host_depleted.fastq.gz`); mapped reads (`*_host.fastq.gz`). |
 
 ---
