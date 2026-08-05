@@ -37,7 +37,7 @@ abstract: >-
   FASTQ, then proceed with read quality control, alignment, host depletion, and taxonomic profiling, followed by
   consensus genome building—polishing, refinement, and consensus calling. One container image per process keeps
   runs portable and reproducible under Docker, Singularity/Apptainer, and typical HPC setups.
-version: 0.1.1
+version: 0.1.2
 date-released: 2026-03-31
 url: https://github.com/Clinical-Virology-Unit/Metatropics
 license: MIT

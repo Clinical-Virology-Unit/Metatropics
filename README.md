@@ -6,7 +6,7 @@
 
 # Metatropics: A Viral Metagenomics ONT Pipeline
 
-**Metatropics (v0.1.1)** is a Nextflow-driven bioinformatics pipeline for metagenomic Oxford Nanopore sequencing data. It is built to detect viral pathogens in complex samples (e.g. blood and swabs from a range of body sites) and, where coverage allows, to generate high-quality viral consensus genomes and to perform variant analysis.
+**Metatropics (v0.1.2)** is a Nextflow-driven bioinformatics pipeline for metagenomic Oxford Nanopore sequencing data. It is built to detect viral pathogens in complex samples (e.g. blood and swabs from a range of body sites) and, where coverage allows, to generate high-quality viral consensus genomes and to perform variant analysis.
 
 **Metatropics** is an abbreviation of **Metagenomics for Tropical Fevers**, and reflects how the project began, with an emphasis on finding human viral pathogens in patients presenting with tropical fevers. The same pipeline has since been validated and applied outside that first setting, including for other febrile syndromes, for genomic surveillance, and for research and diagnostic questions around viral pathogens relevant to human health.
 
@@ -150,7 +150,7 @@ You can run Metatropics on a high-performance cluster instead of a local worksta
 If you use Metatropics in your research, please cite:
 
 ```
-De Souza Novaes, A.†, Jansen, D.†, de Block, T., Coppens, S., Ariën, K.K., Selhorst, P., Rezende, A.M.*, & Vercauteren, K*. (2026). Metatropics: Human viral pathogen identification and consensus genome calling from nanopore metagenomic sequencing data. (v0.1.1). Zenodo. https://doi.org/10.5281/zenodo.20430617
+De Souza Novaes, A.†, Jansen, D.†, de Block, T., Coppens, S., Ariën, K.K., Selhorst, P., Rezende, A.M.*, & Vercauteren, K*. (2026). Metatropics: Human viral pathogen identification and consensus genome calling from nanopore metagenomic sequencing data. (v0.1.2). Zenodo. https://doi.org/10.5281/zenodo.20430617
 ```
 
 † These authors contributed equally (shared first authorship).  
