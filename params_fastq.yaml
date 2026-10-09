@@ -1,6 +1,7 @@
 # Metatropics — FASTQ input (no POD5 basecalling).
 # Example samplesheet: nf-metatropics/assets/submission/fastq.csv
 
+
 # Required:
 
 input: /data/Daan/Projects/Ane_test_NC/Input/samplesheet.csv

@@ -143,7 +143,8 @@ def count_dir(pattern: re.Pattern[str], directory: Path) -> Dict[str, int]:
     out: Dict[str, int] = {}
     if not directory.exists():
         return out
-    for p in directory.iterdir():
+    # rglob: support nested layouts (e.g. Reads/fastplong/<sample>/*.fastq.gz).
+    for p in directory.rglob("*"):
         if not p.is_file():
             continue
         if not pattern.search(p.name):
