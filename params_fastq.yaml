@@ -4,13 +4,14 @@
 
 # Required:
 
-input: /data/Daan/Projects/Ane_test_NC/Input/samplesheet.csv
-outdir: /data/Daan/Projects/Ane_test_NC/Output
+input: /data/Daan/Projects/testsample/Input/samplesheet.csv
+outdir: /data/Daan/Projects/testsample/Output
 
 # Optional:
 Host: human
-#virasign_ultrasensitive: true
-#virasign_database: KC545393.1
+virasign_ultrasensitive: true
+virasign_database: RefSeq
+quality: 7
 
 # Z-score controls: samplesheet sample names (works for FASTQ / fastq_pass / POD5).
 # When set, replaces auto-detect
