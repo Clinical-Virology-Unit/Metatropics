@@ -52,7 +52,7 @@ process VIRASIGN_SUMMARY {
 
     script:
     def rawDbArg = params.virasign_database?.toString()?.trim()
-    def effectiveDbArg = rawDbArg ?: 'RVDB'
+    def effectiveDbArg = rawDbArg ?: 'RefSeq'
     def virasignDbLabel = effectiveDbArg.replaceAll(/[^A-Za-z0-9._-]+/, '_')
     def outroot = file("${params.outdir}/Classification/virasign/${virasignDbLabel}").toAbsolutePath().toString()
     def outHtml = "Metatropics_Summary_${virasignDbLabel}.html"

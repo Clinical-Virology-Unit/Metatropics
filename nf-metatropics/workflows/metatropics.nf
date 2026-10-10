@@ -163,7 +163,7 @@ workflow METATROPICS {
         // Shared on-host results tree, isolated per virasign_database to avoid mixing results
         // across parameter changes when running with `-resume`.
         def rawDbArg = params.virasign_database?.toString()?.trim()
-        def effectiveDbArg = rawDbArg ?: 'RVDB'
+        def effectiveDbArg = rawDbArg ?: 'RefSeq'
         def virasignDbLabel = effectiveDbArg.replaceAll(/[^A-Za-z0-9._-]+/, '_')
         def virasignResultsRoot = file("${params.outdir}/Classification/virasign/${virasignDbLabel}")
         virasignResultsRoot.mkdirs()

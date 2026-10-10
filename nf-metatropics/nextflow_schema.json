@@ -186,8 +186,8 @@
             "properties": {
                 "virasign_database": {
                     "type": "string",
-                    "default": "RVDB",
-                    "description": "Database(s) (e.g., `RVDB,RefSeq`).",
+                    "default": "RefSeq",
+                    "description": "Database(s) (e.g., `RefSeq`, `RVDB`).",
                     "help_text": "Comma-separated list of Virasign database labels.",
                     "fa_icon": "fas fa-database"
                 },

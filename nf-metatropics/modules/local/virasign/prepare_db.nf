@@ -32,7 +32,7 @@ process VIRASIGN_DB {
 
     // Default DB if unset.
     def rawDbArg = params.virasign_database?.toString()?.trim()
-    def effectiveDbArg = rawDbArg ?: 'RVDB'
+    def effectiveDbArg = rawDbArg ?: 'RefSeq'
     add(effectiveDbArg, "-d '${effectiveDbArg}'")
     add(params.virasign_rvdb_version != null, "--rvdb-version ${params.virasign_rvdb_version}")
     add(params.virasign_accessions?.toString()?.trim(), "-a '${params.virasign_accessions}'")

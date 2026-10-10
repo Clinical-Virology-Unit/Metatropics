@@ -59,7 +59,7 @@ process VIRASIGN_CLASSIFICATION {
     def add = { c, f -> if (c) opt << f }
 
     def rawDbArg = params.virasign_database?.toString()?.trim()
-    def effectiveDbArg = rawDbArg ?: 'RVDB'
+    def effectiveDbArg = rawDbArg ?: 'RefSeq'
     // Output isolation per database choice (avoid mixing when using -resume).
     def virasignDbLabel = effectiveDbArg.replaceAll(/[^A-Za-z0-9._-]+/, '_')
     def resolvedDbArg = effectiveDbArg

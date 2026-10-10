@@ -67,7 +67,7 @@ Basecalling on the instrument should keep barcodes intact (Dorado `--no-trim`); 
 
 | Option | Description |
 |--------|-------------|
-| `--virasign_database` | Database(s) (e.g. `RVDB`, `RefSeq`, or `RVDB,RefSeq`). Default: `RVDB`. |
+| `--virasign_database` | Database(s) (e.g. `RefSeq`, `RVDB`, or `RVDB,RefSeq`). Default: `RefSeq`. |
 | `--virasign_db_dir` | Where Virasign databases are stored (defaults to `Databases/`). |
 | `--virasign_ultrasensitive` | Enable Virasign ultrasensitive mode. Default: false. |
 | `--virasign_blind` | Blind specific viral species from analysis (not in any output). Use Virasign abbreviations (e.g. `HEP,HIV,HTLV,EBV,CMV,HPV`) or full species names (comma-separated). To list abbreviations: `virasign --blinding`. |
