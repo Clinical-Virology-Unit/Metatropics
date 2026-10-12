@@ -4,7 +4,7 @@ process VIRASIGN_SUMMARY {
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'library://jansendaan94_v2/metatropics/virasign:latest':
-        'daanjansen94/virasign:0.0.8' }"
+        'daanjansen94/virasign:0.0.9' }"
 
     // Bind outdir and read results via params.
     def outAbs = file(params.outdir).toAbsolutePath().toString()
@@ -26,6 +26,9 @@ process VIRASIGN_SUMMARY {
         }
     }
     addBindDir(params.virasign_blind?.toString()?.trim())
+    // Samplesheet so the summary can include input samples that never reached Virasign
+    // (e.g. empty after host depletion, or dropped by an optional upstream output).
+    addBindDir(params.input?.toString()?.trim())
     extraBindDirs = extraBindDirs.unique()
 
     if (workflow.containerEngine == 'docker' || workflow.containerEngine == 'podman') {
@@ -64,6 +67,8 @@ process VIRASIGN_SUMMARY {
     def zscore_json = groovy.json.JsonOutput.toJson(zscore?.toString()?.trim() ?: 'false')
     def zscore_controls_json = groovy.json.JsonOutput.toJson(zscore_controls_safe)
     def virasign_blind_json = groovy.json.JsonOutput.toJson(virasign_blind_safe)
+    def samplesheet_json = groovy.json.JsonOutput.toJson(params.input?.toString()?.trim() ?: '')
+    def virasign_db_label_json = groovy.json.JsonOutput.toJson(virasignDbLabel)
     def quality = params.quality?.toString() ?: 'NA'
     def depth = params.depth?.toString() ?: 'NA'
     def agreement = params.agreement?.toString() ?: 'NA'
@@ -1427,6 +1432,14 @@ if summary_html.exists():
 
     summary_html.write_text(text, encoding="utf-8")
 PY
+
+    # Samples that never reached Virasign: still list them as empty no-hit in CSV/HTML.
+    metatropics_inject_missing_samples.py \
+        --outdir '${params.outdir}' \
+        --csv '${outCsv}' \
+        --html '${outHtml}' \
+        --samplesheet ${samplesheet_json} \
+        --db-label ${virasign_db_label_json}
 
     # Keep the shared Classification/virasign tree focused on per-sample outputs only.
     rm -f "${outroot}"/results_summary_*.html "${outroot}"/results_summary_*.csv "${outroot}"/.virasign.log || true

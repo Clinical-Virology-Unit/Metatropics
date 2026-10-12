@@ -4,8 +4,8 @@
 
 # Required:
 
-input: /data/Daan/Projects/testsample/Input/samplesheet.csv
-outdir: /data/Daan/Projects/testsample/Output
+input: /data/Daan/Projects/SRA_test/Input/samplesheet.csv
+outdir: /data/Daan/Projects/SRA_test/Output
 
 # Optional:
 Host: human
