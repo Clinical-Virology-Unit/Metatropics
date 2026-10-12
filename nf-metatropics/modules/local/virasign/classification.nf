@@ -3,7 +3,7 @@ process VIRASIGN_CLASSIFICATION {
     label 'process_medium'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'library://jansendaan94_v2/metatropics/virasign:latest':
+        'docker://daanjansen94/virasign:0.0.9':
         'daanjansen94/virasign:0.0.9' }"
 
     // Bind db_dir and optional control files; virasign outputs reach outdir via publishDir (host-side copy).

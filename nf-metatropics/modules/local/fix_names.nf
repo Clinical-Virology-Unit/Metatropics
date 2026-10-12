@@ -2,7 +2,7 @@ process FIX_NAMES {
     label 'process_medium'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'library://daanjansen94/metatropics/bbmap:38.86':
+        'docker://daanjansen94/bbmap:38.86':
         'daanjansen94/bbmap:38.86' }"
 
     tag "Evaluate/fix format of raw reads"

@@ -3,7 +3,7 @@ process VIRASIGN_SUMMARY {
     label 'process_medium'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'library://jansendaan94_v2/metatropics/virasign:latest':
+        'docker://daanjansen94/virasign:0.0.9':
         'daanjansen94/virasign:0.0.9' }"
 
     // Bind outdir and read results via params.

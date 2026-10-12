@@ -4,7 +4,7 @@ process NANOPLOT {
 
     conda "bioconda::nanoplot=1.41.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'library://daanjansen94/metatropics/nanoplot:v1.41.0' :
+        'docker://daanjansen94/nanoplot:v1.41.0' :
         'daanjansen94/nanoplot:v1.41.0' }"
 
     input:

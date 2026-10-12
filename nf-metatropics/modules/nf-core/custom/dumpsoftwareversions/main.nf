@@ -3,7 +3,7 @@ process CUSTOM_DUMPSOFTWAREVERSIONS {
     label 'process_single'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'library://daanjansen94/metatropics/multiqc:v1.12' :
+        'docker://daanjansen94/multiqc:v1.12' :
         'daanjansen94/multiqc:v1.12' }"
 
     input:

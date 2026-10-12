@@ -5,7 +5,7 @@ process FASTPLONG {
     conda "bioconda::fastplong=0.4.1"
     // Singularity: Sylabs image lives under jansendaan94_v2 (same account as other metatropics SIFs you publish). Docker Hub: daanjansen94/fastplong
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'library://jansendaan94_v2/metatropics/fastplong:0.4.1' :
+        'docker://daanjansen94/fastplong:0.4.1' :
         'daanjansen94/fastplong:0.4.1' }"
 
     input:

@@ -2,7 +2,7 @@ process ReadCount {
     label 'process_medium'
     tag "Read distribution summary"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'library://jansendaan94_v2/metatropics/readcount:latest' :
+        'docker://daanjansen94/readcount:v0.0.1' :
         'daanjansen94/readcount:v0.0.1' }"
 
     def outPath = file(params.outdir).toAbsolutePath().toString()

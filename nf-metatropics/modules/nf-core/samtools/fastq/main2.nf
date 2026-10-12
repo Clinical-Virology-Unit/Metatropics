@@ -4,7 +4,7 @@ process SAMTOOLS_hoFASTQ {
 
     conda "bioconda::samtools=1.17"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'library://daanjansen94/metatropics/samtools:v1.17' :
+        'docker://daanjansen94/samtools:v1.17' :
         'daanjansen94/samtools:v1.17' }"
 
     input:

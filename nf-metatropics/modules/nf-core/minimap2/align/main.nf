@@ -5,7 +5,7 @@ process MINIMAP2_ALIGN {
     // Note: the versions here need to match the versions used in the mulled container below and minimap2/index
     conda "bioconda::minimap2=2.24 bioconda::samtools=1.14"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'library://daanjansen94/metatropics/minimap:v2.28' :
+        'docker://daanjansen94/minimap:v2.28' :
         'daanjansen94/minimap:v2.28' }"
 
     input:
