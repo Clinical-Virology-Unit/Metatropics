@@ -52,7 +52,7 @@ References for the **programs and frameworks** used in the Metatropics pipeline.
 
 ### [Virasign](https://github.com/DaanJansen94/virasign) (viral classification)
 
-> Jansen, D., & Vercauteren, K. (2026). Virasign: A viral taxonomic classification tool designed for nanopore sequencing data (v0.0.6). Zenodo. doi: [10.5281/zenodo.18387008](https://doi.org/10.5281/zenodo.18387008).
+> Jansen, D., & Vercauteren, K. (2026). Virasign: A viral taxonomic classification tool designed for nanopore sequencing data (v0.0.9). Zenodo. doi: [10.5281/zenodo.18387008](https://doi.org/10.5281/zenodo.18387008).
 
 ### [Clair3](https://github.com/HKU-BAL/Clair3) (per-virus variant calling)
 
