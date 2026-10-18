@@ -1360,11 +1360,106 @@ if summary_html.exists():
     };
   }
 
+  // Base Virasign applyAllFilters / getFiltersFromSample index filters by DOM position.
+  // Injected Avg Read Length (after Mapped Reads) and Consensus Breadth (trailing)
+  // shift those indices by +1. Hide injected filter inputs (type=hidden) for the
+  // duration of the base filter call so positional indices stay correct — without
+  // removing DOM nodes (which steals focus after every keyup).
+  function withBaseFilterInputsOnly(sampleName, fn){
+    const filterRow = document.getElementById('filters-' + sampleName);
+    // Capture caret BEFORE excluding injected inputs (type change / detach resets it to 0).
+    const active = document.activeElement;
+    let selStart = null;
+    let selEnd = null;
+    try {
+      if (active && active.tagName === 'INPUT' && typeof active.selectionStart === 'number') {
+        selStart = active.selectionStart;
+        selEnd = active.selectionEnd;
+      }
+    } catch (e) {}
+
+    // Detach only injected filter headers (not body cells — numeric filters use data-* attrs).
+    const parked = [];
+    if (filterRow) {
+      Array.from(filterRow.querySelectorAll('th[data-col]')).forEach(th => {
+        parked.push({ node: th, parent: th.parentNode, next: th.nextSibling });
+        th.parentNode.removeChild(th);
+      });
+    }
+    try {
+      return fn();
+    } finally {
+      for (let i = parked.length - 1; i >= 0; i--) {
+        const item = parked[i];
+        if (!item.parent) continue;
+        if (item.next && item.next.parentNode === item.parent) {
+          item.parent.insertBefore(item.node, item.next);
+        } else {
+          item.parent.appendChild(item.node);
+        }
+      }
+      if (active && typeof active.focus === 'function') {
+        try {
+          active.focus();
+          if (selStart !== null && typeof active.setSelectionRange === 'function') {
+            active.setSelectionRange(selStart, selEnd);
+          }
+        } catch (e) {}
+      }
+    }
+  }
+
+  // Heatmap / shared filter reader: map by placeholder, ignore injected columns.
+  const origGetFiltersFromSample = window.getFiltersFromSample;
+  if (typeof origGetFiltersFromSample === 'function'){
+    window.getFiltersFromSample = function(sampleName){
+      const filters = {
+        minReads: null,
+        minIdentity: null,
+        minDepth: null,
+        minBreadth: null,
+        minNogr: null,
+        minZscore: null,
+        filterAccession: '',
+        filterOrganism: '',
+        filterSpecies: '',
+        filterClade: '',
+        filterSegment: ''
+      };
+      const filterRow = document.getElementById('filters-' + sampleName);
+      if (!filterRow) return filters;
+      const byPh = {};
+      filterRow.querySelectorAll('th:not([data-col]) input[type="text"]').forEach(inp => {
+        byPh[inp.getAttribute('placeholder') || ''] = (inp.value || '').trim();
+      });
+      filters.filterAccession = (byPh['Accession'] || '').toLowerCase();
+      filters.filterOrganism = (byPh['Organism'] || '').toLowerCase();
+      filters.filterSpecies = (byPh['Species'] || '').toLowerCase();
+      filters.filterClade = (byPh['Clade'] || '').toLowerCase();
+      filters.filterSegment = (byPh['Segment'] || '').toLowerCase();
+      const num = (ph) => {
+        const raw = byPh[ph] || '';
+        if (!raw) return null;
+        const v = parseFloat(raw);
+        return isNaN(v) ? null : v;
+      };
+      filters.minReads = num('Min Reads');
+      filters.minIdentity = num('Min ID');
+      filters.minDepth = num('Min Depth');
+      filters.minBreadth = num('Min Breadth');
+      filters.minNogr = num('Min NOGR');
+      filters.minZscore = num('Min Z-score');
+      return filters;
+    };
+  }
+
   // Extend filtering with consensus-breadth and avg-read-length rules when their filters are visible.
   const origApplyAllFilters = window.applyAllFilters;
   if (typeof origApplyAllFilters === 'function'){
     window.applyAllFilters = function(sampleName){
-      origApplyAllFilters(sampleName);
+      withBaseFilterInputsOnly(sampleName, function(){
+        origApplyAllFilters(sampleName);
+      });
       try {
         const table = document.getElementById('table-' + sampleName);
         if (!table) return;
@@ -1373,7 +1468,7 @@ if summary_html.exists():
 
         const consTh = table.querySelector('th[data-col="consensus_breadth_pct"]');
         if (consTh && consTh.style.display !== 'none') {
-          const input = consTh.querySelector('input[type="text"]');
+          const input = consTh.querySelector('input[type="text"], input[type="hidden"]');
           const raw = input ? (input.value || '').trim() : '';
           if (raw !== '') {
             const minVal = parseFloat(raw);
@@ -1390,7 +1485,7 @@ if summary_html.exists():
 
         const lenTh = table.querySelector('th[data-col="avg_read_length"]');
         if (lenTh) {
-          const input = lenTh.querySelector('input[type="text"]');
+          const input = lenTh.querySelector('input[type="text"], input[type="hidden"]');
           const raw = input ? (input.value || '').trim() : '';
           if (raw !== '') {
             const minVal = parseFloat(raw);

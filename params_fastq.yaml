@@ -2,8 +2,8 @@
 # Example samplesheet: nf-metatropics/assets/submission/fastq.csv
 
 # Required:
-input: /data/Daan/Projects/FIKI_test/Input/samplesheet.csv
-outdir: /data/Daan/Projects/FIKI_test/Output
+input: /data/Daan/Projects/Ebola_dengue_coinfec_test/Input/samplesheet.csv
+outdir: /data/Daan/Projects/Ebola_dengue_coinfec_test/Output
 
 # Optional:
 Host: human
