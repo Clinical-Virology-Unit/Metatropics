@@ -53,15 +53,22 @@ def strip_extensions(name: str) -> str:
 
 def extract_sample_name(filename: str) -> str:
     name = strip_extensions(filename)
-    # New depletion suffixes (published by SAMTOOLS_hFASTQ / SAMTOOLS_hoFASTQ).
-    name = re.sub(r"_(human|host)_depleted$", "", name)
-    name = re.sub(r"_(human|host)$", "", name)
-    # Legacy suffix kept for backwards compatibility.
-    name = re.sub(r"_other$", "", name)
-    name = re.sub(r"_viral$", "", name)
-    name = re.sub(r"_classification_results$", "", name)
+    # Strip pipeline/tech suffixes FIRST so depletion tags are exposed at the end.
+    # Otherwise `Sample_human_depleted_fixed.fastq.gz` keeps `_human_depleted` while
+    # `Sample_human_depleted.fastp.fastq.gz` loses it → split rows in read_counts.csv.
     name = re.sub(r"_fixed$", "", name)
     name = re.sub(r"\.fastp$", "", name)
+    name = re.sub(r"_classification_results$", "", name)
+    name = re.sub(r"_viral$", "", name)
+    # Depletion / legacy suffixes: strip repeatedly (samplesheet may already end in
+    # `_human_depleted`, and human mapping publishes another `_human_depleted`).
+    while True:
+        new = re.sub(r"_(human|host)_depleted$", "", name)
+        new = re.sub(r"_(human|host)$", "", new)
+        new = re.sub(r"(?i)_other$", "", new)
+        if new == name:
+            break
+        name = new
     return name
 
 
@@ -69,14 +76,10 @@ def canonical_readcount_id(filename_or_label: str) -> str:
     """
     One stable sample key for read_counts.csv / plots.
 
-    Some pipeline artifacts use both `Sample_T1` and `Sample_T1_other` (or `_OTHER`) as basenames.
-    `extract_sample_name` strips a single trailing `_other` (case-sensitive); repeat and fold case
-    so FASTQ-derived keys and Virasign JSON paths always merge into one row per logical sample.
+    Merges raw/trimmed/depleted/Virasign basenames that differ only by pipeline
+    suffixes (`_fixed`, `_human_depleted`, `_other`, …) into one logical sample.
     """
-    base = extract_sample_name((filename_or_label or "").strip())
-    while re.search(r"(?i)_other$", base):
-        base = re.sub(r"(?i)_other$", "", base)
-    return base
+    return extract_sample_name((filename_or_label or "").strip())
 
 
 def read_samplesheet_order(outdir: Path) -> List[str]:
@@ -139,6 +142,11 @@ def count_fastq_gz_reads(path: Path) -> int:
     return n
 
 
+# Staging layout is read_count/{raw+trimmed files, nohuman/, nohost/}. Never let
+# depletion FASTQs leak into the raw/trimmed totals via rglob of the staging root.
+_READCOUNT_SKIP_DIR_NAMES = frozenset({"nohuman", "nohost"})
+
+
 def count_dir(pattern: re.Pattern[str], directory: Path) -> Dict[str, int]:
     out: Dict[str, int] = {}
     if not directory.exists():
@@ -146,6 +154,14 @@ def count_dir(pattern: re.Pattern[str], directory: Path) -> Dict[str, int]:
     # rglob: support nested layouts (e.g. Reads/fastplong/<sample>/*.fastq.gz).
     for p in directory.rglob("*"):
         if not p.is_file():
+            continue
+        # When searching read_count/, skip nested nohuman/nohost. When the search
+        # root *is* nohuman/, relative parts have no parent dir to skip.
+        try:
+            rel_parents = p.relative_to(directory).parts[:-1]
+        except ValueError:
+            continue
+        if any(part in _READCOUNT_SKIP_DIR_NAMES for part in rel_parents):
             continue
         if not pattern.search(p.name):
             continue
@@ -250,10 +266,15 @@ def compute_rows(
     outdir: Path,
     host_status: str,
 ) -> Tuple[List[Row], bool, bool]:
-    # Raw reads can be named either `*_fixed.fastq.gz` (older convention) or `*.fastq.gz`.
-    # Exclude fastp outputs which are counted separately.
-    raw = count_dir(re.compile(r"(?<!\.fastp)(?:_fixed)?\.(fastq|fq)\.gz$"), read_count_dir)
-    trimmed = count_dir(re.compile(r"\.fastp\.(fastq|fq)\.gz$"), read_count_dir)
+    # Raw: `*_fixed.fastq.gz` or plain `*.fastq.gz`. Exclude fastp / rarefaction /
+    # depletion products that would otherwise match the same suffix.
+    _raw_re = re.compile(
+        r"(?<!\.fastp)(?<!_human_depleted)(?<!_host_depleted)(?<!_rarefied)(?<!_other)"
+        r"(?:_fixed)?\.(fastq|fq)\.gz$"
+    )
+    _trim_re = re.compile(r"\.fastp\.(fastq|fq)\.gz$")
+    raw = count_dir(_raw_re, read_count_dir)
+    trimmed = count_dir(_trim_re, read_count_dir)
     human_dep = count_dir(re.compile(r"\.(fastq|fq)\.gz$"), read_count_dir / "nohuman")
     host_dep = count_dir(re.compile(r"\.(fastq|fq)\.gz$"), read_count_dir / "nohost")
     viral = parse_viral_reads_from_virasign(outdir)
@@ -262,8 +283,8 @@ def compute_rows(
     # directly from the pipeline outdir's Reads/* structure.
     if not raw and not trimmed:
         reads_root = outdir / "Reads"
-        raw = count_dir(re.compile(r"(?<!\.fastp)(?:_fixed)?\.(fastq|fq)\.gz$"), reads_root / "fix")
-        trimmed = count_dir(re.compile(r"\.fastp\.(fastq|fq)\.gz$"), reads_root / "fastplong")
+        raw = count_dir(_raw_re, reads_root / "raw")
+        trimmed = count_dir(_trim_re, reads_root / "fastplong")
         # Depletion folders now publish *_human_depleted.fastq.gz / *_host_depleted.fastq.gz.
         # Keep the legacy *_other.fastq.gz pattern so older outdirs still count correctly.
         human_dep = count_dir(re.compile(r"_(human_depleted|other)\.(fastq|fq)\.gz$"), reads_root / "nohuman")

@@ -14,6 +14,42 @@ from pathlib import Path
 
 logger = logging.getLogger()
 
+# Suffixes this pipeline publishes on FASTQs / uses in meta.id-derived names.
+# Strip them from samplesheet sample IDs so re-using depleted/fixed inputs does not
+# stack names (e.g. Sample_human_depleted → Sample_human_depleted_human_depleted).
+_PIPELINE_SAMPLE_SUFFIXES = (
+    "_fixed",
+    "_human_depleted",
+    "_host_depleted",
+    "_human",
+    "_host",
+    "_other",
+    "_viral",
+    "_classification_results",
+    ".fastp",
+)
+
+
+def sanitize_pipeline_sample_id(sample: str) -> str:
+    """Remove pipeline stage suffixes from a samplesheet sample ID (repeatedly)."""
+    name = (sample or "").strip()
+    while True:
+        lowered = name.lower()
+        stripped = False
+        for suf in _PIPELINE_SAMPLE_SUFFIXES:
+            if lowered.endswith(suf.lower()):
+                name = name[: -len(suf)]
+                stripped = True
+                break
+        if not stripped:
+            break
+    name = name.strip("_")
+    if not name:
+        raise AssertionError(
+            f"Sample name {sample!r} is only pipeline suffixes; choose a real sample ID."
+        )
+    return name
+
 
 class RowChecker:
     """
@@ -96,6 +132,10 @@ class RowChecker:
             raise AssertionError("Sample input is required.")
         # Sanitize samples slightly.
         row[self._sample_col] = row[self._sample_col].replace(" ", "_")
+        # Strip suffixes the pipeline itself appends to published FASTQs. Input names
+        # like `Sample_human_depleted` otherwise become `Sample_human_depleted_human_depleted`
+        # after host depletion and split into duplicate rows in read_counts.csv.
+        row[self._sample_col] = sanitize_pipeline_sample_id(row[self._sample_col])
 
     #def _validate_first(self, row):
     #    """Assert that the first FASTQ entry is non-empty and has the right format."""

@@ -86,12 +86,40 @@ def resolve_input_dir(raw: str | None) -> Path:
     return path.resolve()
 
 
+def sanitize_pipeline_sample_id(sample: str) -> str:
+    """Strip suffixes the pipeline itself adds to FASTQ/sample names."""
+    suffixes = (
+        "_fixed",
+        "_human_depleted",
+        "_host_depleted",
+        "_human",
+        "_host",
+        "_other",
+        "_viral",
+        "_classification_results",
+        ".fastp",
+    )
+    name = (sample or "").strip()
+    while True:
+        lowered = name.lower()
+        stripped = False
+        for suf in suffixes:
+            if lowered.endswith(suf.lower()):
+                name = name[: -len(suf)]
+                stripped = True
+                break
+        if not stripped:
+            break
+    name = name.strip("_")
+    return name or sample
+
+
 def sample_name_from_path(path: Path) -> str | None:
     name = path.name
     lower = name.lower()
     for suf in FASTQ_SUFFIXES:
         if lower.endswith(suf):
-            return name[: -len(suf)]
+            return sanitize_pipeline_sample_id(name[: -len(suf)])
     return None
 
 

@@ -392,12 +392,18 @@ def strip_extensions(name: str) -> str:
 
 def extract_sample_name(filename: str) -> str:
     name = strip_extensions(filename)
-    name = re.sub(r"_(human_depleted|host_depleted)\\Z", "", name)
-    name = re.sub(r"_(human|host)\\Z", "", name)
-    name = re.sub(r"_viral\\Z", "", name)
-    name = re.sub(r"_classification_results\\Z", "", name)
+    # Tech suffixes first so depletion tags are at the end (avoids split sample IDs).
     name = re.sub(r"_fixed\\Z", "", name)
     name = re.sub(r"\\.fastp\\Z", "", name)
+    name = re.sub(r"_classification_results\\Z", "", name)
+    name = re.sub(r"_viral\\Z", "", name)
+    while True:
+        new = re.sub(r"_(human_depleted|host_depleted)\\Z", "", name)
+        new = re.sub(r"_(human|host)\\Z", "", new)
+        new = re.sub(r"(?i)_other\\Z", "", new)
+        if new == name:
+            break
+        name = new
     return name
 
 def count_fastq_gz_reads(path: Path) -> int:

@@ -1,17 +1,15 @@
 # Metatropics — FASTQ input (no POD5 basecalling).
 # Example samplesheet: nf-metatropics/assets/submission/fastq.csv
 
-
 # Required:
-
-input: /data/Daan/Projects/SRA_test/Input/samplesheet.csv
-outdir: /data/Daan/Projects/SRA_test/Output
+input: /data/Daan/Projects/FIKI_test/Input/samplesheet.csv
+outdir: /data/Daan/Projects/FIKI_test/Output
 
 # Optional:
 Host: human
 virasign_ultrasensitive: true
-virasign_database: RefSeq
-quality: 7
+virasign_database: RVDB
+quality: 15
 
 # Z-score controls: samplesheet sample names (works for FASTQ / fastq_pass / POD5).
 # When set, replaces auto-detect
