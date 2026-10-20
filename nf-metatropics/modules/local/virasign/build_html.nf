@@ -3,8 +3,8 @@ process VIRASIGN_SUMMARY {
     label 'process_medium'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'docker://daanjansen94/virasign:v0.1.0':
-        'daanjansen94/virasign:v0.1.0' }"
+        'docker://daanjansen94/virasign:v0.1.1':
+        'daanjansen94/virasign:v0.1.1' }"
 
     // Bind outdir and read results via params.
     def outAbs = file(params.outdir).toAbsolutePath().toString()
@@ -173,12 +173,15 @@ try:
     if summary_csv.exists():
         with summary_csv.open("r", newline="", encoding="utf-8") as handle:
             reader = csv.DictReader(handle)
-            if reader.fieldnames and ("Z-score" in reader.fieldnames or "Z-score " in reader.fieldnames):
-                zscore_col = "Z-score" if "Z-score" in reader.fieldnames else "Z-score "
+            if reader.fieldnames:
+                z_cols = [c for c in reader.fieldnames if c and c.strip().lower().startswith("z-score")]
                 for row in reader:
-                    raw_v = (row.get(zscore_col) or "").strip()
-                    if raw_v and raw_v not in {"—", "-"}:
-                        zscore_has_values = True
+                    for zc in z_cols:
+                        raw_v = (row.get(zc) or "").strip()
+                        if raw_v and raw_v not in {"—", "-"}:
+                            zscore_has_values = True
+                            break
+                    if zscore_has_values:
                         break
 except Exception:
     pass
@@ -632,11 +635,12 @@ if summary_csv.exists():
         if key in low:
             accession_col = low[key]
             break
-    zscore_col = None
-    for key in ("z-score", "zscore", "z_score"):
-        if key in low:
-            zscore_col = low[key]
-            break
+    zscore_cols = []
+    for f in in_fields:
+        fl = (f or "").lower().strip()
+        if fl.startswith("z-score") or fl in ("zscore", "z_score"):
+            zscore_cols.append(f)
+    zscore_col = zscore_cols[0] if zscore_cols else None
     qc_header = "QC reads"
     # Per-hit average mapped-read length (replaces older sample-level median column name).
     readlen_header = "Avg Read Length"
@@ -705,8 +709,9 @@ if summary_csv.exists():
             if zscore_enabled and zscore_has_values:
                 row[bg_used_header] = "yes" if is_background_sample(sample) else "no"
                 # Controls are background only — never report a numeric Z-score on them.
-                if is_background_sample(sample) and zscore_col:
-                    row[zscore_col] = "-"
+                if is_background_sample(sample) and zscore_cols:
+                    for zc in zscore_cols:
+                        row[zc] = "-"
             else:
                 # If Z-score is not used (disabled or unusable), make this explicit instead of leaving blank.
                 row[bg_used_header] = "no"
@@ -766,8 +771,19 @@ if summary_html.exists():
 
     # Ensure the per-sample "Download Table (CSV)" header matches the appended column.
     text = text.replace(
+        "let csv = 'Accession,Organism,Viral Species,Nextclade Clade,Segment,Mapped Reads (#),Identity (%),Coverage Depth (x),Coverage Breadth (%),NOGR (#/%),Z-score\\n';",
+        "let csv = 'Accession,Organism,Viral Species,Nextclade Clade,Segment,Mapped Reads (#),Identity (%),Coverage Depth (x),Coverage Breadth (%),NOGR (#/%),Z-score (species),Z-score (genus),Consensus Breadth (%)\\n';",
+        1
+    )
+    # Backward-compatible replace if HTML was built with an older Virasign header.
+    text = text.replace(
+        "let csv = 'Accession,Organism,Viral Species,Nextclade Clade,Segment,Mapped Reads (#),Identity (%),Coverage Depth (x),Coverage Breadth (%),NOGR (#/kb/%),Z-score\\n';",
+        "let csv = 'Accession,Organism,Viral Species,Nextclade Clade,Segment,Mapped Reads (#),Identity (%),Coverage Depth (x),Coverage Breadth (%),NOGR (#/%),Z-score (species),Z-score (genus),Consensus Breadth (%)\\n';",
+        1
+    )
+    text = text.replace(
         "let csv = 'Accession,Organism,Viral Species,Nextclade Clade,Segment,Mapped Reads (#),Identity (%),Coverage Depth (x),Coverage Breadth (%),NOGR (#/bases),Z-score\\n';",
-        "let csv = 'Accession,Organism,Viral Species,Nextclade Clade,Segment,Mapped Reads (#),Identity (%),Coverage Depth (x),Coverage Breadth (%),NOGR (#/bases),Z-score,Consensus Breadth (%)\\n';",
+        "let csv = 'Accession,Organism,Viral Species,Nextclade Clade,Segment,Mapped Reads (#),Identity (%),Coverage Depth (x),Coverage Breadth (%),NOGR (#/%),Z-score (species),Z-score (genus),Consensus Breadth (%)\\n';",
         1
     )
     if "Consensus Breadth (%)" not in text:
@@ -1098,6 +1114,8 @@ if summary_html.exists():
             (dataSort === 'breadth') ||
             (dataSort === 'nogr_regions') ||
             (dataSort === 'zscore') ||
+            (dataSort === 'zscore_species') ||
+            (dataSort === 'zscore_genus') ||
             (dataSort === 'avg_read_length') ||
             (!dataSort); // base columns have no data-sort
           cols[i].style.display = show ? '' : 'none';
@@ -1265,7 +1283,7 @@ if summary_html.exists():
     if (!tbody) return;
 
     const NL = String.fromCharCode(10);
-    let csv = 'Sample,Background,Accession,Organism,Viral Species,Nextclade Clade,Segment,QC reads,Mapped Reads (#),Avg Read Length,Identity (%),Coverage Depth (x),Coverage Breadth (%),NOGR (#/bases),Z-score,Consensus Breadth (%)' + NL;
+    let csv = 'Sample,Background,Accession,Organism,Viral Species,Nextclade Clade,Segment,QC reads,Mapped Reads (#),Avg Read Length,Identity (%),Coverage Depth (x),Coverage Breadth (%),NOGR (#/%),Z-score (species),Z-score (genus),Consensus Breadth (%)' + NL;
     const rows = tbody.querySelectorAll('tr:not([style*="display: none"])');
 
     rows.forEach(row => {
@@ -1313,22 +1331,25 @@ if summary_html.exists():
     const origDownloadAll = window.downloadAllSamplesCSV;
     window.downloadAllSamplesCSV = function() {
       const NL = String.fromCharCode(10);
-      let rows = [['Sample','Background','Accession','Organism','Viral Species','Nextclade Clade','Segment','QC reads','Mapped Reads (#)','Avg Read Length','Avg Identity (%)','Coverage Depth (x)','Coverage Breadth (%)','NOGR (#/bases)','Z-score','Consensus Breadth (%)']];
+      let rows = [['Sample','Background','Accession','Organism','Viral Species','Nextclade Clade','Segment','QC reads','Mapped Reads (#)','Avg Read Length','Avg Identity (%)','Coverage Depth (x)','Coverage Breadth (%)','NOGR (#/%)','Z-score (species)','Z-score (genus)','Consensus Breadth (%)']];
       if (typeof allSamples === 'undefined' || typeof samplesData === 'undefined') return origDownloadAll();
 
       allSamples.forEach(sname => {
         const sdata = samplesData[sname];
         const qc = getQcReads(sname);
         const bg = getBackground(sname);
-        if (!sdata) { rows.push([sname,bg,'','','','','',qc,'','','','','','','','']); return; }
+        if (!sdata) { rows.push([sname,bg,'','','','','',qc,'','','','','','','','','']); return; }
         let refs = [];
         Object.keys(sdata).forEach(db => { if (sdata[db].references) refs = refs.concat(sdata[db].references); });
-        if (refs.length === 0) { rows.push([sname,bg,'','','','','',qc,'','','','','','','','']); return; }
+        if (refs.length === 0) { rows.push([sname,bg,'','','','','',qc,'','','','','','','','','']); return; }
         refs.sort((a,b) => (b.coverage_breadth||0)-(a.coverage_breadth||0));
         refs.forEach(r => {
           const acc = r.accession||'';
           const cons = getVal(sname, acc);
           const rl = getAvgReadLen(sname, acc);
+          const nb = Number(r.nogr_bases||r.non_overlapping_bases||0) || 0;
+          const refLen = Number(r.ref_length || (r.coverage_profile && r.coverage_profile.ref_len) || 0) || 0;
+          const nogrPct = refLen > 0 ? ((nb / refLen) * 100).toFixed(1) + '%' : '—';
           rows.push([
             sname,
             bg,
@@ -1343,8 +1364,9 @@ if summary_html.exists():
             (r.avg_identity||0).toFixed(2),
             (r.coverage_depth||0).toFixed(2),
             ((r.coverage_breadth||0)*100).toFixed(1),
-            String((r.nogr_regions||r.non_overlapping_reads||0)) + '|' + String((r.nogr_bases||r.non_overlapping_bases||0)),
-            (r.zscore !== undefined && r.zscore !== null) ? Number(r.zscore).toFixed(2) : '',
+            String((r.nogr_regions||r.non_overlapping_reads||0)) + '|' + nogrPct,
+            (function(){ const zs=(r.zscore_species!==undefined&&r.zscore_species!==null)?r.zscore_species:r.zscore; return (zs!==undefined&&zs!==null)?Number(zs).toFixed(2):''; })(),
+            (r.zscore_genus !== undefined && r.zscore_genus !== null) ? Number(r.zscore_genus).toFixed(2) : '',
             (cons === null) ? '' : cons.toFixed(2)
           ]);
         });
@@ -1420,6 +1442,7 @@ if summary_html.exists():
         minBreadth: null,
         minNogr: null,
         minZscore: null,
+        minZscoreGenus: null,
         filterAccession: '',
         filterOrganism: '',
         filterSpecies: '',
@@ -1448,7 +1471,9 @@ if summary_html.exists():
       filters.minDepth = num('Min Depth');
       filters.minBreadth = num('Min Breadth');
       filters.minNogr = num('Min NOGR');
-      filters.minZscore = num('Min Z-score');
+      filters.minZscore = num('Min Z-sp');
+      if (filters.minZscore === null) filters.minZscore = num('Min Z-score');
+      filters.minZscoreGenus = num('Min Z-gen');
       return filters;
     };
   }
