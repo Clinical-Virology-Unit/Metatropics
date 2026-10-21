@@ -8,7 +8,7 @@ outdir: /data/Daan/Projects/pox/Output
 # Optional:
 Host: human
 virasign_ultrasensitive: true
-#virasign_database: RVDB
+virasign_database: RVDB
 quality: 15
 
 # Z-score controls: samplesheet sample names (works for FASTQ / fastq_pass / POD5).

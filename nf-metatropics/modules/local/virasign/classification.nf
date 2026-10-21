@@ -3,8 +3,8 @@ process VIRASIGN_CLASSIFICATION {
     label 'process_medium'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'docker://daanjansen94/virasign:v0.1.1':
-        'daanjansen94/virasign:v0.1.1' }"
+        'docker://daanjansen94/virasign:v0.1.2':
+        'daanjansen94/virasign:v0.1.2' }"
 
     // Bind db_dir and optional control files; virasign outputs reach outdir via publishDir (host-side copy).
     def pipelineRoot = new File("${projectDir}").parentFile.absolutePath

@@ -3,11 +3,14 @@ process VIRASIGN_SUMMARY {
     label 'process_medium'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'docker://daanjansen94/virasign:v0.1.1':
-        'daanjansen94/virasign:v0.1.1' }"
+        'docker://daanjansen94/virasign:v0.1.2':
+        'daanjansen94/virasign:v0.1.2' }"
 
     // Bind outdir and read results via params.
     def outAbs = file(params.outdir).toAbsolutePath().toString()
+    def pipelineRoot = new File("${projectDir}").parentFile.absolutePath
+    def db_dir = params.virasign_db_dir ?: "${pipelineRoot}/Databases"
+    def dbAbs = file(db_dir).toAbsolutePath().toString()
 
     // Ensure any control/blind files are visible in-container.
     def extraBindDirs = []
@@ -33,11 +36,11 @@ process VIRASIGN_SUMMARY {
 
     if (workflow.containerEngine == 'docker' || workflow.containerEngine == 'podman') {
         def extra = extraBindDirs.collect { " -v ${it}:${it}" }.join('')
-        containerOptions "-v ${outAbs}:${outAbs}${extra}"
+        containerOptions "-v ${outAbs}:${outAbs} -v ${dbAbs}:${dbAbs}${extra}"
     }
     if (workflow.containerEngine == 'singularity' || workflow.containerEngine == 'apptainer') {
         def extra = extraBindDirs.collect { " --bind ${it}:${it}" }.join('')
-        containerOptions "--bind ${outAbs}:${outAbs}${extra}"
+        containerOptions "--bind ${outAbs}:${outAbs} --bind ${dbAbs}:${dbAbs}${extra}"
     }
 
     input:
@@ -74,6 +77,7 @@ process VIRASIGN_SUMMARY {
     def agreement = params.agreement?.toString() ?: 'NA'
     def opt = []
     def add = { c, f -> if (c) opt << f }
+    add(true, "--db-dir '${dbAbs}'")
     add(!!zscore, "--zscore ${zscore}")
     add(zscore_controls, "--zscore-controls '${zscore_controls}'")
     def tail = task.ext.args?.toString()?.trim()
