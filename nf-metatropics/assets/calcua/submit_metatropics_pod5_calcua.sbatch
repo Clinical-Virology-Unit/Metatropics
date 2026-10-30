@@ -12,14 +12,14 @@
 set -euo pipefail
 
 # Pipeline checkout and params: POD5 + Dorado basecalling (GPU). Params: basecall: true, input_dir, usegpu: true.
-PIPELINE_DIR="${VSC_SCRATCH}/Metatropics_runs/Metatropics/nf-metatropics"
-PARAMS_FILE="${VSC_SCRATCH}/Metatropics_runs/Metatropics/params_POD5.yaml"
+PIPELINE_DIR="${VSC_SCRATCH}/Metatropics/nf-metatropics"
+PARAMS_FILE="${VSC_SCRATCH}/Metatropics/params_POD5.yaml"
 
 unset JAVA_HOME || true
 unset JAVA_CMD || true
 
 module load Java
-module load Nextflow
+module load Nextflow/25.04.2
 
 export APPTAINER_CACHEDIR="${VSC_SCRATCH}/apptainer/cache"
 export APPTAINER_TMPDIR="${TMPDIR:-${VSC_SCRATCH}/apptainer/tmp}"

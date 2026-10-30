@@ -2,9 +2,9 @@
 # Example samplesheet: nf-metatropics/assets/submission/POD5.csv
 
 # Required
-input: /data/Daan/Projects/Ebola_Run10/Input/POD5.csv
-input_dir: /data/Daan/Projects/Ebola_Run10/Input/fastq_pass
-outdir: /data/Daan/Projects/Ebola_Run10/Output_pod5
+input: /scratch/antwerpen/209/vsc20958/test_meta/Input/POD5.csv
+input_dir: /scratch/antwerpen/209/vsc20958/test_meta/Input/POD5
+outdir: /scratch/antwerpen/209/vsc20958/test_meta/Output
 kit_name: TWIST-96A-UDI
 
 # Optional:

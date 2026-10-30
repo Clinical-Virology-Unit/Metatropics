@@ -19,7 +19,7 @@ unset JAVA_HOME || true
 unset JAVA_CMD || true
 
 module load Java
-module load Nextflow
+module load Nextflow/25.04.2
 
 export APPTAINER_CACHEDIR="${VSC_SCRATCH}/apptainer/cache"
 export APPTAINER_TMPDIR="${TMPDIR:-${VSC_SCRATCH}/apptainer/tmp}"
