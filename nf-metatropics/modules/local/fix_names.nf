@@ -11,11 +11,29 @@ process FIX_NAMES {
     tuple val(meta), val(sample), path(reads)
 
     output:
-    tuple val(sample), path("*.fastq.gz"), emit : fqreads
+    tuple val(sample), path("${sample}_fixed.fastq.gz"), emit : fqreads
 
     script:
-    // reformat.sh reads gzip or plain FASTQ from path (avoid cat, which breaks .fastq.gz)
+    // barcode column may be one FASTQ file, or a folder of FASTQ shards
     """
-    reformat.sh in=$reads out=${sample}_fixed.fastq.gz qin=33 ignorebadquality overwrite=t
+    set -euo pipefail
+    if [ -d "${reads}" ]; then
+        shopt -s nullglob
+        files=( "${reads}"/*.fastq.gz "${reads}"/*.fq.gz "${reads}"/*.fastq "${reads}"/*.fq )
+        if [ \${#files[@]} -eq 0 ]; then
+            echo "ERROR: no FASTQ files under ${reads}" >&2
+            exit 1
+        fi
+        if [ \${#files[@]} -eq 1 ]; then
+            in="\${files[0]}"
+        else
+            cat "\${files[@]}" > merged_input.fastq.gz
+            in=merged_input.fastq.gz
+        fi
+    else
+        in="${reads}"
+    fi
+    reformat.sh in="\$in" out=${sample}_fixed.fastq.gz qin=33 ignorebadquality overwrite=t
+    rm -f merged_input.fastq.gz
     """
 }

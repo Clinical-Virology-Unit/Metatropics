@@ -165,6 +165,9 @@ def count_dir(pattern: re.Pattern[str], directory: Path) -> Dict[str, int]:
             continue
         if not pattern.search(p.name):
             continue
+        # Ignore FIX_NAMES temporary concat (must never be treated as a sample).
+        if p.name.startswith("merged_input"):
+            continue
         sample = canonical_readcount_id(p.name)
         out[sample] = out.get(sample, 0) + count_fastq_gz_reads(p)
     return out

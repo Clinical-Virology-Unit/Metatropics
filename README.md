@@ -78,7 +78,7 @@ Use **[`params_POD5.yaml`](params_POD5.yaml)**.
 | `Host` | Optional: host depletion (e.g., `human,pan`). |
 | `virasign_ultrasensitive` | Optional: enable ultrasensitive viral identification mode. |
 
-To autogenerate a [`POD5.csv`](nf-metatropics/assets/submission/POD5.csv) template, run **`pip install .`** once at the repo root, then **`metatropics-samplesheet pod5 -i .`** from your POD5 directory. For TWIST UDI plates, run **`metatropics-samplesheet pod5 TWIST-96A-UDI`** to create `run.txt`, edit sample names and wells, then **`metatropics-samplesheet pod5 TWIST-96A-UDI run.txt`** to build `POD5.csv`.
+To autogenerate a [`POD5.csv`](nf-metatropics/assets/submission/POD5.csv) template, run **`pip install .`** once at the repo root, then **`metatropics-samplesheet pod5 -i .`** from your POD5 directory. For TWIST UDI plates, run **`metatropics-samplesheet pod5 TWIST-96A-UDI`** to create `wells.txt`, edit sample names and wells, then **`metatropics-samplesheet pod5 TWIST-96A-UDI wells.txt`** to build `POD5.csv`.
 
 ### fastq_pass start (on-device basecalled, demultiplex inside the pipeline)
 
@@ -94,7 +94,7 @@ Use **[`params_fastq_pass.yaml`](params_fastq_pass.yaml)**.
 | `Host` | Optional: host depletion (e.g., `human,pan`). |
 | `virasign_ultrasensitive` | Optional: enable ultrasensitive viral identification mode. |
 
-Use the same **`metatropics-samplesheet pod5 -i .`** command from your `fastq_pass` folder to create a `POD5.csv` template there. For TWIST UDI plates, run **`metatropics-samplesheet pod5 TWIST-96A-UDI`** to create `run.txt`, edit sample names and wells, then **`metatropics-samplesheet pod5 TWIST-96A-UDI run.txt`** to build `POD5.csv`.
+Use the same **`metatropics-samplesheet pod5 -i .`** command from your `fastq_pass` folder to create a `POD5.csv` template there. For TWIST UDI plates, run **`metatropics-samplesheet pod5 TWIST-96A-UDI`** to create `wells.txt`, edit sample names and wells, then **`metatropics-samplesheet pod5 TWIST-96A-UDI wells.txt`** to build `POD5.csv`.
 
 ### FASTQ start (basecalled reads)
 

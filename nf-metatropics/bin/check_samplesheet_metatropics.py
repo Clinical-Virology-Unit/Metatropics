@@ -160,7 +160,7 @@ class RowChecker:
     #        row[self._single_col] = True
 
     def _validate_barcode(self, row):
-        """Barcode column: POD5 label (barcode01) or a FASTQ path ending in .fastq / .fastq.gz / .fq / .fq.gz."""
+        """Barcode: POD5 label, FASTQ file path, or folder of FASTQ shards."""
         value = (row.get(self._second_col) or "").strip()
         if not value:
             raise AssertionError("The barcode column is required (FASTQ path or POD5 barcode label).")
@@ -169,10 +169,17 @@ class RowChecker:
         lowered = value.lower()
         if any(lowered.endswith(suf) for suf in self.FASTQ_PATH_SUFFIXES):
             return
+        # Directory of one/many FASTQs (e.g. .../pass/barcode35)
+        path = Path(value)
+        if path.is_dir() or (
+            ("/" in value or value.startswith("."))
+            and not any(lowered.endswith(suf) for suf in self.FASTQ_PATH_SUFFIXES)
+        ):
+            return
         raise AssertionError(
             f"Unrecognized barcode/path: {value!r}. "
-            f"Use a POD5 label like barcode01, or a FASTQ path ending in one of: "
-            f"{', '.join(self.FASTQ_PATH_SUFFIXES)}."
+            f"Use a POD5 label like barcode01, a FASTQ path ending in one of: "
+            f"{', '.join(self.FASTQ_PATH_SUFFIXES)}, or a folder of FASTQ shards."
         )
 
     def _validate_fastq_format(self, filename):

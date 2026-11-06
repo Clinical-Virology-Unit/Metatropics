@@ -9,7 +9,7 @@
 | `--input` | Path to the samplesheet CSV (example: [`fastq.csv`](./fastq.csv)) |
 | `--outdir` | Output directory for results. |
 
-To autogenerate a `samplesheet.csv` from a folder of demultiplexed FASTQ files, run `pip install .` once at the repo root, then `metatropics-samplesheet -i .` from your FASTQ directory.
+To autogenerate a `samplesheet.csv` from demultiplexed FASTQs, run `pip install .` once at the repo root, then `metatropics-samplesheet -i .` from either a flat FASTQ folder or a MinKNOW/Dorado `pass/` folder (`barcodeNN/` subdirs; one or many FASTQ shards per barcode are supported — shards are merged when needed).
 
 ### POD5 start (basecalling inside the pipeline)
 
