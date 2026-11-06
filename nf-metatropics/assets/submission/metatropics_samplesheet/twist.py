@@ -107,6 +107,9 @@ def parse_twist_run_file(path: Path, kit: str) -> list[tuple[str, str]]:
             raise ValueError(f"{path}:{line_no}: missing sample name")
         if not well:
             raise ValueError(f"{path}:{line_no}: missing well ID")
+        # Skip CSV header
+        if sample.lower() == "sample" and well.lower() in {"well", "well_id", "position"}:
+            continue
         if sample in seen_samples:
             raise ValueError(f"{path}:{line_no}: duplicate sample name {sample!r}")
         normalized_well = normalize_well_id(well, kit)

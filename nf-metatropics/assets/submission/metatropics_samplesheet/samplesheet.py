@@ -66,19 +66,19 @@ examples:
   # raw POD5 → POD5.csv
   metatropics-samplesheet pod5 -i .
   metatropics-samplesheet pod5 TWIST-96A-UDI
-  metatropics-samplesheet pod5 TWIST-96A-UDI wells.txt -o POD5.csv
+  metatropics-samplesheet pod5 TWIST-96A-UDI wells.csv -o POD5.csv
 
   2. fastq_pass
   # basecalled fastq_pass → fastq_pass.csv
   metatropics-samplesheet fastq_pass -i .
   metatropics-samplesheet fastq_pass TWIST-96A-UDI
-  metatropics-samplesheet fastq_pass TWIST-96A-UDI wells.txt -o fastq_pass.csv
+  metatropics-samplesheet fastq_pass TWIST-96A-UDI wells.csv -o fastq_pass.csv
 
   3. Demultiplexed
   # pass/barcodeNN/ or flat FASTQs → samplesheet.csv
   metatropics-samplesheet demultiplexed -i .
-  metatropics-samplesheet demultiplexed TWIST-96A-UDI -o wells.txt
-  metatropics-samplesheet demultiplexed -i pass --kit TWIST-96A-UDI --wells wells.txt -o .
+  metatropics-samplesheet demultiplexed TWIST-96A-UDI -o wells.csv
+  metatropics-samplesheet demultiplexed -i pass --kit TWIST-96A-UDI --wells wells.csv -o .
 """
 
 FASTQ_EPILOG = TOP_LEVEL_EPILOG
@@ -197,14 +197,16 @@ def write_twist_run_file(
     *,
     next_hint: str = "the samplesheet CSV",
 ) -> None:
-    """Write sample,well text (wells.txt) for manual editing."""
+    """Write sample,well CSV (wells.csv) for editing or direct EPI2ME use with kit_name."""
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    lines = ["# sample,well  (edit sample names; remove unused wells)", ""]
-    lines.extend(f"{sample},{well}" for sample, well in rows)
-    out_path.write_text("\n".join(lines) + "\n")
+    with out_path.open("w", newline="") as fh:
+        writer = csv.writer(fh)
+        writer.writerow(["sample", "well"])
+        writer.writerows(rows)
     print(
         f"Wrote {len(rows)} well(s) to {out_path} — edit sample names, "
-        f"delete unused rows, then use this file to create {next_hint}.",
+        f"delete unused rows; use as EPI2ME sample sheet with kit_name, "
+        f"or convert to {next_hint}.",
         file=sys.stderr,
     )
 
@@ -232,7 +234,7 @@ def run_twist_barcode_csv(
         return
 
     rows = mock_twist_run_rows()
-    out_path = (output or Path("wells.txt")).resolve()
+    out_path = (output or Path("wells.csv")).resolve()
     write_twist_run_file(out_path, rows, next_hint=default_csv)
 
 
@@ -472,7 +474,7 @@ def build_twist_barcode_parser(mode: str) -> argparse.ArgumentParser:
         "run_file",
         nargs="?",
         default=None,
-        metavar="wells.txt",
+        metavar="wells.csv",
         help="Optional run file (sample,well per line). Without it, a mock template is written.",
     )
     parser.add_argument(
@@ -480,7 +482,7 @@ def build_twist_barcode_parser(mode: str) -> argparse.ArgumentParser:
         "--output",
         default=None,
         metavar="FILE",
-        help=f"Output file (default: wells.txt or {default_csv}).",
+        help=f"Output file (default: wells.csv or {default_csv}).",
     )
     add_version_arg(parser)
     return parser
@@ -497,7 +499,7 @@ def build_barcode_label_parser(
         description=(
             f"Build {default_csv} for {'raw POD5' if mode == 'pod5' else 'basecalled fastq_pass'} data.\n"
             "Columns: sample, barcode (barcode label, e.g. barcode01 — not a file path).\n"
-            f"For TWIST UDI plates: {mode} TWIST-96A-UDI [wells.txt]."
+            f"For TWIST UDI plates: {mode} TWIST-96A-UDI [wells.csv]."
         ),
         epilog=POD5_EPILOG,
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -529,11 +531,11 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def write_wells_template(output: Path | None = None) -> None:
-    out = (output or Path("wells.txt")).resolve()
+    out = (output or Path("wells.csv")).resolve()
     write_twist_run_file(
         out,
         mock_twist_run_rows(),
-        next_hint="samplesheet.csv (demultiplexed -i pass/ --kit … --wells wells.txt -o .)",
+        next_hint="samplesheet.csv (demultiplexed -i pass/ --kit … --wells wells.csv -o .)",
     )
 
 
@@ -571,9 +573,9 @@ def main(argv: list[str] | None = None) -> None:
         parser.print_help()
         return
 
-    # TWIST wells.txt: `… demultiplexed TWIST-96A-UDI` or bare `… TWIST-96A-UDI`
+    # TWIST wells.csv: `… demultiplexed TWIST-96A-UDI` or bare `… TWIST-96A-UDI`
     if argv and is_twist_kit(argv[0]):
-        out = Path("wells.txt")
+        out = Path("wells.csv")
         i = 1
         while i < len(argv):
             if argv[i] in HELP_FLAGS:
@@ -585,7 +587,7 @@ def main(argv: list[str] | None = None) -> None:
                 continue
             raise SystemExit(
                 f"Unexpected argument {argv[i]!r}. "
-                "Usage: metatropics-samplesheet TWIST-96A-UDI [-o wells.txt]"
+                "Usage: metatropics-samplesheet TWIST-96A-UDI [-o wells.csv]"
             )
         write_wells_template(out)
         return
@@ -595,7 +597,7 @@ def main(argv: list[str] | None = None) -> None:
         and argv[0] in ("demultiplexed", "fastq")
         and is_twist_kit(argv[1])
     ):
-        out = Path("wells.txt")
+        out = Path("wells.csv")
         rest = argv[2:]
         i = 0
         while i < len(rest):
@@ -608,12 +610,12 @@ def main(argv: list[str] | None = None) -> None:
                 continue
             raise SystemExit(
                 f"Unexpected argument {rest[i]!r}. "
-                "Usage: metatropics-samplesheet demultiplexed TWIST-96A-UDI [-o wells.txt]"
+                "Usage: metatropics-samplesheet demultiplexed TWIST-96A-UDI [-o wells.csv]"
             )
         write_wells_template(out)
         return
 
-    # TWIST barcode CSV: `… pod5|fastq_pass TWIST-96A-UDI [wells.txt]`
+    # TWIST barcode CSV: `… pod5|fastq_pass TWIST-96A-UDI [wells.csv]`
     if len(argv) >= 2 and argv[0] in BARCODE_LABEL_MODES and is_twist_kit(argv[1]):
         mode = argv[0]
         twist_argv = argv[1:]
